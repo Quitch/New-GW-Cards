@@ -34,6 +34,16 @@ Edit the card to achieve the desired effect i.e. draw the rest of the fucking ow
 
 The `deal` function is used for card distribution. The `buff` function is the adding of units, mods, and AI mods (see GWO cards). The `dull` function is applied after `buff` and is for the removal of units and application of debuffs.
 
+### Setting up a loadout
+
+Open the mod's `start_cards.js` file. This file provides an example of how to load multiple start cards. Change the loadout IDs to match your card's file name, minus the file extension.
+
+### Setting up a tech card
+
+Open the mod's `tech_cards.js` file. This file provides an example of how to load multiple tech cards and setup the tooltips for them.
+
+Change the tech IDs to match your card's file name, minus the file extension. Change unit paths to the file path of the unit's JSON, using the structure `/pa/units/SOME_LAYER/SOME_UNIT_NAME/SOME_UNIT_NAME.json`
+
 ## Testing your mod
 
 1. Add `--devmode` to your PA [launch options](https://help.steampowered.com/en/faqs/view/7D01-D2DD-D75E-2955).
@@ -52,29 +62,31 @@ During testing you will be checking the debugger for errors. Note that it is exp
 
 ### Start cards
 
-1. Go to the Galactic War Loadout screen.
-2. Confirm that your loadout is listed, locked, and its hint displayed.
-3. Confirm that your card was dealt to your inventory and no errors show in the debugger.
-4. In the debugger switch to the Resources tab.
-5. Expand local storage.
-6. Click on `coui://`.
-7. If the key `gwaio_bank` does not exist then right-click in the empty line at the bottom and create it.
-8. Right-click `gwaio_bank` and choose to edit the value, adding your start card ID in the format `{"id":"your_card_id"}` - the final result should look something like `{"startCards":[{"id":"some_card_you_previously_unlocked"},{"id":"your_card_id"}]}`.
-9. Press Enter to save your change.
-10. Press F5 to refresh the loadout screen.
-11. Confirm that your loadout is unlocked and selectable.
+1. Start PA.
+2. Go to the Galactic War Loadout screen.
+3. Confirm that your loadout is listed, locked, and its hint displayed.
+4. Confirm that your card was dealt to your inventory and no errors show in the debugger.
+5. In the debugger switch to the Resources tab.
+6. Expand local storage.
+7. Click on `coui://`.
+8. If the key `gwaio_bank` does not exist then right-click in the empty line at the bottom and create it.
+9. Right-click `gwaio_bank` and choose to edit the value, adding your start card ID in the format `{"id":"your_card_id"}` - the final result should look something like `{"startCards":[{"id":"some_card_you_previously_unlocked"},{"id":"your_card_id"}]}`.
+10. Press Enter to save your change.
+11. Press F5 to refresh the loadout screen.
+12. Confirm that your loadout is unlocked and selectable.
 
 ### Tech cards
 
-1. Start a new Galactic War.
-2. Click the X in the bottom left-hand corner.
-3. Enter your card ID into the panel.
-4. Click the + icon to the right of the text entry box.
-5. Confirm that your card was dealt to your inventory and no errors show in the debugger.
-6. In the debugger check the `Preserve log` box.
-7. Begin a fight.
-8. Confirm that no unexpected errors show in the debugger.
-9. Use the sandbox to spawn your modified units and check that they operate correctly.
+1. Start PA.
+2. Start a new Galactic War.
+3. Click the X in the bottom left-hand corner.
+4. Enter your card ID into the panel.
+5. Click the + icon to the right of the text entry box.
+6. Confirm that your card was dealt to your inventory and no errors show in the debugger.
+7. In the debugger check the `Preserve log` box.
+8. Begin a fight.
+9. Confirm that no unexpected errors show in the debugger.
+10. Use the sandbox to spawn your modified units and check that they operate correctly.
 
 ## Releasing your mod
 
