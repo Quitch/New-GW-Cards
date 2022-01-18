@@ -1,0 +1,21 @@
+{
+  "context": "client",
+  "identifier": "com.pa.YOURNAME.MODNAME",
+  "display_name": "New Galactic War Cards",
+  "description": "Adds new cards to Galactic War.",
+  "author": "YOUR NAME HERE, Quitch",
+  "version": "#.#.#",
+  "build": "115958",
+  "date": "yyyy-mm-dd",
+  "signature": " ",
+  "forum": "https://forums.planetaryannihilation.com/threads/client-galactic-war-overhaul.72360/",
+  "category": ["titans", "gw", "card"],
+  "icon": "",
+  "scenes": {
+    "gw_play": ["coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js"],
+    "gw_start": ["coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js"]
+  },
+  "priority": 100,
+  "titansOnly": true,
+  "dependencies": ["com.pa.quitch.gwaioverhaul"]
+}
