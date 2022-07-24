@@ -13,6 +13,8 @@ define([
     // ADD A CARD NAME
     summarize: _.constant("!LOC:CARD NAME HERE"),
     // SET A PATH TO YOUR CHOSEN ICON
+    // this path can also be to a custom icon shipped with your mod e.g.
+    // "coui://ui/mods/com.pa.YOURNAME.MODNAME/SOME_FOLDER/PNG_FILE_NAME.png"
     icon: _.constant(
       "coui://ui/main/game/galactic_war/gw_play/img/tech/PNG_FILE_NAME.png"
     ),
