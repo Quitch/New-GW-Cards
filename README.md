@@ -26,13 +26,13 @@ Under `/ui/mods/` change the folder found there to match your `identifier`.
 
 PA's cards can be found under `{PA_INSTALL_DIRECTORY}/media/ui/main/game/galactic_war/cards`
 
-The cards which ship with Galactic War Overhaul, including the updated base game cards, can be found in the [Galactic War Overhaul repository](https://github.com/Quitch/GW-AI-Overhaul/tree/develop/ui/main/game/galactic_war/cards).
+The cards which ship with Galactic War Overhaul, including the updated base game cards, can be found in the [Galactic War Overhaul repository](https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards).
 
 For your first card you should take a copy of a card which does something similar to what you want to achieve and use it as a base template. Place the card in your mod's `/ui/main/game/galactic_war/cards` folder. Rename it using a unique name. A typical naming strategy is ACRONYM_EFFECT_UNITTYPE.js e.g. `gwc_damage_bots.js`
 
-Edit the card to achieve the desired effect i.e. draw the rest of the fucking owl.
+The mod `start_card_id.js` and `tech_card_id.js` files provide instructions on how to create your own loadouts and tech cards.
 
-The `deal` function is used for card distribution. The `buff` function is the adding of units, mods, and AI mods (see GWO cards). The `dull` function is applied after `buff` and is for the removal of units and application of debuffs.
+The `deal` function is used for card distribution. The `buff` function is the adding of units, unit mods, and AI mods. The `dull` function is applied after all card `buff`s and is for the removal of units.
 
 ### Setting up a loadout
 
