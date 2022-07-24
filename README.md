@@ -38,6 +38,8 @@ The `deal` function is used for card distribution. The `buff` function is the ad
 
 Open the mod's `start_cards.js` file. This file provides an example of how to load multiple start cards. Change the loadout IDs to match your card's file name, minus the file extension.
 
+Set the `LS_KEY` variable in `bank.js` to something unique. This is where the locked status of your loadouts will be stored in the local storage database.
+
 ### Setting up a tech card
 
 Open the mod's `tech_cards.js` file. This file provides an example of how to load multiple tech cards and setup the tooltips for them.
