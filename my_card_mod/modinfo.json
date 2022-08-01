@@ -12,7 +12,10 @@
   "category": ["titans", "gw", "card"],
   "icon": "",
   "scenes": {
-    "gw_play": ["coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js"],
+    "gw_play": [
+      "coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js",
+      "coui://ui/mods/com.pa.YOURNAME.MODNAME/specs.js"
+    ],
     "gw_start": ["coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js"]
   },
   "priority": 100,
