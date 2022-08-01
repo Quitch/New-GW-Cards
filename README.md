@@ -46,6 +46,10 @@ Open the mod's `tech_cards.js` file. This file provides an example of how to loa
 
 Change the tech IDs to match your card's file name, minus the file extension. Change unit paths to the file path of the unit's JSON, using the structure `/pa/units/SOME_LAYER/SOME_UNIT_NAME/SOME_UNIT_NAME.json`
 
+### Adding new specs
+
+Open the mod's `specs.js` file. This file provides an example of how to load unused files for modification.
+
 ## Testing your mod
 
 1. Add `--devmode` to your PA [launch options](https://help.steampowered.com/en/faqs/view/7D01-D2DD-D75E-2955).
