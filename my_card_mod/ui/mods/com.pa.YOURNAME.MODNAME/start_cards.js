@@ -1,4 +1,4 @@
-function addCards() {
+function addStartCards() {
   try {
     // Add locked loadouts
     if (!model.gwoNewStartCards) model.gwoNewStartCards = [];
@@ -22,4 +22,4 @@ function addCards() {
     console.error(JSON.stringify(e));
   }
 }
-addCards();
+addStartCards();

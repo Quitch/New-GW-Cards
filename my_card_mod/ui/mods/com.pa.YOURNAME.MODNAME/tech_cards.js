@@ -1,4 +1,4 @@
-function addCards() {
+function addTechCards() {
   try {
     requireGW(
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
@@ -39,4 +39,4 @@ function addCards() {
     console.error(JSON.stringify(e));
   }
 }
-addCards();
+addTechCards();
