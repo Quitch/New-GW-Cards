@@ -1,0 +1,26 @@
+{
+  "parserOptions": {
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "jquery": true,
+    "amd": true,
+    "es6": true // PA uses Chrome 40 which supports a subset of ES6
+  },
+  "extends": ["eslint:recommended", "plugin:lodash/v3", "prettier"],
+  "globals": {
+    "model": "writable",
+    "_": "readonly",
+    "requireGW": "readonly"
+  },
+  "plugins": ["lodash"],
+  "rules": {
+    "curly": [2, "all"],
+    "no-inner-declarations": 0,
+    "lodash/prefer-lodash-method": [2, { "ignoreMethods": ["split"] }],
+    "lodash/prefer-noop": 0
+  }
+}
