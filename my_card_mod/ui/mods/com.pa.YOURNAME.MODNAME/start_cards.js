@@ -1,7 +1,9 @@
 function addStartCards() {
   try {
     // Add locked loadouts
-    if (!model.gwoNewStartCards) model.gwoNewStartCards = [];
+    if (!model.gwoNewStartCards) {
+      model.gwoNewStartCards = [];
+    }
     // IDs match the card filename minus file extension e.g. "gwc_start_vehicles"
     model.gwoNewStartCards.push(
       { id: "YOUR_LOADOUT_ID_1" },
@@ -10,7 +12,9 @@ function addStartCards() {
     );
 
     // Add unlocked loadouts
-    if (!model.gwoStartingCards) model.gwoStartingCards = [];
+    if (!model.gwoStartingCards) {
+      model.gwoStartingCards = [];
+    }
     // IDs match the card filename minus file extension e.g. "gwc_start_vehicles"
     model.gwoStartingCards.push(
       { id: "YOUR_LOADOUT_ID_1" },

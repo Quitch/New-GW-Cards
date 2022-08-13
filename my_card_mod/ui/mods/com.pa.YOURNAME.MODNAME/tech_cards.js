@@ -4,7 +4,9 @@ function addTechCards() {
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
       function (gwoUnit) {
         // Add cards to deck
-        if (!model.gwoDeck) model.gwoDeck = [];
+        if (!model.gwoDeck) {
+          model.gwoDeck = [];
+        }
         // IDs match the card filename minus file extension e.g. "gwc_enable_vehicles_all"
         model.gwoDeck.push(
           "YOUR_CARD_ID_1",
@@ -13,7 +15,9 @@ function addTechCards() {
         );
 
         // Setup tooltips for cards
-        if (!model.gwoCardsToUnits) model.gwoCardsToUnits = [];
+        if (!model.gwoCardsToUnits) {
+          model.gwoCardsToUnits = [];
+        }
         model.gwoCardsToUnits.push(
           {
             id: "YOUR_TECH_ID_1",
