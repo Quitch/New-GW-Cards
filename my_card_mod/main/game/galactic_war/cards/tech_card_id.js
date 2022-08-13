@@ -169,7 +169,7 @@ define([
       var aiMods = [];
       inventory.addAIMods(aiMods);
     },
-    dull: function () {
+    dull: function (inventory) {
       /* REMOVE UNITS FROM INVENTORY
        * Comma separated list of paths to units, or GWO unit IDs, or GWO group IDs
        * example path: "/pa/units/land/assault_bot/assault_bot.json"
