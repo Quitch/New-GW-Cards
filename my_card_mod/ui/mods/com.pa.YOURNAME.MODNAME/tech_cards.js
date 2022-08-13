@@ -12,7 +12,7 @@ function addTechCards() {
           "YOUR_CARD_ID_N"
         );
 
-        // Setup cards for tooltips
+        // Setup tooltips for cards
         if (!model.gwoCardsToUnits) model.gwoCardsToUnits = [];
         model.gwoCardsToUnits.push(
           {
