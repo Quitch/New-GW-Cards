@@ -6,7 +6,7 @@ A mod template for use by individuals who want to add new loadouts and tech card
 
 You will be working with JSON and JavaScript files. I recommend the use of [Visual Studio Code](https://code.visualstudio.com/) or similar IDE.
 
-For testing you will need the [Coherent UI Debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip).
+For testing you will need the [Coherent UI Debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip). To allow it to connect to PA, add `--coherent_port=9999` to your launch options.
 
 ## Preparing the mod
 
