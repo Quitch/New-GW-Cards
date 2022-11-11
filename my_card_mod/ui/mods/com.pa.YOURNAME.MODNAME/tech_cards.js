@@ -4,11 +4,11 @@ function addTechCards() {
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
       function (gwoUnit) {
         // Add cards to deck
-        if (!model.gwoDeck) {
-          model.gwoDeck = [];
+        if (!model.gwoCards) {
+          model.gwoCards = [];
         }
         // IDs match the card filename minus file extension e.g. "gwc_enable_vehicles_all"
-        model.gwoDeck.push(
+        model.gwoCards.push(
           "YOUR_CARD_ID_1",
           "YOUR_CARD_ID_2",
           "YOUR_CARD_ID_N"
