@@ -64,10 +64,10 @@ define([
            *
            * file - The un-tagged spec ID to modify.
            * path - A "." separated list of attributes.  Objects will traverse
-           *      down the hierarchy.  Strings will be considered dependent
-           *      references to other specs.
-           * op - The operation to apply to the attribute.  Currently supports
-           *      multiply, add, replace, merge, push, clone, tag, eval, pull, and wipe.
+           *        down the hierarchy.  Strings will be considered dependent
+           *        references to other specs.
+           * op   - The operation to apply to the attribute.  Currently supports
+           *        multiply, add, replace, merge, push, clone, tag, eval, pull, and wipe.
            *          clone - Write to the value file with whatever is in the
            *                  attribute.
            *          eval - Execute value as raw javascript in a context with
@@ -99,7 +99,7 @@ define([
            *   refValue: 376,
            * }
            *
-           * type - The AI manager/folder the file is under.
+           * type     - The AI manager/folder the file is under.
            * op       - The operation to apply to the idToMod.  Currently supports
            *            append, prepend, replace, remove, new, and squad.
            *              load - Only uses type, op, and value. Allows the loading of
