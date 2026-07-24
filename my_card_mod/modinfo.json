@@ -1,16 +1,16 @@
 {
   "context": "client",
   "identifier": "com.pa.YOURNAME.MODNAME",
-  "display_name": "New Galactic War Cards",
-  "description": "Adds new cards to Galactic War.",
-  "author": "YOUR NAME HERE, Quitch",
+  "display_name": "New Galactic War Cards - CHANGE THIS",
+  "description": "Adds new cards to Galactic War. - DESCRIBE THEM/THE THEME",
+  "author": "YOUR NAME HERE",
   "version": "#.#.#",
-  "build": "115958",
+  "build": "124665",
   "date": "yyyy-mm-dd",
   "signature": " ",
-  "forum": "",
+  "forum": "https://steamcommunity.com/app/386070/discussions/0/THREAD_ID/",
   "category": ["titans", "gw", "card"],
-  "icon": "",
+  "icon": "SOME_PUBLIC_URL_HERE",
   "scenes": {
     "gw_play": [
       "coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js",
