@@ -36,6 +36,17 @@ function addTechCards() {
             units: ["AFFECTED_UNIT_PATH_1", gwoUnit.dox, "AND_SO_ON"],
           }
         );
+
+        // OPTIONAL: tech cards that should NOT show an affected-units tooltip.
+        // A card that changes something other than units (for example one that
+        // only switches a feature on) belongs here INSTEAD of in
+        // model.gwoCardsToUnits above, otherwise Galactic War Overhaul warns that
+        // the card is missing its tooltip data. See the README's "Feature
+        // reference". Uncomment and edit the lines below if you need this.
+        // if (!model.gwoCardsWithoutTooltip) {
+        //   model.gwoCardsWithoutTooltip = [];
+        // }
+        // model.gwoCardsWithoutTooltip.push("YOUR_CARD_ID_1", "YOUR_CARD_ID_N");
       }
     );
   } catch (e) {
