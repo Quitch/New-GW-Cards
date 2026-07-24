@@ -2,20 +2,20 @@
    the mod is uninstalled the gw_start loadout list isn't messed up by 404s */
 define(function () {
   // SET THIS VARIABLE TO SOMETHING UNIQUE
-  const LS_KEY = "your_mod_id";
+  var LS_KEY = "your_mod_id";
 
   var self;
 
   var loading = false;
 
-  const bank = function () {
+  var bank = function () {
     self = this;
 
     self.startCards = ko.observableArray();
     self.startCards.subscribe(function (value) {
       self.save();
 
-      const unlocked = value.length;
+      var unlocked = value.length;
 
       if (!unlocked) {
         return;
@@ -34,14 +34,14 @@ define(function () {
   bank.prototype = {
     load: function () {
       loading = true;
-      const bankJson = localStorage[LS_KEY];
+      var bankJson = localStorage[LS_KEY];
       if (!_.isString(bankJson)) {
         self.startCards([]);
         loading = false;
         return;
       }
 
-      const config = JSON.parse(bankJson);
+      var config = JSON.parse(bankJson);
       self.startCards(config.startCards);
       loading = false;
     },
