@@ -48,6 +48,9 @@ define([
       };
     },
     getContext: gwoCard.getContext,
+    // The deal parameters are unused in this template but documented below for you to
+    // draw on when writing your own distribution logic.
+    // eslint-disable-next-line no-unused-vars
     deal: function (system, context, inventory) {
       var chance = 0;
       /* MODIFY CHANCE OF CARD APPEARING
