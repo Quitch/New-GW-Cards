@@ -75,8 +75,8 @@ During testing you will be checking the debugger for errors. Note that it is exp
 5. In the debugger switch to the Resources tab.
 6. Expand local storage.
 7. Click on `coui://`.
-8. If the key `gwaio_bank` does not exist then right-click in the empty line at the bottom and create it.
-9. Right-click `gwaio_bank` and choose to edit the value, adding your start card ID in the format `{"id":"your_card_id"}` - the final result should look something like `{"startCards":[{"id":"some_card_you_previously_unlocked"},{"id":"your_card_id"}]}`.
+8. If the key `your_mod_id` (this should match what you set `LS_KEY` to in `bank.js`) does not exist then right-click in the empty line at the bottom and create it.
+9. Right-click `your_mod_id` and choose to edit the value, adding your start card ID in the format `{"id":"your_card_id"}` - the final result should look something like `{"startCards":[{"id":"some_card_you_previously_unlocked"},{"id":"your_card_id"}]}`.
 10. Press Enter to save your change.
 11. Press F5 to refresh the loadout screen.
 12. Confirm that your loadout is unlocked and selectable.
