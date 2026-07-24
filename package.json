@@ -1,0 +1,17 @@
+{
+  "name": "new-gw-cards",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Template for adding new Galactic War loadouts and tech cards to Planetary Annihilation: TITANS (requires GW-AI-Overhaul)",
+  "license": "Unlicense",
+  "scripts": {
+    "lint:js": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0"
+  }
+}
