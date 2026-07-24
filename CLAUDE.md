@@ -112,5 +112,6 @@ with `--devmode` and `--coherent_port=9999`, enable the mod, and watch the Coher
 Debugger console. `README.md` lists the two errors/warnings PA emits normally (an
 `Uncaught TypeError: undefined is not a function` and a synchronous-XHR deprecation
 warning, up to once per scene) so they aren't mistaken for real failures. Separate
-manual flows are documented there for start cards (loadout screen + `gwaio_bank`
-localStorage) and tech cards (deal via the `X` panel, then spawn units in sandbox).
+manual flows are documented there for start cards (loadout screen + the localStorage
+key set as `LS_KEY` in `bank.js`) and tech cards (deal via the `X` panel, then spawn
+units in sandbox).
