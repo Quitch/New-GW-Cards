@@ -99,7 +99,9 @@ During testing you will be checking the debugger for errors. Note that it is exp
 Update the following fields:
 
 1. `version` - consider [semantic versioning](https://semver.org/).
-2. `date`
-3. `build` - match the contents of the version file at the root of PA.
-4. `forum` - URL of the mod's forum thread.
+2. `date` - using ISO 8601 - yyyy-mm-dd
+3. `build` - match the contents of the `version.txt` file at the root of PA.
+4. `forum` - URL of the mod's forum thread. Steam or GitHub Discussions is fine.
 5. `icon` - URL of a publicly accessible png file.
+
+The mod's ZIP must be hosted in a publicly accessible location. GitHub is preferred. Post the location to the `#new-mod-submissions` channel on the [official PA Discord](https://discord.gg/pa).
