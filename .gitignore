@@ -1,2 +1,22 @@
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Windows shortcuts
+*.lnk
+
+# IDE
+.vscode/settings.json
+
+# LLM
+.claude/settings.local.json
+
+# =========================
+# Node.js tooling (lint/test only - the mod itself has no build step)
+# =========================
 
 .vscode/settings.json
+node_modules/
