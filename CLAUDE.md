@@ -53,9 +53,12 @@ whole job.
   scripts** injected per scene via `modinfo.json`'s `scenes` block. These push the
   author's card IDs into GWO's `model.gwo*` arrays so GWO picks them up:
   - `start_cards.js` (`gw_start` scene) → `model.gwoNewStartCards` (locked) +
-    `model.gwoStartingCards` (unlocked).
+    `model.gwoStartingCards` (unlocked); optionally `model.gwoStarCardsWhichBreakAllies`
+    (loadouts incompatible with an allied commander — GWO never creates this array, so the
+    loader must guard-create it).
   - `tech_cards.js` (`gw_play` scene) → `model.gwoCards` (deck) +
-    `model.gwoCardsToUnits` (tooltip unit associations).
+    `model.gwoCardsToUnits` (tooltip unit associations); optionally
+    `model.gwoCardsWithoutTooltip` (tech cards that should have no affected-units tooltip).
   - `specs.js` (`gw_play` scene) → `model.gwoSpecs`, for modding unit specs the base
     game doesn't otherwise load (e.g. unused units).
   - `bank.js` — a `define()` AMD module `require`d by `start_card_id.js`; persists
@@ -78,9 +81,9 @@ contract") for the authoritative list and its validator; the templates here mirr
 - `buff(inventory)` applies the card: `inventory.addUnits(...)` (unit paths / GWO unit
   IDs / group IDs), `inventory.addMods(...)` (unit-spec stat mods —
   `{file, path, op, value}`), and `inventory.addAIMods(...)` (AI build-order descriptors
-  — `{type, op, toBuild, idToMod, value, refId, refValue}`). The op tables and field
-  meanings are documented inline in the template comments and in GWO's `referee.js`
-  (`modSpecs()`, `addTechToAI()`).
+  — `{type, op, toBuild, idToMod, value, refId, refValue, matchAll}`). The op tables and
+  field meanings are documented inline in the template comments; GWO applies spec mods in
+  `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - `dull(inventory)` reverses `buff` — applied after all `buff`s, for unit removal. Start
   cards route removal through `gwoCard.applyDulls(CARD, inventory, units)`.
 
@@ -104,7 +107,7 @@ For fully-worked examples, point at the GWO card directory
   `try/catch` that `console.error`s failures — keep that pattern; a throw there would
   break the scene silently in-game.
 - LICENSE is public-domain (Unlicense).
-- The audience of this mod are individuals are may be completely unfamiliar with coding.
+- The audience of this mod are individuals who may be completely unfamiliar with coding.
   The mod should handhold the user at every step, with far more comments in much more
   detail than would be normal, while keeping everything in plain English.
 
