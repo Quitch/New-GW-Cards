@@ -104,6 +104,9 @@ For fully-worked examples, point at the GWO card directory
   `try/catch` that `console.error`s failures — keep that pattern; a throw there would
   break the scene silently in-game.
 - LICENSE is public-domain (Unlicense).
+- The audience of this mod are individuals are may be completely unfamiliar with coding.
+  The mod should handhold the user at every step, with far more comments in much more
+  detail than would be normal, while keeping everything in plain English.
 
 ## Testing (manual, in-game)
 
