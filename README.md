@@ -531,6 +531,40 @@ Anti-Ship and Anti-Hover Ammo Techs drop from 70 to 15 this way:
 gwoCard.navalWeight(inventory, 70, 15);
 ```
 
+##### Commander cards — `gwoCard.commanderWeight`
+
+Your own commander and every Sub Commander are built from the same unit file, so a card
+that changes commander stats improves all of them at once. That makes the size of the
+player's retinue — not how far they have travelled — the thing that decides what the
+card is worth, and `gwoCard.commanderWeight` weighs it that way. Pass it the `inventory`
+and the chance you want when the player is fighting alone; each Sub Commander they have
+adds a third of that chance on top, up to a maximum of double:
+
+```js
+deal: function (system, context, inventory) {
+  return { chance: gwoCard.commanderWeight(inventory, 70) };
+},
+```
+
+Both values are required — unlike `upgradeDeal` there is no default chance. Use this
+instead of the distance checks above rather than alongside them: a commander card is
+worth the same at the edge of the galaxy as it is next door, and it is the retinue that
+has grown in the meantime.
+
+If your commander card also hands out a card slot, `upgradeDeal` cannot weigh it for you
+(it takes a true/false answer, not a chance), so write the `deal` out in full and keep
+the `allowOverflow` part yourself — that is what lets a card which pays for its own slot
+still be offered to a full hand:
+
+```js
+deal: function (system, context, inventory) {
+  return {
+    params: { allowOverflow: true },
+    chance: gwoCard.commanderWeight(inventory, 35),
+  };
+},
+```
+
 ##### Cards that react to the player's other cards
 
 `inventory.hasCard("some_card_id")` is true when the player is holding that card. Use it
