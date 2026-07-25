@@ -565,6 +565,35 @@ deal: function (system, context, inventory) {
 },
 ```
 
+##### Sub Commander cards — `gwoCard.subcommanderWeight`
+
+Some cards improve only the Sub Commanders fighting alongside the player and leave the
+player's own commander untouched. A card like that is worth nothing at all until the
+player has recruited a Sub Commander, which is a different question to the one
+`commanderWeight` answers, and `gwoCard.subcommanderWeight` is the helper for it. Pass it
+the `inventory` and the chance you want:
+
+```js
+deal: function (system, context, inventory) {
+  return { chance: gwoCard.subcommanderWeight(inventory, 55) };
+},
+```
+
+With no Sub Commanders the chance is `0`, so the card stays out of the deck entirely. With
+one it is offered at the full chance you gave — not a fraction of it, so a card that has
+only just become useful isn't buried at a throwaway weight. Each further Sub Commander
+adds a third of that chance on top, up to a ceiling of 90 so a large retinue cannot crowd
+out the deck. That ceiling applies from the first Sub Commander onwards, so there is no
+point passing a chance above 90: it is capped straight back down to 90.
+
+Both values are required. As with `commanderWeight`, use this instead of the distance
+checks rather than alongside them, and if your card also hands out a card slot, write the
+`deal` out in full with the `allowOverflow` part as shown above.
+
+Choose between the two by asking who the card actually changes: `commanderWeight` for one
+that improves every commander the player fields, their own included, and
+`subcommanderWeight` for one that only helps their Sub Commanders.
+
 ##### Cards that react to the player's other cards
 
 `inventory.hasCard("some_card_id")` is true when the player is holding that card. Use it
