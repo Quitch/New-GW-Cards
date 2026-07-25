@@ -43,7 +43,6 @@ define([
      * board_tech_available_titans_all
      * board_tech_available_vehicle
      * board_tech_available_weapon_upgrade
-     * board_tech_available_combat
      */
     audio: _.constant({ found: "/VO/Computer/gw/CHOSEN_LINE_HERE" }),
     getContext: gwoCard.getContext,
