@@ -15,7 +15,7 @@ function addSpecs() {
     );
   } catch (e) {
     console.error(e);
-    console.error(JSON.stringify(e));
+    console.error("New GW Cards: " + (e.stack || e.message || e));
   }
 }
 addSpecs();
