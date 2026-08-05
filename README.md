@@ -44,6 +44,13 @@ You will be editing text files. Any plain-text editor works, but a code editor s
 [Visual Studio Code](https://code.visualstudio.com/) is recommended because it colours
 the text and highlights mistakes.
 
+The template also comes with a checker that reads your card files and points out mistakes
+before you ever launch the game — including use of newer JavaScript that PA's old built-in
+browser cannot run, which would otherwise break the whole screen. Using it is optional and
+needs [Node.js](https://nodejs.org/) installed. Put your renamed mod folder inside the
+template folder (the one holding `package.json`), then run `npm install` once, and
+`npm run lint:js` whenever you want to check your work.
+
 For testing you will need the
 [Coherent UI Debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip).
 This is a free tool that lets you see what the game's menus are doing. To let it connect
@@ -290,6 +297,11 @@ icon: _.constant(
 The picture can be one of PA's existing tech icons (as above) or an image you ship inside
 your own mod, for example
 `coui://ui/mods/<your identifier>/SOME_FOLDER/PNG_FILE_NAME.png`.
+
+To see the icons PA already has, open
+`{PA_INSTALL_DIRECTORY}/media/ui/main/game/galactic_war/gw_play/img/tech` and pick a file
+name from that folder. A name that isn't in there leaves the card's picture blank, with no
+error to tell you why.
 
 The example loadout does something different: its `icon` calls
 `gwoCard.loadoutIcon(CARD.id)`, which shows the medal for the hardest difficulty the
@@ -745,6 +757,11 @@ Change numbers or values inside a unit's file. Each change is described by four 
   more — `clone`, `tag`, and `eval` — which are advanced and best avoided (see below).
 - `value` — the amount or value to use.
 
+Reach for `multiply` when the unit already has the value you are scaling, and
+`multiplyOrCreate` when it might not: `multiply` leaves a missing value alone, while
+`multiplyOrCreate` sets it to your `value` instead. `add` behaves like the latter — on a
+missing value it simply sets it.
+
 ```js
 inventory.addMods([
   { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
@@ -753,8 +770,12 @@ inventory.addMods([
 ```
 
 Most of the `op` choices do what their name suggests (`push` adds to the end of a list,
-`prepend` to the start). The remaining three do not:
+`prepend` to the start, `pull` takes something back out of one, `merge` folds your value
+into an existing set of settings). Four do not:
 
+- `wipe` — despite the name this does not clear the value. It is a find-and-replace inside
+  a piece of text: `value` is a pair, `[what to find, what to put in its place]`, and a
+  single value on its own means "delete every occurrence of this".
 - `clone` — writes whatever is at `path` into the file named by `value`.
 - `tag` — adds your card's spec tag onto the end of the value at `path`.
 - `eval` — runs `value` as raw JavaScript. The thing at `path` is handed to you as
@@ -805,8 +826,9 @@ these labels:
   `template`.
 - `op` — the kind of change: `load`, `append`, `prepend`, `replace`, `remove`, `new`, or
   `squad`. `squad` only works on `template`, and `append`, `prepend`, `replace`, `remove`
-  and `new` only work on `fabber`, `factory`, and `platoon`. Pairing an op with the wrong
-  `type` changes nothing and reports no error.
+  and `new` only work on `fabber`, `factory`, and `platoon`. A build op pointed at
+  `template` quietly does nothing, but `squad` pointed at one of the other three breaks the
+  AI setup outright, so check the pairing.
 - `value` — the value to apply.
 - `toBuild` — which thing in the AI's build list to target (not needed for `load`).
 - `idToMod` — which part of that entry to change (for example `builders` or `priority`).
@@ -814,6 +836,26 @@ these labels:
   `refValue` at `refId`.
 - `matchAll` — optional. Change every build condition on the entry, instead of only the
   ones where `refId` holds `refValue`.
+
+Each op needs a particular set of these, and one that is missing a label it needs simply
+does nothing at all — no error, no change:
+
+| `op` | needs, besides `type` |
+| ---- | --------------------- |
+| `load` | `value` |
+| `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
+| `remove`, `new`, `squad` | `toBuild`, `value` |
+
+`toBuild` has to match one of the AI's own build entries exactly. Those names are the
+`to_build` values inside the AI's build files, which you can read in
+`{PA_INSTALL_DIRECTORY}/media/pa/ai/` (and `media/pa_ex1/ai/`, `media/pa_ex1/ai_queller/`
+for the Titans and Queller AIs). The role names you put in `builders` come from
+`media/pa/ai/unit_maps/ai_unit_map.json`. A name that does not appear in those files
+changes nothing and says nothing.
+
+One piece of shape worth knowing before you use `new` or `remove`: an entry's
+`build_conditions` is a **list of lists**. Each inner list is a group of tests that must
+all pass, and the entry is built if any one group passes.
 
 The simplest AI change loads a whole ready-made AI build file (this is how most upgrade
 cards teach the AI to use a new unit). `load` is the odd one out: it uses only `type`,
@@ -830,7 +872,12 @@ inventory.addAIMods([
 That file has to exist, and it is yours to write: ship it in your own mod at the matching
 path, for example `pa/ai_tech/factory_builds/my_upgrade_myunit.json`, alongside your `ui`
 folder. Give it a name no other mod is likely to use — a file with the same name as one of
-Galactic War Overhaul's own would replace it.
+Galactic War Overhaul's own would replace it — and remember the `.json` on the end of
+`value`.
+
+> **Check that file really is there before you share the mod.** If a `load` names a file
+> that is missing, the battle never starts: the loading screen simply hangs, with no error
+> message pointing at the cause.
 
 A more targeted change — here, letting basic bot factories also build a unit, but only
 when the entry is for the advanced bot factory:

@@ -54,7 +54,10 @@ export default defineConfig([
     // inversion is deliberate. A syntax-only denylist can't see `Object.assign`
     // (Chrome 45) or `Array.from` (45), and those fail at call time with
     // "undefined is not a function" rather than at parse time, so a stray one ships.
-    files: ["ui/**/*.js"],
+    // The `**/` prefix matters: the shipped tree lives at my_card_mod/ui/**, and an
+    // author's copy of it is renamed to something else again, so a bare "ui/**" would
+    // match nothing and quietly lint none of the code this block exists to protect.
+    files: ["**/ui/**/*.js"],
     ...esX.configs["flat/restrict-to-es5"],
   },
   {
@@ -64,7 +67,7 @@ export default defineConfig([
     // (@mdn/browser-compat-data, javascript.*); a rule only belongs here if that
     // number is <= 40. Everything absent from this list stays forbidden by
     // restrict-to-es5 above, so no entry means no.
-    files: ["ui/**/*.js"],
+    files: ["**/ui/**/*.js"],
     rules: {
       // Array iterators. Note `Array.prototype.values` is deliberately NOT here:
       // unlike entries/keys it did not land until Chrome 66.
@@ -114,7 +117,7 @@ export default defineConfig([
   {
     // Restated as errors purely to document *why* - both would otherwise look like
     // oversights next to the whitelist above. restrict-to-es5 already errors on them.
-    files: ["ui/**/*.js"],
+    files: ["**/ui/**/*.js"],
     rules: {
       // let/const. Chrome 41, and strict mode only even there, so out of reach
       // regardless - but const stays excluded on its own merits even if that changes.

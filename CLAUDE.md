@@ -3,6 +3,14 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in
 this repository.
 
+**Authoring vs maintaining.** This file governs changes to the template itself.
+`my_card_mod/CLAUDE.md` governs the other job — writing an actual card for a user against
+their PA install — and travels with the folder when they copy it into `client_mods`. Read
+that one when the user is authoring a card; keep the two in step when GWO's card contract
+or op behaviour changes. Both, plus the lint tooling and `.prettierrc`, ship in the
+release ZIP (`.gitattributes` no longer `export-ignore`s them), because the audience takes
+the ZIP rather than cloning.
+
 ## What this is
 
 New-GW-Cards (repo `Quitch/New-GW-Cards`) is a **template / starter kit**, not a
@@ -43,7 +51,8 @@ whole job.
 
 ## Layout
 
-`my_card_mod/` is the mod root that gets copied out. Two distinct trees inside it:
+`my_card_mod/` is the mod root that gets copied out. It carries its own `CLAUDE.md` (the
+authoring guide, above) so the guidance survives the copy. Two distinct trees inside it:
 
 - `my_card_mod/ui/main/game/galactic_war/cards/*.js` — the **card definitions**. This
   path shadows the base game's card directory. `tech_card_id.js` is the tech-card
@@ -94,7 +103,9 @@ For fully-worked examples, point at the GWO card directory
 
 - Shipped game code targets PA's embedded **Chrome 40**. `ecmaVersion: 6` is a parser
   setting, not the policy — the enforcement is `eslint-plugin-es-x`'s `restrict-to-es5`
-  applied to `ui/**/*.js`, with the post-ES5 features Chrome 40 genuinely shipped
+  applied to `**/ui/**/*.js` (the `**/` prefix is load-bearing: the shipped tree is at
+  `my_card_mod/ui/**` and an author renames the folder again, so a bare `ui/**` matches
+  nothing), with the post-ES5 features Chrome 40 genuinely shipped
   switched back on one rule at a time (each annotated with the Chrome version that
   landed it). **That whitelist is the authoritative answer to "may I use X in a card?" —
   absent from it means forbidden.** Being a denylist-of-everything inverted, it also

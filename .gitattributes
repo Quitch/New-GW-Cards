@@ -1,11 +1,10 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-# Keep development junk out of our ZIP files
+# Keep development junk out of our ZIP files. The lint tooling, .prettierrc and the
+# CLAUDE.md files are not junk here - this template's product is code an inexperienced
+# author writes themselves, so the guidance and the Chrome 40 whitelist that stops a
+# parse error taking out the scene have to travel with it.
 .gitattributes export-ignore
 .gitignore export-ignore
-.prettierrc export-ignore
-CLAUDE.md export-ignore
-eslint.config.mjs export-ignore
 package-lock.json export-ignore
-package.json export-ignore

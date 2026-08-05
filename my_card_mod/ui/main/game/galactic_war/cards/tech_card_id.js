@@ -61,11 +61,30 @@ define([
       inventory.addUnits(units);
 
       // MODIFY UNITS
+      // An example of what goes in the list, giving Dox 50% more health and
+      // their weapon a little more range:
+      //   var mods = [
+      //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
+      //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
+      //   ];
       // Delete both lines below if your card doesn't change any unit's stats.
       var mods = [];
       inventory.addMods(mods);
 
       // MODIFY SUB COMMANDER BEHAVIOUR
+      // An example of what goes in the list, letting basic bot factories build
+      // something only advanced bot factories could build before:
+      //   var aiMods = [
+      //     {
+      //       type: "factory",
+      //       op: "append",
+      //       toBuild: "MyUnit",
+      //       idToMod: "builders",
+      //       value: "BasicBotFactory",
+      //       refId: "builders",
+      //       refValue: ["AdvancedBotFactory"],
+      //     },
+      //   ];
       // Delete both lines below if your card doesn't change what the AI builds.
       var aiMods = [];
       inventory.addAIMods(aiMods);
