@@ -92,7 +92,8 @@ A card that is not registered is never dealt. The card's ID is its file name wit
 - Loadout → push `{ id: "…" }` to `model.gwoStartingCards` (available immediately) or
   `model.gwoNewStartCards` (must be earned) in `start_cards.js`.
 - A unit file the game does not otherwise load (an unused spec such as Ares' stomp) must
-  be listed in `model.gwoSpecs` in `specs.js`, or mods to it are dropped.
+  be listed in `model.gwoSpecs` in `specs.js`, or mods to it are dropped. So must a file
+  one unit borrows from another — see "Writing a file name into a spec" below.
 
 ## `inventory.addMods` — changing unit stats
 
@@ -122,9 +123,42 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
   `Warning: File not found in mod` and nothing happens.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
-- **`clone`, `tag` and `eval` are advanced — avoid them**, as the README says.
+- **A value that is a file name must be followed by `op: "tag"`** on the same `file` and
+  `path`. See the section below — this is the failure that is hardest to spot.
+- **`clone` and `eval` are advanced — avoid them**, as the README says.
 - **`dull` removes units only.** It cannot undo a stat change or an AI change; only what
   `buff` never added stays un-added.
+
+### Writing a file name into a spec — `op: "tag"`
+
+GW gives each army private copies of its specs, keyed `<path>.json<tag>`
+(`.player`, `.ai0`, …), and applies that army's mods to those copies. The copies are
+generated **before** mods run (`<GWO>` `gw_play/referee_game_files.js`, then
+`shared/spec_cache.js:tagSpec`), so a path a mod writes arrives untagged. Untagged paths
+still resolve — to the stock file — so the weapon fires and the unit spawns, and the
+player's entire hand misses it. Nothing is logged. This has shipped broken in GWO itself
+more than once.
+
+Every mod whose `value` is a spec reference needs a second mod, `op: "tag"`, on the same
+`file` and `path` and with no `value`. The reference fields are the ones `tagSpec`
+renames: `base_spec`, `tools[].spec_id`, `ammo_id`, `replaceable_units`,
+`buildable_projectiles`, `factory.initial_build_spec`, `death_weapon.ground_ammo_spec`,
+`death_weapon.air_ammo_spec`, `spawn_unit_on_death`.
+
+Two things follow.
+
+- **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so a tool pushed
+  onto a two-tool unit is tagged at `tools.2.spec_id`. Read the count from the unit's own
+  spec under `<PA>`, not from the card.
+- **The target must exist tagged**, or the tag points at nothing and the tool is lost
+  outright — a worse outcome than leaving it untagged. A file the unit already references
+  is covered. A file borrowed from another unit is not, and needs listing in
+  `model.gwoSpecs`. Tagging cascades from there: a tagged weapon brings its `ammo_id`, and
+  any `spawn_unit_on_death` on that ammo, with it.
+
+Worked examples in `<GWO>`: `cards/gwaio_upgrade_firefly.js` (replace then tag),
+`gwaio_upgrade_wyrm.js` (borrowed weapon), `gwaio_upgrade_sheller.js`
+(`spawn_unit_on_death`). GWO's own `docs/specs.md` carries the same rule.
 
 ## `inventory.addAIMods` — changing what the AI builds
 

@@ -93,6 +93,11 @@ contract") for the authoritative list and its validator; the templates here mirr
   — `{type, op, toBuild, idToMod, value, refId, refValue, matchAll}`). The op tables and
   field meanings are documented inline in the template comments; GWO applies spec mods in
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
+- A spec mod whose `value` is a **file name** needs a second mod, `op: "tag"`, on the same
+  `file` and `path`, and the file must be reachable or listed in `model.gwoSpecs`. This is
+  the template's most important silent-failure warning and is spelled out three times over
+  — `README.md`, `my_card_mod/CLAUDE.md`, and the comments in `tech_card_id.js` and
+  `specs.js`. Keep those four in step, and in step with GWO's `docs/specs.md`.
 - `dull(inventory)` reverses `buff` — applied after all `buff`s, for unit removal. Start
   cards route removal through `gwoCard.applyDulls(CARD, inventory, units)`.
 

@@ -252,9 +252,16 @@ model.gwoStarCardsWhichBreakAllies.push("gwc_start_myloadout");
 
 #### `model.gwoSpecs` — extra unit files to change (in `specs.js`)
 
+Galactic War only makes a player a copy of the files their own units need. List a path
+here and every player gets a copy of that file too. There are two reasons to want that.
+
 Some unit files are not used by the game normally (for example Ares' stomp). If you want
-to change one of those, list its path here so Galactic War Overhaul loads it. Add the
-path(s).
+to change one of those, list its path here so Galactic War Overhaul loads it.
+
+The other reason is lending one unit a file that belongs to another — a weapon, a build
+arm, a unit spawned on death. That is explained under
+[Whenever your value is a file name, `tag` it](#whenever-your-value-is-a-file-name-tag-it);
+list the borrowed file here, and its ammo comes along with it.
 
 ```js
 model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
@@ -753,8 +760,10 @@ Change numbers or values inside a unit's file. Each change is described by four 
   than a value, the game follows that reference into the other file and carries on from
   there.
 - `op` — the kind of change. The everyday choices are `multiply`, `multiplyOrCreate`,
-  `add`, `replace`, `merge`, `push`, `prepend`, `pull`, and `wipe`. There are three
-  more — `clone`, `tag`, and `eval` — which are advanced and best avoided (see below).
+  `add`, `replace`, `merge`, `push`, `prepend`, `pull`, and `wipe`. There is also `tag`,
+  which you need whenever the value you write is the name of another file — see
+  "Whenever your value is a file name, tag it" below. Two more, `clone` and `eval`, are
+  advanced and best avoided.
 - `value` — the amount or value to use.
 
 Reach for `multiply` when the unit already has the value you are scaling, and
@@ -777,15 +786,70 @@ into an existing set of settings). Four do not:
   a piece of text: `value` is a pair, `[what to find, what to put in its place]`, and a
   single value on its own means "delete every occurrence of this".
 - `clone` — writes whatever is at `path` into the file named by `value`.
-- `tag` — adds your card's spec tag onto the end of the value at `path`.
+- `tag` — points the file name at `path` at the player's own copy of that file. It takes
+  no `value`. See the next section: this one is not optional when you need it.
 - `eval` — runs `value` as raw JavaScript. The thing at `path` is handed to you as
   `attribute`, and you can do whatever you like with it; if you used a `path`, remember to
   return `attribute` at the end.
 
-> **`clone`, `tag`, and `eval` are advanced — avoid them.** They are easy to get wrong,
-> and anything you can do with them you can nearly always do more safely with one of the
+> **`clone` and `eval` are advanced — avoid them.** They are easy to get wrong, and
+> anything you can do with them you can nearly always do more safely with one of the
 > everyday ops. `eval` in particular runs your own code inside the game, so a mistake
 > there can break the war rather than just change a number.
+
+##### Whenever your value is a file name, `tag` it
+
+Galactic War does not change the game's unit files. It gives each player a **private copy**
+of every file their units need, and applies that player's whole hand of cards to the
+copies. The copies are what they fight with.
+
+Those copies are made **before** any card runs. So a file name your card writes is a name
+your card invented, and it points at the original, untouched file — not the player's copy.
+Nothing breaks: the weapon still fires, the unit still spawns. It simply gets none of the
+player's other tech. No health card, no damage card, nothing. There is no warning.
+
+The fix is a second entry: same `file`, same `path`, `op: "tag"`, and no `value` at all.
+
+```js
+inventory.addMods([
+  // Give the Dox a second weapon, borrowed from the Ant.
+  {
+    file: gwoUnit.dox,
+    path: "tools",
+    op: "push",
+    value: { spec_id: gwoUnit.antWeapon, aim_bone: "bone_root" },
+  },
+  // ...and point it at the player's copy of that weapon.
+  { file: gwoUnit.dox, path: "tools.1.spec_id", op: "tag" },
+]);
+```
+
+**Which values are file names.** Only these, and only when your card writes one:
+
+| Where | What it is |
+| --- | --- |
+| `tools.<number>.spec_id` | a weapon or build arm |
+| `ammo_id` | what a weapon fires |
+| `spawn_unit_on_death` | a unit left behind when this is destroyed |
+| `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec` | the explosion on death |
+| `base_spec` | the file this one inherits from |
+| `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule |
+
+**Getting the number right.** Tools are numbered from `0`, and the numbering you must tag
+is the one **after** your change has been made. Every `replace` in every card in the hand
+happens before any `push`, `prepend` or `tag`, so count like this: open the unit's file in
+the game install, count the tools it already has, and your pushed tool is that number. The
+Dox has one tool, so the pushed one is number `1`. A `prepend` goes in at `0` instead and
+shifts the rest along.
+
+**The file you borrow has to be in play.** Tagging a file the player has no copy of leaves
+the tool pointing at nothing, and it disappears altogether — worse than not tagging. You
+are safe if the file already belongs to the unit you are changing, or to a unit your card
+requires the player to own. Anything borrowed from elsewhere — the Ant's weapon in the
+example above — must be listed in `model.gwoSpecs` (see
+[`model.gwoSpecs`](#modelgwospecs--extra-unit-files-to-change-in-specsjs)), which is what
+makes a copy of it exist. You only need to list the weapon itself: its ammo, and anything
+that ammo spawns, are copied along with it automatically.
 
 ##### A shorthand for one file — `gwoCard.mods`
 

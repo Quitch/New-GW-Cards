@@ -46,6 +46,26 @@ define([
           //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
           //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
           //   ];
+          //
+          // If the value you write is the NAME OF ANOTHER FILE - a weapon, a build
+          // arm, something spawned on death - it needs a second entry right after it
+          // with op: "tag" and no value.  Without it the player's other cards will
+          // not apply to what you added, and nothing will warn you.  Giving Dox a
+          // second weapon borrowed from the Ant:
+          //   var mods = [
+          //     {
+          //       file: gwoUnit.dox,
+          //       path: "tools",
+          //       op: "push",
+          //       value: { spec_id: gwoUnit.antWeapon, aim_bone: "bone_root" },
+          //     },
+          //     { file: gwoUnit.dox, path: "tools.1.spec_id", op: "tag" },
+          //   ];
+          // Dox has one tool already, so the one you pushed is number 1 (they count
+          // from 0).  A borrowed file also has to be listed in specs.js, or the tag
+          // points at nothing.  The README section "Whenever your value is a file
+          // name, tag it" walks through both halves.
+          //
           // Delete both lines below if your loadout doesn't change any unit's stats.
           var mods = [];
           inventory.addMods(mods);
