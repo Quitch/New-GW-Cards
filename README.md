@@ -826,14 +826,14 @@ inventory.addMods([
 
 **Which values are file names.** Only these, and only when your card writes one:
 
-| Where | What it is |
-| --- | --- |
-| `tools.<number>.spec_id` | a weapon or build arm |
-| `ammo_id` | what a weapon fires |
-| `spawn_unit_on_death` | a unit left behind when this is destroyed |
-| `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec` | the explosion on death |
-| `base_spec` | the file this one inherits from |
-| `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule |
+| Where                                                                      | What it is                                |
+| -------------------------------------------------------------------------- | ----------------------------------------- |
+| `tools.<number>.spec_id`                                                   | a weapon or build arm                     |
+| `ammo_id`                                                                  | what a weapon fires                       |
+| `spawn_unit_on_death`                                                      | a unit left behind when this is destroyed |
+| `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec`              | the explosion on death                    |
+| `base_spec`                                                                | the file this one inherits from           |
+| `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule                          |
 
 **Getting the number right.** Tools are numbered from `0`, and the numbering you must tag
 is the one **after** your change has been made. Every `replace` in every card in the hand
@@ -904,11 +904,11 @@ these labels:
 Each op needs a particular set of these, and one that is missing a label it needs simply
 does nothing at all — no error, no change:
 
-| `op` | needs, besides `type` |
-| ---- | --------------------- |
-| `load` | `value` |
+| `op`                           | needs, besides `type`         |
+| ------------------------------ | ----------------------------- |
+| `load`                         | `value`                       |
 | `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
-| `remove`, `new`, `squad` | `toBuild`, `value` |
+| `remove`, `new`, `squad`       | `toBuild`, `value`            |
 
 `toBuild` has to match one of the AI's own build entries exactly. Those names are the
 `to_build` values inside the AI's build files, which you can read in
