@@ -90,6 +90,9 @@ contract") for the authoritative list and its validator; the templates here mirr
 
 - `visible`, `describe`, `summarize`, `icon`, `deal`, `buff`, `dull` — always present.
   Tech cards also carry `audio` + `getContext`; start cards carry `hint` instead.
+  `keep`, `discard` and `releaseContext` are optional and near-vestigial: GWO replaces
+  PA's dealer, so it never calls `discard`, and calls `keep(deal, context)` at deal time
+  rather than when the player keeps the card. Only `releaseContext` behaves as named.
 - `deal(system, context, inventory, rng)` controls distribution (returns `{ chance }`);
   tech cards compute a chance, start cards delegate to `gwoCard.startCard`. `rng` is the
   card's seeded stream and is optional — GWO's own docs require `gwoCard.uniqueValue(rng)`

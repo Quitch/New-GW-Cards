@@ -326,20 +326,21 @@ Each card file is a set of named parts. You will recognise them by name inside t
 file. Some parts are used by every card; a few are only used by loadouts or only by tech
 cards.
 
-| Part         | Used by    | What it does                                                                                                                     |
-| ------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `visible`    | all        | Whether the player can see and discard the card on the board. Tech cards are usually visible; loadouts and hidden cards are not. |
-| `summarize`  | all        | The card's name.                                                                                                                 |
-| `describe`   | all        | The card's description text.                                                                                                     |
-| `icon`       | all        | The card's picture.                                                                                                              |
-| `deal`       | all        | How likely the card is to be offered. See below.                                                                                 |
-| `buff`       | all        | What the card actually does. See below.                                                                                          |
-| `dull`       | all        | Cleanup, run after every card's `buff`. Usually removes units.                                                                   |
-| `audio`      | tech cards | The voice line played when the card is discovered.                                                                               |
-| `getContext` | tech cards | Gives the `deal` part information about the galaxy. Use `gwoCard.getContext`.                                                    |
-| `hint`       | loadouts   | The picture and text shown while the loadout is still locked.                                                                    |
-| `keep`       | rare       | Adjusts the card's chance when the player keeps it.                                                                              |
-| `discard`    | rare       | Adjusts the card's chance when the player discards it.                                                                           |
+| Part             | Used by    | What it does                                                                                                                     |
+| ---------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `visible`        | all        | Whether the player can see and discard the card on the board. Tech cards are usually visible; loadouts and hidden cards are not. |
+| `summarize`      | all        | The card's name.                                                                                                                 |
+| `describe`       | all        | The card's description text.                                                                                                     |
+| `icon`           | all        | The card's picture.                                                                                                              |
+| `deal`           | all        | How likely the card is to be offered. See below.                                                                                 |
+| `buff`           | all        | What the card actually does. See below.                                                                                          |
+| `dull`           | all        | Cleanup, run after every card's `buff`. Usually removes units.                                                                   |
+| `audio`          | tech cards | The voice line played when the card is discovered.                                                                               |
+| `getContext`     | tech cards | Gives the `deal` part information about the galaxy. Use `gwoCard.getContext`.                                                    |
+| `hint`           | loadouts   | The picture and text shown while the loadout is still locked.                                                                    |
+| `keep`           | rare       | Called just after the card is dealt. Not what the name suggests — see below.                                                     |
+| `discard`        | rare       | Left over from PA's own cards. Galactic War Overhaul never calls it.                                                             |
+| `releaseContext` | rare       | Called just after the card is dealt, to let go of anything `getContext` made.                                                    |
 
 #### `summarize`, `describe`, `icon` — name, description, picture
 
@@ -783,29 +784,30 @@ var pick = rng ? rng.pick(list) : _.sample(list);
 
 #### `keep` and `discard` — rare chance adjustments
 
-These are only needed for special cards. Very few use them, and no Galactic War Overhaul
-card does. `keep` runs when the player keeps the card and `discard` runs when they throw
-it away, and both are handed the card's own `context` — the same object `getContext`
-made, which the game keeps for the rest of the deal. Writing into it is all they can do,
-so they are only worth having if your card also writes its own `getContext` supplying the
-value and its `deal` reads that value back. The standard `gwoCard.getContext` provides
-only `totalSize`, and nothing else in the game looks at what `keep` or `discard` write.
+**You almost certainly do not want these.** They are leftovers from the way PA's own
+cards worked, no Galactic War Overhaul card uses either, and under Galactic War Overhaul
+they do not do what their names suggest. They are documented here only so you recognise
+them if you copy a card from PA that has them.
 
-PA's own "Additional Data Bank" card is the worked example. Its `getContext` starts a
-`chance` value off at 300 and its `deal` returns whatever that value has become. The two
-parts below then settle the card down to a flat 100 once the player has taken one, and
-rescale it by the size of the galaxy each time one is thrown away — growing it in a large
-galaxy, shrinking it in a small one:
+The names come from PA, where `keep` ran when the player kept a card and `discard` when
+they threw one away, letting the card nudge its own future chance. Galactic War Overhaul
+replaces PA's dealing entirely, and in doing so:
+
+- **`discard` is never called at all.** A card relying on it silently does nothing.
+- **`keep` is called every time the card is dealt**, whether the player keeps it or not,
+  and it is handed the result of your `deal` (the `{ chance: … }` object you returned)
+  rather than PA's `params`.
+
+So if you copy a PA card that uses either, delete them and work the logic into `deal`
+instead, where you can read the `inventory` and the `system` directly.
+
+`releaseContext` is the one genuinely useful part of this group. If your card writes its
+own `getContext` and needs to clean something up afterwards, Galactic War Overhaul calls
+`releaseContext(context)` once the card has been dealt:
 
 ```js
-getContext: function (galaxy) {
-  return { chance: 300, totalSize: galaxy.stars().length };
-},
-keep: function (params, context) {
-  context.chance = 100;
-},
-discard: function (params, context) {
-  context.chance *= Math.log(context.totalSize) * 0.4;
+releaseContext: function (context) {
+  // let go of anything getContext set up
 },
 ```
 
