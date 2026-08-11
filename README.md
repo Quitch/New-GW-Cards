@@ -235,6 +235,8 @@ Loadouts available from the very start. Same shape as above.
 model.gwoStartingCards.push({ id: "gwc_start_myloadout" });
 ```
 
+> **Do not add a loadout to both the locked and unlocked groups.**
+
 #### `model.gwoStarCardsWhichBreakAllies` — loadouts that disable the ally (in `start_cards.js`)
 
 If your loadout's effect would break the allied-commander feature, list its ID here.
