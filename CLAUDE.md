@@ -39,7 +39,8 @@ intentional placeholders that a real mod replaces, **not** bugs to "fix" in this
   three must be changed together and kept in sync (`README.md` step "Preparing the mod").
 - `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, empty `forum`/`icon` in `modinfo.json`.
 - `your_mod_id` — the `LS_KEY` in `bank.js` (localStorage key for unlocked loadouts).
-- `YOUR_CARD_ID_*`, `YOUR_LOADOUT_ID_*`, `YOUR_TECH_ID_*`, `UNIT_PATH`, `PATH_*`,
+- `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,
+  `YOUR_PREFIX_start_`, `YOUR_TECH_ID_*`, `UNIT_PATH`, `PATH_*`,
   `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:...HERE` strings, and the two example
   card files `start_card_id.js` / `tech_card_id.js` (rename to
   `ACRONYM_EFFECT_UNITTYPE.js`, e.g. `gwc_damage_bots.js`).

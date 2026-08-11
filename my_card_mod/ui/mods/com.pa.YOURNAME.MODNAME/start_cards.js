@@ -10,10 +10,10 @@ function addStartCards() {
     // A loadout ID must contain "_start_" and must NOT begin "gwc_start" -
     // that prefix belongs to the loadouts that come with the game.  See the
     // README's "Creating a card".
+    // A loadout belongs in THIS list or the unlocked one below, never in both.
     model.gwoNewStartCards.push(
-      { id: "YOUR_LOADOUT_ID_1" },
-      { id: "YOUR_LOADOUT_ID_2" },
-      { id: "YOUR_LOADOUT_ID_N" }
+      { id: "YOUR_LOCKED_LOADOUT_ID_1" },
+      { id: "YOUR_LOCKED_LOADOUT_ID_N" }
     );
 
     // Add unlocked loadouts.  GWO's shared/loadouts.js reads this.
@@ -24,10 +24,10 @@ function addStartCards() {
     // A loadout ID must contain "_start_" and must NOT begin "gwc_start" -
     // that prefix belongs to the loadouts that come with the game.  See the
     // README's "Creating a card".
+    // Different loadouts to the locked ones above - never the same ID in both.
     model.gwoStartingCards.push(
-      { id: "YOUR_LOADOUT_ID_1" },
-      { id: "YOUR_LOADOUT_ID_2" },
-      { id: "YOUR_LOADOUT_ID_N" }
+      { id: "YOUR_UNLOCKED_LOADOUT_ID_1" },
+      { id: "YOUR_UNLOCKED_LOADOUT_ID_N" }
     );
 
     // TELL GALACTIC WAR OVERHAUL WHERE YOUR BANK IS
@@ -57,7 +57,7 @@ function addStartCards() {
     // if (!model.gwoStarCardsWhichBreakAllies) {
     //   model.gwoStarCardsWhichBreakAllies = [];
     // }
-    // model.gwoStarCardsWhichBreakAllies.push("YOUR_LOADOUT_ID_1");
+    // model.gwoStarCardsWhichBreakAllies.push("YOUR_UNLOCKED_LOADOUT_ID_1");
   } catch (e) {
     console.error(e);
     console.error("New GW Cards: " + (e.stack || e.message || e));
