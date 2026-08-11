@@ -1195,7 +1195,7 @@ invisible until the game refuses to load your card.
 If you do not use Visual Studio Code, or you want to check the whole mod at once before
 releasing it, run this in the template folder after the `npm install` above:
 
-```
+```bash
 npm run lint:js
 ```
 
