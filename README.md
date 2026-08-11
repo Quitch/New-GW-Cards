@@ -19,8 +19,9 @@ War Overhaul.
 5. [Creating a card](#creating-a-card)
 6. [Feature reference](#feature-reference)
 7. [Minimum required changes](#minimum-required-changes)
-8. [Testing your mod](#testing-your-mod)
-9. [Releasing your mod](#releasing-your-mod)
+8. [Checking your work](#checking-your-work)
+9. [Testing your mod](#testing-your-mod)
+10. [Releasing your mod](#releasing-your-mod)
 
 ## What this template does
 
@@ -45,11 +46,8 @@ You will be editing text files. Any plain-text editor works, but a code editor s
 the text and highlights mistakes.
 
 The template also comes with a checker that reads your card files and points out mistakes
-before you ever launch the game — including use of newer JavaScript that PA's old built-in
-browser cannot run, which would otherwise break the whole screen. Using it is optional and
-needs [Node.js](https://nodejs.org/) installed. Put your renamed mod folder inside the
-template folder (the one holding `package.json`), then run `npm install` once, and
-`npm run lint:js` whenever you want to check your work.
+before you ever launch the game. Setting it up is optional but strongly recommended, and
+[Checking your work](#checking-your-work) explains how.
 
 For testing you will need the
 [Coherent UI Debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip).
@@ -1152,6 +1150,9 @@ one card. Tick each item off as you go.
 - [ ] Listed the card in `model.gwoCardsToUnits` in `tech_cards.js` (or, if it changes no
       units, in `model.gwoCardsWithoutTooltip`).
 
+- [ ] Checked the mod with ESLint (see [Checking your work](#checking-your-work)) and
+      fixed anything it flagged.
+
 **If your card is a loadout, also:**
 
 - [ ] Added the card's ID to `model.gwoStartingCards` (unlocked) or
@@ -1162,7 +1163,65 @@ one card. Tick each item off as you go.
 - [ ] Set `prefix` and `path` in the `model.gwoLoadoutBanks` entry in `start_cards.js`.
       Without this a locked loadout can never be unlocked.
 
+## Checking your work
+
+Do this before you launch the game. A card is only text until PA reads it, and PA is
+unforgiving: **one typo takes out the whole file**, not just the line it is on. A missing
+comma or an unclosed bracket means your card simply never appears, with no error message
+and nothing in the game to tell you why. The checker catches that in seconds.
+
+### The editor extension (recommended)
+
+If you use [Visual Studio Code](https://code.visualstudio.com/), install the **ESLint**
+extension (by Microsoft) from the Extensions panel — click the blocks icon in the sidebar,
+search for `ESLint`, press Install.
+
+You also need to set the checker up once, which needs [Node.js](https://nodejs.org/)
+installed:
+
+1. Put your renamed mod folder inside the template folder (the one holding
+   `package.json`).
+2. Open that template folder in Visual Studio Code.
+3. Open a terminal in it (Terminal → New Terminal) and run `npm install`. This downloads
+   the checker. You only ever do this once.
+
+From then on mistakes are underlined in red as you type, in the file you are editing,
+with an explanation when you hover over them. Nothing to run and nothing to remember —
+which is the point, because the mistakes this catches are exactly the ones that are
+invisible until the game refuses to load your card.
+
+### From a terminal
+
+If you do not use Visual Studio Code, or you want to check the whole mod at once before
+releasing it, run this in the template folder after the `npm install` above:
+
+```
+npm run lint:js
+```
+
+It prints one line per problem, with the file and line number. No output means no
+problems.
+
+### What it catches
+
+- **Typos and syntax mistakes** — missing commas, unclosed brackets and quotes.
+- **Newer JavaScript PA cannot run.** PA's built-in browser is very old. Modern
+  JavaScript you may have seen elsewhere — `let`, `=>`, backtick strings, `class` — will
+  not even load, and takes the whole file down with it. The checker knows exactly which
+  features PA supports and flags the rest.
+- **Functions that do not exist in PA**, such as `Object.assign` and `Array.from`. These
+  are worse than a typo: the file loads, and the card fails only at the moment a player
+  uses it.
+
+The list of what PA does and does not support lives in `eslint.config.mjs`. If you are
+ever unsure whether you can use something, that file is the answer — but the easy version
+is to write the card, and see whether anything goes red.
+
 ## Testing your mod
+
+Run the checker first — see [Checking your work](#checking-your-work). It finds the
+mistakes that stop a card loading at all, and those are the hardest to diagnose from
+inside the game, where the only symptom is a card that never shows up.
 
 1. Add `--devmode` to your PA
    [launch options](https://help.steampowered.com/en/faqs/view/7D01-D2DD-D75E-2955) (keep
