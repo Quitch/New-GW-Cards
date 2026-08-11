@@ -106,6 +106,19 @@ A card that is not registered is never dealt. The card's ID is its file name wit
   be listed in `model.gwoSpecs` in `specs.js`, or mods to it are dropped. So must a file
   one unit borrows from another — see "Writing a file name into a spec" below.
 
+**A registered loadout with no card file hangs the game, and it is the template's default
+state.** GWO resolves every ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs
+while generating a war; a missing file throws `Script error for: cards/<id>` and the
+generation promise never settles, so the client sits on `gw_start` forever with
+`makeGameBusy()` true and no visible error. The log line `War created using Galactic War
+Overhaul v…` appears anyway, so it is not evidence of success — the navigation to
+`gw_play` is. The shipped `start_cards.js` registers four placeholder IDs and ships no
+files for them, so **clear the lists of any example ID before the user enables the mod**,
+including when the job is only tech cards. Verified live 2026-08-11: removing just those
+two `push` calls took the same war from a permanent hang to `gw_play` in seconds.
+Placeholder IDs in `model.gwoCards` are not equivalent — those 404 non-fatally and the
+war plays.
+
 ## `inventory.addMods` — changing unit stats
 
 The README documents the shape. This is the behaviour that is not obvious from it. Line

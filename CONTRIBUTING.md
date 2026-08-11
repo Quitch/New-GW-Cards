@@ -114,9 +114,18 @@ contract") for the authoritative list and its validator; the templates here mirr
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod, `op: "tag"`, on the same
   `file` and `path`, and the file must be reachable or listed in `model.gwoSpecs`. This is
-  the template's most important silent-failure warning and is spelled out three times over
-  — `README.md`, `CLAUDE.md`, and the comments in `tech_card_id.js` and
-  `specs.js`. Keep those four in step, and in step with GWO's `docs/specs.md`.
+  a silent-failure warning spelled out three times over — `README.md`, `CLAUDE.md`, and the
+  comments in `tech_card_id.js` and `specs.js`. Keep those four in step, and in step with
+  GWO's `docs/specs.md`.
+- **A loadout ID registered with no card file of that name hangs war generation outright**,
+  and the shipped `start_cards.js` does exactly that with four placeholder IDs — so an
+  author who enables the template before editing it gets a Galactic War that never starts.
+  Verified live 2026-08-11 against GWO DEV v6.10.1. This is the template's worst failure
+  mode, because it breaks the game rather than the card, and it is stated in three places:
+  `README.md` (the blockquote under `model.gwoStartingCards`, plus a checklist item),
+  `CLAUDE.md` ("Registering a card"), and the header comment in `start_cards.js` itself.
+  Keep those three in step. Do not "fix" it by emptying the shipped lists — the example IDs
+  are what show an author the shape; the warning is the fix.
 - `dull(inventory)` reverses `buff` — applied after all `buff`s, for unit removal. Start
   cards route removal through `gwoCard.applyDulls(CARD, inventory, units)`.
 

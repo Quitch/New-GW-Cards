@@ -260,6 +260,23 @@ model.gwoStartingCards.push({ id: "mym_start_myloadout" });
 ```
 
 > **Do not add a loadout to both the locked and unlocked groups.**
+>
+> **Every ID in these two lists must have a card file of exactly that name, or Galactic War
+> will not start.** This is the worst mistake in the whole template, because it does not
+> break the card — it breaks the game. Galactic War Overhaul loads every loadout you list
+> here while it builds a new war. If one of them has no file, it waits for a file that will
+> never arrive: the war finishes generating and then the screen simply sits there, with no
+> error, no message, and nothing to click. Only closing the game gets you out.
+>
+> The template arrives with four example IDs already in these lists
+> (`YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`, `YOUR_UNLOCKED_LOADOUT_ID_1`,
+> `YOUR_UNLOCKED_LOADOUT_ID_N`) and no files to match, so **the mod does this to you the
+> first time you switch it on.** Before you enable the mod, open `start_cards.js` and delete
+> every example ID you have not replaced with a real one. Deleting them all is fine — a mod
+> with no loadouts works perfectly well.
+>
+> Tech cards are more forgiving: a missing tech card file logs an error and is skipped, and
+> the war plays on.
 
 #### `model.gwoStarCardsWhichBreakAllies` — loadouts that disable the ally (in `start_cards.js`)
 
@@ -1145,6 +1162,12 @@ one card. Tick each item off as you go.
 - [ ] Replaced or removed every leftover placeholder in the card, such as `UNIT_PATH`,
       `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` text. A leftover
       placeholder will break the card.
+- [ ] **Deleted the example loadout IDs you are not using from `start_cards.js`**
+      (`YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`,
+      `YOUR_UNLOCKED_LOADOUT_ID_1`, `YOUR_UNLOCKED_LOADOUT_ID_N`). Do this even if you are
+      only making a tech card. Leaving them there stops Galactic War starting at all — see
+      the warning under
+      [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 **If your card is a tech card, also:**
 
@@ -1246,6 +1269,17 @@ following two messages, up to once per screen, and they are **not** a problem:
 - WARN: _Synchronous XMLHttpRequest on the main thread is deprecated because of its
   detrimental effects to the end user's experience. For more help, check
   <http://xhr.spec.whatwg.org/>._
+
+One message is worth knowing on sight:
+
+- ERROR: _Uncaught Error: Script error for: cards/SOME_ID_
+
+  You listed `SOME_ID` somewhere but there is no `SOME_ID.js` in
+  `ui/main/game/galactic_war/cards/`. Usually a typo, or an example ID you forgot to
+  delete. From a **tech card** list this is harmless — the card is skipped. From a
+  **loadout** list it is fatal: starting a new war will hang on a blank screen forever.
+  See the warning under
+  [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 ### Testing loadouts
 

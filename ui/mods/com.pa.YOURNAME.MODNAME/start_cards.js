@@ -1,3 +1,20 @@
+// READ THIS BEFORE YOU SWITCH THE MOD ON
+//
+// Every ID in the two lists below must have a card file of exactly that name in
+// ui/main/game/galactic_war/cards/.  If one of them does not, GALACTIC WAR WILL
+// NOT START: GWO loads every loadout you list here while it builds a new war,
+// and if a file is missing it waits forever for it.  The war finishes
+// generating and then the screen sits there, with no error and nothing to
+// click.  Closing the game is the only way out.
+//
+// The example IDs shipped below have no files, so this happens the very first
+// time you enable the mod.  DELETE THE ONES YOU HAVE NOT REPLACED, even if you
+// are only writing tech cards.  Deleting all of them is fine - a mod with no
+// loadouts works perfectly well.
+//
+// Tech cards (tech_cards.js) are more forgiving: a missing file there is logged
+// and skipped, and the war carries on.
+
 function addStartCards() {
   try {
     // Add locked loadouts.  GWO's shared/loadouts.js reads this to build the
