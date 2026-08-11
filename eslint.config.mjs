@@ -54,9 +54,10 @@ export default defineConfig([
     // inversion is deliberate. A syntax-only denylist can't see `Object.assign`
     // (Chrome 45) or `Array.from` (45), and those fail at call time with
     // "undefined is not a function" rather than at parse time, so a stray one ships.
-    // The `**/` prefix matters: the shipped tree lives at my_card_mod/ui/**, and an
-    // author's copy of it is renamed to something else again, so a bare "ui/**" would
-    // match nothing and quietly lint none of the code this block exists to protect.
+    // The `**/` prefix is cheap insurance. The shipped tree sits at ui/** beside this
+    // config, so a bare "ui/**" would match it today, but an author is free to nest the
+    // renamed mod folder inside another one, and then it would match nothing and quietly
+    // lint none of the code this block exists to protect.
     files: ["**/ui/**/*.js"],
     ...esX.configs["flat/restrict-to-es5"],
   },

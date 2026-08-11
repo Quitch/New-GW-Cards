@@ -1,168 +1,261 @@
-# CLAUDE.md
+# CLAUDE.md — authoring a Galactic War card
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in
-this repository.
+This file provides guidance to Claude Code (claude.ai/code) when writing cards **for a
+user** from the New-GW-Cards template. The template's repo root is the mod root, and this
+file sits in it, so it applies both in the template repo and in the copy the author
+renames into their `client_mods`. `CONTRIBUTING.md` governs the other job — changing the
+template itself — and does not travel with the copy.
 
-**Authoring vs maintaining.** This file governs changes to the template itself.
-`my_card_mod/CLAUDE.md` governs the other job — writing an actual card for a user against
-their PA install — and travels with the folder when they copy it into `client_mods`. Read
-that one when the user is authoring a card; keep the two in step when GWO's card contract
-or op behaviour changes. Both, plus the lint tooling and `.prettierrc`, ship in the
-release ZIP (`.gitattributes` no longer `export-ignore`s them), because the audience takes
-the ZIP rather than cloning.
+`README.md`, which does travel, is the author-facing guide, written in plain English for
+someone who does not code. It is the reference for what every part of a card does, and
+you should follow it. This file adds what the README deliberately leaves out: where to
+find the real values on the user's own machine, and the runtime behaviour that fails
+**silently** when you get it wrong.
 
-## What this is
+The user may know nothing about coding. Explain what you changed in plain language, keep
+the heavy comment style the template uses, and never leave a placeholder behind.
 
-New-GW-Cards (repo `Quitch/New-GW-Cards`) is a **template / starter kit**, not a
-finished mod. It gives third-party authors a copy-and-rename skeleton for shipping
-their own new Galactic War loadouts and tech cards for Planetary Annihilation: TITANS.
-It is a hard dependency on GW-AI-Overhaul (GWAIO/GWO) — `modinfo.json` declares
-`"dependencies": ["com.pa.quitch.gwaioverhaul"]` and every card `require`s GWO's shared
-modules (`shared/cards.js`, `shared/units.js`, `shared/unit_groups.js`), so the template
-only works with GWO installed. This repo is the sibling of GWO; GWO's own workspace
-(`GW-AI-Overhaul`) is the authoritative source for card examples, unit IDs, and the
-`referee.js`/AI-mod runtime the cards target.
+## Find these three things first
 
-Like GWO, this ships plain JS/JSON loaded by the game's embedded Chrome 40 — **no build
-step, no transpile, no bundler**. The only tooling is ESLint (`package.json` +
-`eslint.config.mjs`); unlike GWO there is **no test harness**. Validation is otherwise
-manual (see "Testing" below), done in-game against the Coherent UI Debugger.
+Ask the user for anything you cannot locate.
 
-## The template is full of placeholders — that is by design
+- **`<PA>` — the game install.** Ends in
+  `steamapps/common/Planetary Annihilation Titans/media`. **Read-only. Never edit it.**
+- **`<data>` — the PA user data directory.** `%LOCALAPPDATA%\Uber Entertainment\Planetary
+Annihilation` on Windows. The author's mod is a copy of this folder under
+  `<data>/client_mods/<their identifier>/`. **It may not exist yet** — creating
+  `client_mods/`, copying the folder, renaming it, and syncing the identifier is part of
+  the job (see "Setting the mod up" below).
+- **`<GWO>` — Galactic War Overhaul.** A hard dependency: cards do nothing without it.
+  Normally it is a zip the game reads directly, at
+  `<data>/download/com.pa.quitch.gwaioverhaul.zip` — read files straight out of it
+  (`unzip -p`, or Python's `zipfile`), do not unpack it into the user's mod folders. If
+  the zip is missing, have the user install GWO rather than guessing at its contents.
 
-The point of the repo is that an author copies `my_card_mod/` into their PA
-`client_mods/` folder, renames it, and fills in the blanks. The following are
-intentional placeholders that a real mod replaces, **not** bugs to "fix" in this repo:
+Prefer these local copies to anything on GitHub: they are what the user is actually
+running. The two exceptions are GWO's `docs/` and `scripts/`, which the zip does not
+contain — read those from a `GW-AI-Overhaul` checkout if the user has one, otherwise from
+the repo's **`master`** branch (what releases are built from). Never read `develop`; it
+can be ahead of what is live.
 
-- `com.pa.YOURNAME.MODNAME` — the mod identifier, appearing in `modinfo.json`, the
-  `ui/mods/com.pa.YOURNAME.MODNAME/` directory name, and the `coui://` scene URLs. All
-  three must be changed together and kept in sync (`README.md` step "Preparing the mod").
-- `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, empty `forum`/`icon` in `modinfo.json`.
-- `your_mod_id` — the `LS_KEY` in `bank.js` (localStorage key for unlocked loadouts).
-- `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,
-  `YOUR_PREFIX_start_`, `YOUR_TECH_ID_*`, `UNIT_PATH`, `PATH_*`,
-  `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:...HERE` strings, and the two example
-  card files `start_card_id.js` / `tech_card_id.js` (rename to
-  `ACRONYM_EFFECT_UNITTYPE.js`, e.g. `gwc_damage_bots.js`).
+## Never invent an identifier — read it from a file
 
-When editing this repo itself, only change the template/scaffold; do **not** replace
-placeholders with concrete values (that would turn the template into one specific mod).
-When the user is authoring an actual card _from_ this template, filling them in is the
-whole job.
+Every one of these fails quietly when wrong: a bad icon name renders blank, a bad
+`toBuild` changes nothing, a bad unit path warns once in a console the user is not
+watching. Look each one up.
 
-## Layout
+| What you need                                           | Where it is                                                                                                                                                               |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit paths, and the stat names you put in `path`        | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa/ammo/`, `<PA>/pa/tools/`      |
+| GWO unit IDs (`gwoUnit.*`) and group IDs (`gwoGroup.*`) | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js` and `shared/unit_groups.js`                                                                                |
+| `gwoCard` helpers and exactly what they return          | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js`                                                                                                            |
+| Worked examples of finished cards                       | `<GWO>` → `ui/main/game/galactic_war/cards/*.js` (hundreds of them); stock ones at `<PA>/ui/main/game/galactic_war/cards/*.js`                                            |
+| Tech icon file names for `icon`                         | `<PA>/ui/main/game/galactic_war/gw_play/img/tech/` — that directory listing is the complete set of stock names                                                            |
+| Discovery voice lines for `audio`                       | the list in the comment in `ui/main/game/galactic_war/cards/tech_card_id.js`                                                                                              |
+| AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`         |
+| AI `builders` roles and platoon template names          | keys of `<PA>/pa/ai/unit_maps/ai_unit_map.json` and `<GWO>` → `pa/ai_penchant/unit_maps/ai_unit_map.json`                                                                 |
+| Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above               |
+| What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available |
 
-`my_card_mod/` is the mod root that gets copied out. It carries its own `CLAUDE.md` (the
-authoring guide, above) so the guidance survives the copy. Two distinct trees inside it:
+Two path rules that catch everyone:
 
-- `my_card_mod/ui/main/game/galactic_war/cards/*.js` — the **card definitions**. This
-  path shadows the base game's card directory. `tech_card_id.js` is the tech-card
-  template (dealt during play, appears on the board); `start_card_id.js` is the
-  loadout / start-card template (chosen on the pre-game loadout screen, unlockable).
-- `my_card_mod/ui/mods/com.pa.YOURNAME.MODNAME/*.js` — the **loader / registration
-  scripts** injected per scene via `modinfo.json`'s `scenes` block. These push the
-  author's card IDs into GWO's `model.gwo*` arrays so GWO picks them up:
-  - `start_cards.js` (`gw_start`, `gw_play`, `gw_coop_per_player_loadout`) →
-    `model.gwoNewStartCards` (locked) + `model.gwoStartingCards` (unlocked) +
-    `model.gwoLoadoutBanks` (where this mod's `bank.js` lives); optionally
-    `model.gwoStarCardsWhichBreakAllies` (loadouts incompatible with an allied
-    commander — GWO never creates this array, so the loader must guard-create it).
-  - `tech_cards.js` (`gw_play`, `gw_coop_per_player_loadout`) → `model.gwoCards`
-    (deck) + `model.gwoCardsToUnits` (tooltip unit associations); optionally
-    `model.gwoCardsWithoutTooltip` (tech cards that should have no affected-units tooltip).
-  - `specs.js` (`gw_play` scene) → `model.gwoSpecs`, for modding unit specs the base
-    game doesn't otherwise load (e.g. unused units).
-  - `bank.js` — a `define()` AMD module `require`d by `start_card_id.js`; persists
-    unlocked loadouts to a mod-private `localStorage` key so uninstalling the mod
-    doesn't 404 the base loadout list.
+- Titans units are stored under `pa_ex1/` but the game mounts them into `/pa/`. **Always
+  write `/pa/…`, never `/pa_ex1/…`.** Use `pa_ex1/` only to find the file on disk.
+- Prefer a `gwoUnit`/`gwoGroup` ID to a raw path wherever one exists. GWO keeps them
+  current, and they cannot fall foul of the rule above.
 
-`modinfo.json`'s `scenes` block is the real entry-point list — only files listed there
-load, and every URL must match the mod `identifier`. **`model` is a fresh page per
-scene**, so a loader has to be listed under every scene whose data it supplies; that
-is why `start_cards.js` appears three times and `tech_cards.js` twice. Registering
-loadouts only in `gw_start` leaves them out of the `gw_play` treasure pool (so they
-can never be awarded) and out of the co-op loadout picker.
+## Setting the mod up
 
-## Card contract
+If the user has no mod folder yet, create one before writing any card:
 
-Cards are AMD modules (`define([deps], function(...) {...})`) returning an object with
-GWO's fixed card shape. See the GW-AI-Overhaul workspace's CLAUDE.md ("Tech card
-contract") for the authoritative list and its validator; the templates here mirror it:
+1. Copy this whole folder into `<data>/client_mods/` and rename it (the folder name is
+   free-form; convention is to match the identifier). Copy it entire — the lint tooling
+   (`package.json`, `eslint.config.mjs`, `.prettierrc`) and the guides are meant to travel
+   with it, and the checker only works from inside the mod folder. PA reads `modinfo.json`
+   and the files its `scenes` block names, and ignores the rest.
+2. In `modinfo.json`, fill in `identifier` (style `com.pa.yourname.modname`),
+   `display_name`, `description` and `author`.
+3. Change every `coui://` address under `scenes` so it contains that identifier.
+   Some loaders are listed under more than one scene; keep all of them.
+4. Rename `ui/mods/com.pa.YOURNAME.MODNAME/` to exactly that identifier.
+5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js`, update the
+   `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card, and set
+   `prefix`/`path` on the `model.gwoLoadoutBanks` entry in `start_cards.js`. GWO reads
+   that entry to find the mod's bank; without it a locked loadout never unlocks.
 
-- `visible`, `describe`, `summarize`, `icon`, `deal`, `buff`, `dull` — always present.
-  Tech cards also carry `audio` + `getContext`; start cards carry `hint` instead.
-  `keep`, `discard` and `releaseContext` are optional and near-vestigial: GWO replaces
-  PA's dealer, so it never calls `discard`, and calls `keep(deal, context)` at deal time
-  rather than when the player keeps the card. Only `releaseContext` behaves as named.
-- `deal(system, context, inventory, rng)` controls distribution (returns `{ chance }`);
-  tech cards compute a chance, start cards delegate to `gwoCard.startCard`. `rng` is the
-  card's seeded stream and is optional — GWO's own docs require `gwoCard.uniqueValue(rng)`
-  over `Math.random()`, and that `chance` never depend on `rng` (only `params` may), since
-  the dealer calls `deal()` speculatively many times per hand.
-- `buff(inventory)` applies the card: `inventory.addUnits(...)` (unit paths / GWO unit
-  IDs / group IDs), `inventory.addMods(...)` (unit-spec stat mods —
-  `{file, path, op, value}`), and `inventory.addAIMods(...)` (AI build-order descriptors
-  — `{type, op, toBuild, idToMod, value, refId, refValue, matchAll}`). The op tables and
-  field meanings are documented inline in the template comments; GWO applies spec mods in
-  `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
-- A spec mod whose `value` is a **file name** needs a second mod, `op: "tag"`, on the same
-  `file` and `path`, and the file must be reachable or listed in `model.gwoSpecs`. This is
-  the template's most important silent-failure warning and is spelled out three times over
-  — `README.md`, `my_card_mod/CLAUDE.md`, and the comments in `tech_card_id.js` and
-  `specs.js`. Keep those four in step, and in step with GWO's `docs/specs.md`.
-- `dull(inventory)` reverses `buff` — applied after all `buff`s, for unit removal. Start
-  cards route removal through `gwoCard.applyDulls(CARD, inventory, units)`.
+The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
+must agree. If they disagree the game loads nothing and reports nothing.
 
-For fully-worked examples, point at the GWO card directory
-(`GW-AI-Overhaul/ui/main/game/galactic_war/cards/`) rather than inventing them.
+Work in the user's copy. The template repo's own tree is the pristine skeleton — do not
+fill its placeholders in.
 
-**GWO is the authority on all of this.** `docs/tech-cards.md` there documents the card
-contract and the third-party surface, and `test/modder_api.test.js` pins it — the
-`model.gwo*` globals, the `shared/cards.js` helper names, the `units.js` /
-`unit_groups.js` keys, and `deal`'s arguments. When GWO changes any of them it is
-supposed to update this repo in step, so that test is the first place to look when the
-template and the game disagree.
+## Registering a card
 
-## Conventions
+A card that is not registered is never dealt. The card's ID is its file name without
+`.js`. See the README's "Feature reference" for the full list of `model.gwo*` arrays.
 
-- Shipped game code targets PA's embedded **Chrome 40**. `ecmaVersion: 6` is a parser
-  setting, not the policy — the enforcement is `eslint-plugin-es-x`'s `restrict-to-es5`
-  applied to `**/ui/**/*.js` (the `**/` prefix is load-bearing: the shipped tree is at
-  `my_card_mod/ui/**` and an author renames the folder again, so a bare `ui/**` matches
-  nothing), with the post-ES5 features Chrome 40 genuinely shipped
-  switched back on one rule at a time (each annotated with the Chrome version that
-  landed it). **That whitelist is the authoritative answer to "may I use X in a card?" —
-  absent from it means forbidden.** Being a denylist-of-everything inverted, it also
-  catches missing _builtins_ (`Object.assign`, `Array.from`), which fail at call time
-  rather than parse time and so slip past a syntax-only check. Notable bans the config
-  restates with its reasoning: `let`/`const` (Chrome 41, and its block scoping is
-  non-conforming — use `var`), block-scoped function declarations, and
-  `String.prototype.startsWith`/`endsWith` (PA's own single-argument polyfill silently
-  drops the position argument and returns the wrong answer — use `indexOf`/`slice`).
-  Known engine globals are declared in the config (`api`, `model`, `_`, `requireGW`,
-  `ko`, plus browser/jquery/amd).
-- ESLint flat config, `js/recommended` + `curly: ["error", "all"]`, Prettier config
-  applied last to disable conflicting rules. Run it with `npm install` then
-  `npm run lint:js`. `package.json` pins the five lint deps (`eslint`, `@eslint/js`,
-  `eslint-config-prettier`, `eslint-plugin-es-x`, `globals`) with caret ranges and sets
-  `"type": "module"` so Node loads the ESM `eslint.config.mjs` — that config file is the
-  only `.js` Node itself executes; the shipped game code is only ever parsed by ESLint
-  (as `sourceType: "script"`), never run under Node.
-- Loader scripts (`start_cards.js`, `tech_cards.js`, `specs.js`) wrap their body in a
-  `try/catch` that `console.error`s failures — keep that pattern; a throw there would
-  break the scene silently in-game.
-- LICENSE is public-domain (Unlicense).
-- The audience of this mod are individuals who may be completely unfamiliar with coding.
-  The mod should handhold the user at every step, with far more comments in much more
-  detail than would be normal, while keeping everything in plain English.
+- Tech card → push the ID to `model.gwoCards` in `tech_cards.js`, **and** describe its
+  affected units in `model.gwoCardsToUnits`. A card that changes no units goes in
+  `model.gwoCardsWithoutTooltip` instead, or GWO warns about missing tooltip data.
+- Loadout → push `{ id: "…" }` to `model.gwoStartingCards` (available immediately) or
+  `model.gwoNewStartCards` (must be earned) in `start_cards.js`, never both. A loadout
+  ID **must contain `_start_`** (GWO's `isStartLoadoutCardId` test) and **must not begin
+  `gwc_start`** (reserved for base-game loadouts, and routed to the base game's bank).
+  Use a mod-specific prefix matching the one registered in `model.gwoLoadoutBanks`.
+- A unit file the game does not otherwise load (an unused spec such as Ares' stomp) must
+  be listed in `model.gwoSpecs` in `specs.js`, or mods to it are dropped. So must a file
+  one unit borrows from another — see "Writing a file name into a spec" below.
 
-## Testing (manual, in-game)
+## `inventory.addMods` — changing unit stats
 
-There is no automated test suite. Follow `README.md`'s "Testing your mod": launch PA
-with `--devmode` and `--coherent_port=9999`, enable the mod, and watch the Coherent UI
-Debugger console. `README.md` lists the two errors/warnings PA emits normally (an
-`Uncaught TypeError: undefined is not a function` and a synchronous-XHR deprecation
-warning, up to once per scene) so they aren't mistaken for real failures. Separate
-manual flows are documented there for start cards (loadout screen + the localStorage
-key set as `LS_KEY` in `bank.js`) and tech cards (deal via the `X` panel, then spawn
-units in sandbox).
+The README documents the shape. This is the behaviour that is not obvious from it. Line
+references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`.
+
+- **`multiply` does not create.** If the stat is missing or is not a number it warns and
+  leaves it alone (`:139-149`). `multiplyOrCreate` sets it to `value` when it is absent
+  (`:259-268`). `add` also creates when absent, and concatenates when the value is a
+  string (`:150-165`).
+- **Ops do not run in the order you write them.** Across every card in the hand, all
+  `replace` run first, then `multiplyOrCreate`, then `multiply`, then `add`; everything
+  else follows afterwards (`:7, 20-33`). So another card's `replace` still lands before
+  your `multiply`. Never write two ops that depend on running in sequence.
+- **`wipe` is a string substitution, not a delete.** `value` is `[from, to]`; a bare value
+  means "delete every occurrence of it" (`:238-246`).
+- **Path walking** (`:278-399`): segments are separated by dots, so a segment cannot
+  itself contain one. A number indexes into an array, and `+` appends a new object to one.
+  Missing intermediate levels are created for you. If an intermediate segment is a
+  **string**, it is treated as another spec file and followed — which means your change
+  lands in that shared file and affects **every unit that references it**. The final
+  segment is never followed (that is what `op: "tag"` exists for).
+- **`file` is one path string.** Never an array. To change several units, build one
+  descriptor per file — `gwoCard.mods(file, op, {path: value, …})` writes the entries
+  for one file, and `_.flatten(_.map(group, …))` covers a whole group.
+- **The file must be in play.** It has to be a unit the player was granted, or reachable
+  from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
+  `Warning: File not found in mod` and nothing happens.
+- **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
+- **A value that is a file name must be followed by `op: "tag"`** on the same `file` and
+  `path`. See the section below — this is the failure that is hardest to spot.
+- **`clone` and `eval` are advanced — avoid them**, as the README says.
+- **`dull` removes units only.** It cannot undo a stat change or an AI change; only what
+  `buff` never added stays un-added.
+
+### Writing a file name into a spec — `op: "tag"`
+
+GW gives each army private copies of its specs, keyed `<path>.json<tag>`
+(`.player`, `.ai0`, …), and applies that army's mods to those copies. The copies are
+generated **before** mods run (`<GWO>` `gw_play/referee_game_files.js`, then
+`shared/spec_cache.js:tagSpec`), so a path a mod writes arrives untagged. Untagged paths
+still resolve — to the stock file — so the weapon fires and the unit spawns, and the
+player's entire hand misses it. Nothing is logged. This has shipped broken in GWO itself
+more than once.
+
+Every mod whose `value` is a spec reference needs a second mod, `op: "tag"`, on the same
+`file` and `path` and with no `value`. The reference fields are the ones `tagSpec`
+renames: `base_spec`, `tools[].spec_id`, `ammo_id`, `replaceable_units`,
+`buildable_projectiles`, `factory.initial_build_spec`, `death_weapon.ground_ammo_spec`,
+`death_weapon.air_ammo_spec`, `spawn_unit_on_death`.
+
+Two things follow.
+
+- **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so a tool pushed
+  onto a two-tool unit is tagged at `tools.2.spec_id`. Read the count from the unit's own
+  spec under `<PA>`, not from the card.
+- **The target must exist tagged**, or the tag points at nothing and the tool is lost
+  outright — a worse outcome than leaving it untagged. A file the unit already references
+  is covered. A file borrowed from another unit is not, and needs listing in
+  `model.gwoSpecs`. Tagging cascades from there: a tagged weapon brings its `ammo_id`, and
+  any `spawn_unit_on_death` on that ammo, with it.
+
+Worked examples in `<GWO>`: `cards/gwaio_upgrade_firefly.js` (replace then tag),
+`gwaio_upgrade_wyrm.js` (borrowed weapon), `gwaio_upgrade_sheller.js`
+(`spawn_unit_on_death`). GWO's own `docs/specs.md` carries the same rule.
+
+## `inventory.addAIMods` — changing what the AI builds
+
+Line references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/referee_ai.js`.
+
+**Fields each op needs.** All need `type`. Missing any of these makes the descriptor do
+nothing:
+
+| op                             | also needs                    |
+| ------------------------------ | ----------------------------- |
+| `load`                         | `value`                       |
+| `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
+| `remove`, `new`                | `toBuild`, `value`            |
+| `squad`                        | `toBuild`, `value`            |
+
+`squad` works only with `type: "template"`; the other five work only with `fabber`,
+`factory` and `platoon`. Getting that pairing wrong is not always harmless: a build op
+aimed at a template file quietly does nothing, but `squad` aimed at a build list
+**throws** and takes the AI setup down with it (`:154-159`).
+
+**What the files look like.** `fabber`/`factory`/`platoon` files are
+`{ "build_list": [ … ] }`, where each entry has `to_build`, `priority`, `builders`,
+`instance_count` and `build_conditions`. `build_conditions` is a **list of lists** — the
+inner lists are groups of tests that must all pass, and the entry builds if any one group
+passes. You need that shape to use `new` or `remove`. `template` files are
+`{ "platoon_templates": { "<Name>": { "units": [ … ] } } }`.
+
+**How matching works.** `toBuild` must equal an entry's `to_build` exactly — no wildcards,
+no partial matches. `idToMod` is the field on that entry you are changing (`builders`,
+`priority`, …). `refId`/`refValue` restrict the change to entries that already hold that
+value, which is the usual way to tell apart the same `to_build` in the TITANS, Queller and
+Penchant AI trees — `refId: "priority"` with the priority that tree uses.
+
+**Things that silently do nothing:** a `toBuild` no file contains; `append`/`prepend`/
+`replace` with no `idToMod`; `replace` against a field the entry does not already have (it
+cannot create one); `remove` whose `value` is not an exact copy of a whole test object;
+`squad` naming a template that does not exist.
+
+**`op: "load"`.** It reads `/pa/ai_tech/<folder>/<value>` from your own mod, where the
+folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds/`,
+`platoon_templates/`). So `{ type: "factory", op: "load", value: "my_card.json" }` needs
+`pa/ai_tech/factory_builds/my_card.json` shipped alongside your `ui` folder.
+
+- `value` must include the `.json`.
+- **If that file is missing the battle never starts.** Nothing errors; loading just hangs.
+  Confirm the file exists on disk before shipping a `load`.
+- Name it after your card ID. A name another mod also uses replaces that mod's file.
+- Your other AI mods of the same `type` also apply to the file you loaded.
+
+## Code rules
+
+This code runs in PA's embedded **Chrome 40**, and a parse error takes out the entire
+screen, not just the card. Use `var`; no `let`/`const`, arrow functions, template
+literals or `class`. Do not use `String.prototype.startsWith`/`endsWith` — PA's own
+polyfill ignores the position argument and returns the wrong answer; use `indexOf` or
+`slice`. `_` (lodash), `ko`, jQuery, `api` and `model` are globals.
+
+`eslint.config.mjs` is the authoritative answer to "may I use X?": it forbids everything
+after ES5 and then switches back on, one at a time, the features Chrome 40 genuinely
+shipped. Anything not on that list is not allowed. It came with the template and sits in
+the mod folder alongside `package.json`, so checking a card is `npm install` once in that
+folder, then `npm run lint:js`.
+
+The loader files (`tech_cards.js`, `start_cards.js`, `specs.js`) wrap their body in
+`try`/`catch` and `console.error` the failure. Keep that: a throw there breaks the whole
+scene with no visible cause.
+
+## When something here disagrees with the game
+
+GWO is the authority, not this file and not the README. Its `docs/tech-cards.md` holds
+the card contract, the `model.gwo*` list, and the loadout bank rules; its
+`test/modder_api.test.js` pins the surface a card is written against — the helper names
+in `shared/cards.js`, the unit and group keys, `deal`'s arguments. If a card behaves
+unexpectedly, read that test before assuming the template is wrong: it says what GWO
+actually guarantees today.
+
+## Checking the work
+
+There is no test suite — validation is in-game, and the README's "Testing your mod"
+section is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
+Coherent UI Debugger console, deal the card from the `X` panel, spawn the units in
+sandbox). The README also lists the two messages PA prints normally, so they are not
+mistaken for a fault.
+
+Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
+`PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance
+above `0` that does not depend on its optional fourth argument `rng` (only `params` may be
+random, and a card drawing at all should use `rng`, not `Math.random()`); the card ID is registered in the right list; and the identifier is the same in
+all three places.

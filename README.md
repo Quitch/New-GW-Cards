@@ -58,8 +58,12 @@ to PA, add `--coherent_port=9999` to your Steam launch options for the game.
 
 1. Find your [PA data directory](https://support.planetaryannihilation.com/kb/faq.php?id=176)
    and open the `client_mods` folder inside it. If that folder does not exist, create it.
-2. Copy the `my_card_mod` folder from this template into `client_mods`. Rename it to
-   something of your choice. From here on, this renamed folder is the root of your mod.
+2. Copy this whole template folder into `client_mods`. Rename it to something of your
+   choice. From here on, this renamed folder is the root of your mod. It contains a few
+   files the game ignores — `README.md`, `package.json`, `eslint.config.mjs` and the
+   like. Leave them there: they are the checker described in
+   [Checking your work](#checking-your-work), and it only works from inside your mod
+   folder.
 3. Open `modinfo.json` (in your mod's root folder) and fill in these entries:
    - `identifier` — a unique name for your mod, using the style
      `com.pa.yourname.modname`.
@@ -79,7 +83,7 @@ to PA, add `--coherent_port=9999` to your Steam launch options for the game.
 
 ## Understanding the pieces
 
-Inside `my_card_mod` there are two important areas.
+Inside your mod folder there are two important areas.
 
 **The cards themselves** live in `ui/main/game/galactic_war/cards/`. Each card is one
 file. The template ships two examples:
@@ -1126,7 +1130,7 @@ one card. Tick each item off as you go.
 
 **Every mod:**
 
-- [ ] Copied `my_card_mod` into `client_mods` and renamed it.
+- [ ] Copied this template folder into `client_mods` and renamed it.
 - [ ] In `modinfo.json`, filled in `identifier`, `display_name`, `description`, and
       `author`.
 - [ ] In `modinfo.json`, changed the `scenes` addresses so they contain your identifier.
@@ -1179,10 +1183,8 @@ search for `ESLint`, press Install.
 You also need to set the checker up once, which needs [Node.js](https://nodejs.org/)
 installed:
 
-1. Put your renamed mod folder inside the template folder (the one holding
-   `package.json`).
-2. Open that template folder in Visual Studio Code.
-3. Open a terminal in it (Terminal → New Terminal) and run `npm install`. This downloads
+1. Open your mod folder in Visual Studio Code.
+2. Open a terminal in it (Terminal → New Terminal) and run `npm install`. This downloads
    the checker. You only ever do this once.
 
 From then on mistakes are underlined in red as you type, in the file you are editing,
@@ -1190,10 +1192,13 @@ with an explanation when you hover over them. Nothing to run and nothing to reme
 which is the point, because the mistakes this catches are exactly the ones that are
 invisible until the game refuses to load your card.
 
+There is nothing to move or point at: `package.json` and `eslint.config.mjs` came with the
+template and are already sitting next to your `ui` folder. The game ignores them.
+
 ### From a terminal
 
 If you do not use Visual Studio Code, or you want to check the whole mod at once before
-releasing it, run this in the template folder after the `npm install` above:
+releasing it, run this in your mod folder after the `npm install` above:
 
 ```bash
 npm run lint:js
@@ -1285,6 +1290,11 @@ When your mod is ready to share, update these entries in `modinfo.json`:
 4. `forum` — the web address of your mod's discussion thread (Steam or GitHub Discussions
    is fine).
 5. `icon` — the web address of a publicly visible PNG image for your mod.
+
+Then zip up your mod folder. If you ran `npm install`, that folder now also contains a
+`node_modules` folder holding the checker — it is large and nobody else needs it, so leave
+it out of the ZIP. Everything else can stay; the game ignores what it does not recognise,
+and the next person to open your mod gets the checker and this guide along with it.
 
 Put your mod's ZIP file somewhere anyone can download it (GitHub is preferred). Then post
 the download location to the `#new-mod-submissions` channel on the
