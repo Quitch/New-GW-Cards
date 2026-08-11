@@ -260,6 +260,35 @@ if (!model.gwoStarCardsWhichBreakAllies) {
 model.gwoStarCardsWhichBreakAllies.push("gwc_start_myloadout");
 ```
 
+#### `model.gwoLoadoutBanks` — where your bank lives (in `start_cards.js`)
+
+Your locked loadouts are recorded in your own `bank.js`, under your own `LS_KEY`.
+Galactic War Overhaul has no way of guessing where that file is, so you point it at it.
+**Without this, a locked loadout can never become unlocked**, and nothing warns you.
+
+Like the list above, Galactic War Overhaul does not create this one for you.
+
+```js
+if (!model.gwoLoadoutBanks) {
+  model.gwoLoadoutBanks = [];
+}
+model.gwoLoadoutBanks.push({
+  prefix: "mym_start_",
+  path: "coui://ui/mods/<your identifier>/bank.js",
+});
+```
+
+`prefix` is the start of every loadout ID in your mod. When the player earns one of your
+loadouts, that is how Galactic War Overhaul knows the loadout is yours, and writes it to
+your bank rather than its own. It must match the start of the loadout IDs you chose.
+
+`path` is the address of your `bank.js`, and contains your identifier like every other
+address in the mod.
+
+Give this the address, not the file itself. The screens Galactic War Overhaul builds
+your loadout list on run before any file your mod loads, so handing it an address it can
+fetch when it is ready is the only way it can be sure of having your bank in time.
+
 #### `model.gwoSpecs` — extra unit files to change (in `specs.js`)
 
 Galactic War only makes a player a copy of the files their own units need. List a path
@@ -1023,12 +1052,25 @@ Your loadout cards connect to this bank in two steps, both already wired up in t
 2. When the loadout is earned, the card records it in the bank:
 
    ```js
-   gwoBank.addStartCard(CARD);
+   myBank.addStartCard(CARD);
    ```
 
-The loadout screen then checks the bank (using the same `LS_KEY`) to decide whether to
+3. `start_cards.js` tells Galactic War Overhaul where the bank is, through
+   [`model.gwoLoadoutBanks`](#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
+   Miss this step and the loadout stays locked forever.
+
+The loadout screen then checks your bank (using the same `LS_KEY`) to decide whether to
 show your loadout as unlocked. Using your own key means that if the player later removes
-your mod, PA's built-in loadout list is not left pointing at missing cards.
+your mod, PA's built-in loadout list is not left pointing at missing cards, and the
+player's unlocks leave with the mod rather than lingering in someone else's storage.
+
+There are two ways a loadout reaches your bank. If the player wins a loadout on a
+Guardian planet, Galactic War Overhaul writes it there itself — your card's own code
+does not run in that case, which is why it needs the address above. The
+`myBank.addStartCard(CARD)` line in the card covers the other route.
+
+Your bank also keeps PA's "loadouts unlocked" statistic up to date as it grows. That is
+already written for you in `bank.js`; there is nothing to do.
 
 ## Minimum required changes
 
@@ -1068,6 +1110,8 @@ one card. Tick each item off as you go.
 - [ ] Set a unique `LS_KEY` in `bank.js`.
 - [ ] Changed the `bank.js` address at the top of the loadout card so it matches your
       identifier.
+- [ ] Set `prefix` and `path` in the `model.gwoLoadoutBanks` entry in `start_cards.js`.
+      Without this a locked loadout can never be unlocked.
 
 ## Testing your mod
 

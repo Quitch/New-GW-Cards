@@ -22,6 +22,24 @@ function addStartCards() {
       { id: "YOUR_LOADOUT_ID_N" }
     );
 
+    // TELL GALACTIC WAR OVERHAUL WHERE YOUR BANK IS
+    // Your locked loadouts are recorded in your own bank.js.  Galactic War
+    // Overhaul cannot guess where that is, so you point it at the file here.
+    // Without this, a locked loadout can never become unlocked, and nothing
+    // warns you.
+    //
+    // prefix - the start of every loadout ID in this mod.  When the player earns
+    //          one of your loadouts, this is how Galactic War Overhaul knows the
+    //          loadout is yours and writes it to your bank instead of its own.
+    // path   - the address of your bank.js.  CHANGE THE IDENTIFIER TO MATCH YOURS.
+    if (!model.gwoLoadoutBanks) {
+      model.gwoLoadoutBanks = [];
+    }
+    model.gwoLoadoutBanks.push({
+      prefix: "YOUR_PREFIX_start_",
+      path: "coui://ui/mods/com.pa.YOURNAME.MODNAME/bank.js",
+    });
+
     // OPTIONAL: loadouts that cannot be used alongside an allied commander.
     // If your loadout's effect would break the allied-commander feature, list
     // its ID here so Galactic War Overhaul turns the ally off when the loadout

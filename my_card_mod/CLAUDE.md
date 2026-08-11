@@ -73,8 +73,10 @@ If the user has no mod folder yet, create one before writing any card:
 3. Change every `coui://` address under `scenes` so it contains that identifier.
    Some loaders are listed under more than one scene; keep all of them.
 4. Rename `ui/mods/com.pa.YOURNAME.MODNAME/` to exactly that identifier.
-5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js` and update the
-   `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card.
+5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js`, update the
+   `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card, and set
+   `prefix`/`path` on the `model.gwoLoadoutBanks` entry in `start_cards.js`. GWO reads
+   that entry to find the mod's bank; without it a locked loadout never unlocks.
 
 The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
 must agree. If they disagree the game loads nothing and reports nothing.
