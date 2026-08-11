@@ -115,6 +115,13 @@ contract") for the authoritative list and its validator; the templates here mirr
 For fully-worked examples, point at the GWO card directory
 (`GW-AI-Overhaul/ui/main/game/galactic_war/cards/`) rather than inventing them.
 
+**GWO is the authority on all of this.** `docs/tech-cards.md` there documents the card
+contract and the third-party surface, and `test/modder_api.test.js` pins it — the
+`model.gwo*` globals, the `shared/cards.js` helper names, the `units.js` /
+`unit_groups.js` keys, and `deal`'s arguments. When GWO changes any of them it is
+supposed to update this repo in step, so that test is the first place to look when the
+template and the game disagree.
+
 ## Conventions
 
 - Shipped game code targets PA's embedded **Chrome 40**. `ecmaVersion: 6` is a parser

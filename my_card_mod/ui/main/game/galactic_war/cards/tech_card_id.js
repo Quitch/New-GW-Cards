@@ -3,6 +3,10 @@
 //
 // For examples of what fully implemented cards look like see the GWO repository
 // https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards
+//
+// If this file and the README ever disagree with the game, GWO is the authority:
+// its docs/tech-cards.md describes what a card may contain and what each part is
+// handed, and its test/modder_api.test.js is what holds that steady.
 define([
   "shared/gw_common",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js",

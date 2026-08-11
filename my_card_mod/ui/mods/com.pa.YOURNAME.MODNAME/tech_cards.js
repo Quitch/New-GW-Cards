@@ -3,7 +3,7 @@ function addTechCards() {
     requireGW(
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
       function (gwoUnit) {
-        // Add cards to deck
+        // Add cards to deck.  GWO's shared/deal.js reads this list.
         if (!model.gwoCards) {
           model.gwoCards = [];
         }
@@ -14,7 +14,7 @@ function addTechCards() {
           "YOUR_CARD_ID_N"
         );
 
-        // Setup tooltips for cards
+        // Setup tooltips for cards.  GWO's gw_play/card_tooltips.js reads this.
         if (!model.gwoCardsToUnits) {
           model.gwoCardsToUnits = [];
         }

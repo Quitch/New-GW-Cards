@@ -1,6 +1,8 @@
 function addStartCards() {
   try {
-    // Add locked loadouts
+    // Add locked loadouts.  GWO's shared/loadouts.js reads this to build the
+    // loadout screen, and its gw_play/treasure_loadouts.js to decide what a
+    // Guardian planet can award.
     if (!model.gwoNewStartCards) {
       model.gwoNewStartCards = [];
     }
@@ -14,7 +16,7 @@ function addStartCards() {
       { id: "YOUR_LOADOUT_ID_N" }
     );
 
-    // Add unlocked loadouts
+    // Add unlocked loadouts.  GWO's shared/loadouts.js reads this.
     if (!model.gwoStartingCards) {
       model.gwoStartingCards = [];
     }

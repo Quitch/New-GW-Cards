@@ -232,6 +232,15 @@ The loader files (`tech_cards.js`, `start_cards.js`, `specs.js`) wrap their body
 `try`/`catch` and `console.error` the failure. Keep that: a throw there breaks the whole
 scene with no visible cause.
 
+## When something here disagrees with the game
+
+GWO is the authority, not this file and not the README. Its `docs/tech-cards.md` holds
+the card contract, the `model.gwo*` list, and the loadout bank rules; its
+`test/modder_api.test.js` pins the surface a card is written against — the helper names
+in `shared/cards.js`, the unit and group keys, `deal`'s arguments. If a card behaves
+unexpectedly, read that test before assuming the template is wrong: it says what GWO
+actually guarantees today.
+
 ## Checking the work
 
 There is no test suite — validation is in-game, and the README's "Testing your mod"
