@@ -20,7 +20,7 @@ Ask the user for anything you cannot locate.
 - **`<PA>` — the game install.** Ends in
   `steamapps/common/Planetary Annihilation Titans/media`. **Read-only. Never edit it.**
 - **`<data>` — the PA user data directory.** `%LOCALAPPDATA%\Uber Entertainment\Planetary
-  Annihilation` on Windows. The author's mod is a copy of this folder under
+Annihilation` on Windows. The author's mod is a copy of this folder under
   `<data>/client_mods/<their identifier>/`. **It may not exist yet** — creating
   `client_mods/`, copying the folder, renaming it, and syncing the identifier is part of
   the job (see "Setting the mod up" below).
@@ -42,18 +42,18 @@ Every one of these fails quietly when wrong: a bad icon name renders blank, a ba
 `toBuild` changes nothing, a bad unit path warns once in a console the user is not
 watching. Look each one up.
 
-| What you need | Where it is |
-| --- | --- |
-| Unit paths, and the stat names you put in `path` | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa/ammo/`, `<PA>/pa/tools/` |
-| GWO unit IDs (`gwoUnit.*`) and group IDs (`gwoGroup.*`) | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js` and `shared/unit_groups.js` |
-| `gwoCard` helpers and exactly what they return | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js` |
-| Worked examples of finished cards | `<GWO>` → `ui/main/game/galactic_war/cards/*.js` (hundreds of them); stock ones at `<PA>/ui/main/game/galactic_war/cards/*.js` |
-| Tech icon file names for `icon` | `<PA>/ui/main/game/galactic_war/gw_play/img/tech/` — that directory listing is the complete set of stock names |
-| Discovery voice lines for `audio` | the list in the comment in `ui/main/game/galactic_war/cards/tech_card_id.js` |
-| AI `toBuild` names | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**` |
-| AI `builders` roles and platoon template names | keys of `<PA>/pa/ai/unit_maps/ai_unit_map.json` and `<GWO>` → `pa/ai_penchant/unit_maps/ai_unit_map.json` |
-| Legal `test_type` values for AI build conditions | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above |
-| What an op or helper *actually* does | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available |
+| What you need                                           | Where it is                                                                                                                                                               |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit paths, and the stat names you put in `path`        | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa/ammo/`, `<PA>/pa/tools/`      |
+| GWO unit IDs (`gwoUnit.*`) and group IDs (`gwoGroup.*`) | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js` and `shared/unit_groups.js`                                                                                |
+| `gwoCard` helpers and exactly what they return          | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js`                                                                                                            |
+| Worked examples of finished cards                       | `<GWO>` → `ui/main/game/galactic_war/cards/*.js` (hundreds of them); stock ones at `<PA>/ui/main/game/galactic_war/cards/*.js`                                            |
+| Tech icon file names for `icon`                         | `<PA>/ui/main/game/galactic_war/gw_play/img/tech/` — that directory listing is the complete set of stock names                                                            |
+| Discovery voice lines for `audio`                       | the list in the comment in `ui/main/game/galactic_war/cards/tech_card_id.js`                                                                                              |
+| AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`         |
+| AI `builders` roles and platoon template names          | keys of `<PA>/pa/ai/unit_maps/ai_unit_map.json` and `<GWO>` → `pa/ai_penchant/unit_maps/ai_unit_map.json`                                                                 |
+| Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above               |
+| What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available |
 
 Two path rules that catch everyone:
 
@@ -70,7 +70,8 @@ If the user has no mod folder yet, create one before writing any card:
    free-form; convention is to match the identifier).
 2. In `modinfo.json`, fill in `identifier` (style `com.pa.yourname.modname`),
    `display_name`, `description` and `author`.
-3. Change the three `coui://` addresses under `scenes` so they contain that identifier.
+3. Change every `coui://` address under `scenes` so it contains that identifier.
+   Some loaders are listed under more than one scene; keep all of them.
 4. Rename `ui/mods/com.pa.YOURNAME.MODNAME/` to exactly that identifier.
 5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js` and update the
    `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card.
@@ -167,12 +168,12 @@ Line references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/ref
 **Fields each op needs.** All need `type`. Missing any of these makes the descriptor do
 nothing:
 
-| op | also needs |
-| --- | --- |
-| `load` | `value` |
+| op                             | also needs                    |
+| ------------------------------ | ----------------------------- |
+| `load`                         | `value`                       |
 | `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
-| `remove`, `new` | `toBuild`, `value` |
-| `squad` | `toBuild`, `value` |
+| `remove`, `new`                | `toBuild`, `value`            |
+| `squad`                        | `toBuild`, `value`            |
 
 `squad` works only with `type: "template"`; the other five work only with `fabber`,
 `factory` and `platoon`. Getting that pairing wrong is not always harmless: a build op

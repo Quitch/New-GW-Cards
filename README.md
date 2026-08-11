@@ -68,9 +68,10 @@ to PA, add `--coherent_port=9999` to your Steam launch options for the game.
    - `display_name` — the name players see in the mod list.
    - `description` — a short summary of what your mod adds.
    - `author` — your name.
-   - `scenes` — the three web addresses listed here (one under `gw_start`, two under
-     `gw_play`) each contain your identifier. Change that part so it matches the
-     `identifier` you chose above.
+   - `scenes` — every web address listed here contains your identifier. Change that
+     part in each one so it matches the `identifier` you chose above. Do not remove
+     or reorder the entries: a loader file appears under more than one scene on
+     purpose, because Galactic War Overhaul reads your lists separately in each one.
 4. Inside your mod, open the `ui/mods/` folder. Rename the folder found there (currently
    `com.pa.YOURNAME.MODNAME`) so its name exactly matches your `identifier`.
 
@@ -93,9 +94,16 @@ Galactic War Overhaul about your cards. When Galactic War loads, it reads these 
 your cards to the game:
 
 - `tech_cards.js` — lists your tech cards and their tooltips.
-- `start_cards.js` — lists your loadouts.
+- `start_cards.js` — lists your loadouts, and tells Galactic War Overhaul where your
+  `bank.js` is.
 - `specs.js` — lists any extra unit files you want to change.
 - `bank.js` — remembers which of your locked loadouts the player has unlocked.
+
+Each of these is loaded once per screen that needs it, which is why `modinfo.json`
+lists some of them more than once. Galactic War is three separate screens — choosing
+a loadout, playing the war, and picking a loadout in a co-op game — and each one
+starts with a blank slate, so a loader that only runs on one of them leaves your
+cards missing from the others.
 
 The [Feature reference](#feature-reference) below explains exactly what to put in each
 file, with examples.

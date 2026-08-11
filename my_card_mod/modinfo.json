@@ -13,10 +13,15 @@
   "icon": "SOME_PUBLIC_URL_HERE",
   "scenes": {
     "gw_play": [
+      "coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js",
       "coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js",
       "coui://ui/mods/com.pa.YOURNAME.MODNAME/specs.js"
     ],
-    "gw_start": ["coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js"]
+    "gw_start": ["coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js"],
+    "gw_coop_per_player_loadout": [
+      "coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js",
+      "coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js"
+    ]
   },
   "priority": 100,
   "titansOnly": true,

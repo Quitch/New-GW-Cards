@@ -61,12 +61,13 @@ authoring guide, above) so the guidance survives the copy. Two distinct trees in
 - `my_card_mod/ui/mods/com.pa.YOURNAME.MODNAME/*.js` — the **loader / registration
   scripts** injected per scene via `modinfo.json`'s `scenes` block. These push the
   author's card IDs into GWO's `model.gwo*` arrays so GWO picks them up:
-  - `start_cards.js` (`gw_start` scene) → `model.gwoNewStartCards` (locked) +
-    `model.gwoStartingCards` (unlocked); optionally `model.gwoStarCardsWhichBreakAllies`
-    (loadouts incompatible with an allied commander — GWO never creates this array, so the
-    loader must guard-create it).
-  - `tech_cards.js` (`gw_play` scene) → `model.gwoCards` (deck) +
-    `model.gwoCardsToUnits` (tooltip unit associations); optionally
+  - `start_cards.js` (`gw_start`, `gw_play`, `gw_coop_per_player_loadout`) →
+    `model.gwoNewStartCards` (locked) + `model.gwoStartingCards` (unlocked) +
+    `model.gwoLoadoutBanks` (where this mod's `bank.js` lives); optionally
+    `model.gwoStarCardsWhichBreakAllies` (loadouts incompatible with an allied
+    commander — GWO never creates this array, so the loader must guard-create it).
+  - `tech_cards.js` (`gw_play`, `gw_coop_per_player_loadout`) → `model.gwoCards`
+    (deck) + `model.gwoCardsToUnits` (tooltip unit associations); optionally
     `model.gwoCardsWithoutTooltip` (tech cards that should have no affected-units tooltip).
   - `specs.js` (`gw_play` scene) → `model.gwoSpecs`, for modding unit specs the base
     game doesn't otherwise load (e.g. unused units).
@@ -75,7 +76,11 @@ authoring guide, above) so the guidance survives the copy. Two distinct trees in
     doesn't 404 the base loadout list.
 
 `modinfo.json`'s `scenes` block is the real entry-point list — only files listed there
-load, and `gw_start`/`gw_play` URLs must match the mod `identifier`.
+load, and every URL must match the mod `identifier`. **`model` is a fresh page per
+scene**, so a loader has to be listed under every scene whose data it supplies; that
+is why `start_cards.js` appears three times and `tech_cards.js` twice. Registering
+loadouts only in `gw_start` leaves them out of the `gw_play` treasure pool (so they
+can never be awarded) and out of the co-op loadout picker.
 
 ## Card contract
 
