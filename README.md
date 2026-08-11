@@ -422,9 +422,11 @@ deal: function () {
 },
 ```
 
-You can make the chance depend on the situation. The `deal` part is given the current
-`system`, some galaxy `context`, and the player's `inventory`, and Galactic War Overhaul
-gives you helpers to check them:
+You can make the chance depend on the situation. The `deal` part is handed four things:
+the current `system`, some galaxy `context`, the player's `inventory`, and an `rng` (a
+random number generator — see [Randomness in `deal`](#randomness-in-deal) below, which
+you can ignore unless your card needs to make a random choice). Galactic War Overhaul
+gives you helpers to check the first three:
 
 - `gwoCard.hasUnit(inventory.units(), X)` — true if the player has **any** of unit(s) X.
 - `gwoCard.hasAllUnits(inventory.units(), X)` — true if the player has **all** of unit(s) X.
@@ -747,6 +749,37 @@ loadout screen. A loadout's `deal` is always just:
 ```js
 deal: gwoCard.startCard,
 ```
+
+##### Randomness in `deal`
+
+Most cards never need this. If your card makes a random choice while being dealt, use the
+fourth thing `deal` is handed rather than reaching for `Math.random()`:
+
+```js
+deal: function (system, context, inventory, rng) {
+  return { chance: 40, params: { unique: gwoCard.uniqueValue(rng) } };
+},
+```
+
+Galactic War Overhaul gives each card its own `rng`, tied to the war's seed. That is what
+makes a war repeatable: the same war dealt again offers the same cards, and in a co-op
+game every player sees the same thing. `Math.random()` is not tied to anything, so a card
+using it would deal differently every time and players in the same game would disagree
+about what was offered.
+
+`rng` is **optional** — some ways of dealing a card do not supply one, in which case it
+arrives as `undefined`. `gwoCard.uniqueValue(rng)` handles that for you. If you draw a
+random value yourself, fall back when it is missing:
+
+```js
+var pick = rng ? rng.pick(list) : _.sample(list);
+```
+
+> **Your `chance` must never be random.** Only `params` may be. Galactic War Overhaul
+> asks every card in the deck for its chance, several times over, and keeps just one of
+> the answers. A chance that changed between those questions would make the card's real
+> likelihood depend on how many times it happened to be asked, which is not something you
+> can predict or balance.
 
 #### `keep` and `discard` — rare chance adjustments
 

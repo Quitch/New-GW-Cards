@@ -47,10 +47,14 @@ define([
     audio: _.constant({ found: "/VO/Computer/gw/CHOSEN_LINE_HERE" }),
     getContext: gwoCard.getContext,
     // MODIFY CHANCE OF CARD APPEARING
-    // system, context, and inventory are unused in this template, but they are what you
-    // test to decide the chance.
+    // The four things below are unused in this template.  The first three are what
+    // you test to decide the chance.  The fourth, rng, is only needed if your card
+    // makes a random choice - use it instead of Math.random(), or the same war will
+    // deal differently each time it is played and players in a co-op game will
+    // disagree about what was offered.  Whatever you do here, the chance itself must
+    // never be random.  See the README's "Randomness in `deal`".
     // eslint-disable-next-line no-unused-vars
-    deal: function (system, context, inventory) {
+    deal: function (system, context, inventory, rng) {
       var chance = 0;
       return { chance: chance };
     },

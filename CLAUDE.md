@@ -90,8 +90,11 @@ contract") for the authoritative list and its validator; the templates here mirr
 
 - `visible`, `describe`, `summarize`, `icon`, `deal`, `buff`, `dull` — always present.
   Tech cards also carry `audio` + `getContext`; start cards carry `hint` instead.
-- `deal(system, context, inventory)` controls distribution (returns `{ chance }`); tech
-  cards compute a chance, start cards delegate to `gwoCard.startCard`.
+- `deal(system, context, inventory, rng)` controls distribution (returns `{ chance }`);
+  tech cards compute a chance, start cards delegate to `gwoCard.startCard`. `rng` is the
+  card's seeded stream and is optional — GWO's own docs require `gwoCard.uniqueValue(rng)`
+  over `Math.random()`, and that `chance` never depend on `rng` (only `params` may), since
+  the dealer calls `deal()` speculatively many times per hand.
 - `buff(inventory)` applies the card: `inventory.addUnits(...)` (unit paths / GWO unit
   IDs / group IDs), `inventory.addMods(...)` (unit-spec stat mods —
   `{file, path, op, value}`), and `inventory.addAIMods(...)` (AI build-order descriptors
