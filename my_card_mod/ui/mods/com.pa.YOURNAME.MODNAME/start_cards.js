@@ -4,7 +4,10 @@ function addStartCards() {
     if (!model.gwoNewStartCards) {
       model.gwoNewStartCards = [];
     }
-    // IDs match the card filename minus file extension e.g. "gwc_start_vehicles"
+    // IDs match the card filename minus file extension e.g. "mym_start_bots".
+    // A loadout ID must contain "_start_" and must NOT begin "gwc_start" -
+    // that prefix belongs to the loadouts that come with the game.  See the
+    // README's "Creating a card".
     model.gwoNewStartCards.push(
       { id: "YOUR_LOADOUT_ID_1" },
       { id: "YOUR_LOADOUT_ID_2" },
@@ -15,7 +18,10 @@ function addStartCards() {
     if (!model.gwoStartingCards) {
       model.gwoStartingCards = [];
     }
-    // IDs match the card filename minus file extension e.g. "gwc_start_vehicles"
+    // IDs match the card filename minus file extension e.g. "mym_start_bots".
+    // A loadout ID must contain "_start_" and must NOT begin "gwc_start" -
+    // that prefix belongs to the loadouts that come with the game.  See the
+    // README's "Creating a card".
     model.gwoStartingCards.push(
       { id: "YOUR_LOADOUT_ID_1" },
       { id: "YOUR_LOADOUT_ID_2" },

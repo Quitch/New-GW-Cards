@@ -93,7 +93,10 @@ A card that is not registered is never dealt. The card's ID is its file name wit
   affected units in `model.gwoCardsToUnits`. A card that changes no units goes in
   `model.gwoCardsWithoutTooltip` instead, or GWO warns about missing tooltip data.
 - Loadout → push `{ id: "…" }` to `model.gwoStartingCards` (available immediately) or
-  `model.gwoNewStartCards` (must be earned) in `start_cards.js`.
+  `model.gwoNewStartCards` (must be earned) in `start_cards.js`, never both. A loadout
+  ID **must contain `_start_`** (GWO's `isStartLoadoutCardId` test) and **must not begin
+  `gwc_start`** (reserved for base-game loadouts, and routed to the base game's bank).
+  Use a mod-specific prefix matching the one registered in `model.gwoLoadoutBanks`.
 - A unit file the game does not otherwise load (an unused spec such as Ares' stomp) must
   be listed in `model.gwoSpecs` in `specs.js`, or mods to it are dropped. So must a file
   one unit borrows from another — see "Writing a file name into a spec" below.

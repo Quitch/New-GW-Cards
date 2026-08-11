@@ -141,6 +141,20 @@ and put your copy in your mod's `ui/main/game/galactic_war/cards` folder.
 1. Give the file a unique name. A common style is `ACRONYM_EFFECT_UNITTYPE.js`, for
    example `gwc_damage_bots.js`. **Remember the name without the `.js`** — this is the
    card's ID, and you will use it in the loader files.
+
+   **Loadouts have two extra rules, and breaking either fails silently.** A loadout's
+   ID must contain `_start_`, which is how the game recognises it as a loadout at all,
+   and it must **not** begin with `gwc_start`, which is reserved for the loadouts that
+   come with the game. Pick a short prefix of your own and put `_start_` after it, the
+   way the existing mods do — `gwaio_start_ceo`, `nem_start_nuke`. So
+   `mym_start_engineer`, not `gwc_start_engineer`.
+
+   Getting this wrong is not obvious. An ID without `_start_` is treated as an
+   ordinary tech card, so it never appears on the loadout screen. An ID beginning
+   `gwc_start` is treated as one of the game's own, so its unlock is written into the
+   game's storage instead of your bank — and stays there, pointing at a card that no
+   longer exists, after the player removes your mod.
+
 2. Change the parts of the card to do what you want, using the
    [Feature reference](#feature-reference).
 3. Tell Galactic War Overhaul about the card by adding its ID to `tech_cards.js` (for a
@@ -232,7 +246,7 @@ loadout screen and can be handed out as rewards on Guardian planets. Add one ent
 loadout, giving its ID.
 
 ```js
-model.gwoNewStartCards.push({ id: "gwc_start_myloadout" });
+model.gwoNewStartCards.push({ id: "mym_start_myloadout" });
 ```
 
 #### `model.gwoStartingCards` — unlocked loadouts (in `start_cards.js`)
@@ -240,7 +254,7 @@ model.gwoNewStartCards.push({ id: "gwc_start_myloadout" });
 Loadouts available from the very start. Same shape as above.
 
 ```js
-model.gwoStartingCards.push({ id: "gwc_start_myloadout" });
+model.gwoStartingCards.push({ id: "mym_start_myloadout" });
 ```
 
 > **Do not add a loadout to both the locked and unlocked groups.**
@@ -257,7 +271,7 @@ must create it before adding to it (as shown).
 if (!model.gwoStarCardsWhichBreakAllies) {
   model.gwoStarCardsWhichBreakAllies = [];
 }
-model.gwoStarCardsWhichBreakAllies.push("gwc_start_myloadout");
+model.gwoStarCardsWhichBreakAllies.push("mym_start_myloadout");
 ```
 
 #### `model.gwoLoadoutBanks` — where your bank lives (in `start_cards.js`)
