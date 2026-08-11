@@ -40,7 +40,7 @@ define([
 
           // ADD UNITS TO INVENTORY
           // Delete both lines below if your loadout doesn't unlock any units.
-          var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
+          var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
           inventory.addUnits(units);
 
           // MODIFY UNITS
@@ -103,9 +103,9 @@ define([
     },
     dull: function (inventory) {
       // REMOVE UNITS FROM INVENTORY
-      // If your loadout doesn't unlock any units, delete `units` below and remove it
-      // from the gwoCard.applyDulls() call.
-      var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
+      // If your loadout doesn't remove any units, delete the line below and remove
+      // `units` from the gwoCard.applyDulls() call.
+      var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
       gwoCard.applyDulls(CARD, inventory, units);
     },
   };
