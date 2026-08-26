@@ -86,9 +86,11 @@ to PA, add `--coherent_port=9999` to your Steam launch options for the game.
 Inside your mod folder there are two important areas.
 
 **The cards themselves** live in `ui/main/game/galactic_war/cards/`. Each card is one
-file. The template ships two examples:
+file. The template ships three examples:
 
 - `tech_card_id.js` — an example tech card.
+- `unit_upgrade_card_id.js` — an example tech card that improves one unit the player
+  already has. The shortest kind of card to write.
 - `start_card_id.js` — an example loadout (start card).
 
 **The loader files** live in `ui/mods/<your identifier>/`. These are the files that tell
@@ -119,11 +121,18 @@ in full.
 
 ### Option 1: start from the template's example cards (recommended)
 
-The template already includes two ready-made cards in your mod's
+The template already includes three ready-made cards in your mod's
 `ui/main/game/galactic_war/cards` folder, so you do not have to copy anything:
 
-- `tech_card_id.js` — an example tech card.
-- `start_card_id.js` — an example loadout (start card).
+- `unit_upgrade_card_id.js` — makes **one unit the player already has** better, and is
+  only offered once they have it. If that is what your card does, start here: it is the
+  shortest of the three, because
+  [`gwoCard.upgradeCard`](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard)
+  writes most of the card for you.
+- `tech_card_id.js` — a tech card, dealt to the player during the war. Start here for
+  anything else that happens mid-war: handing out new units, changing a whole family of
+  them, or changing what the AI builds.
+- `start_card_id.js` — a loadout, chosen on the screen before the war starts.
 
 Each one is a complete card with every part already in place, filled with a placeholder
 and labelled by a comment right next to it. Just pick the one you need and rename it (see
@@ -160,7 +169,8 @@ and put your copy in your mod's `ui/main/game/galactic_war/cards` folder.
 2. Change the parts of the card to do what you want, using the
    [Feature reference](#feature-reference).
 3. Tell Galactic War Overhaul about the card by adding its ID to `tech_cards.js` (for a
-   tech card) or `start_cards.js` (for a loadout).
+   tech card, including one that improves a single unit) or `start_cards.js` (for a
+   loadout).
 
 ## Feature reference
 
@@ -1072,6 +1082,52 @@ inventory.addAIMods([
 ]);
 ```
 
+### A shortcut for a card that improves one unit — `gwoCard.upgradeCard`
+
+Plenty of cards do the same simple thing: take one unit the player already has, make it
+better, and only turn up once the player has that unit. Every part of such a card is the
+same every time except the unit and the change, so Galactic War Overhaul will write the
+rest for you.
+
+`gwoCard.upgradeCard` **is** the card — you return what it gives you, and there is no
+list of parts to fill in:
+
+```js
+return gwoCard.upgradeCard({
+  name: "!LOC:Dox Health",
+  description: "!LOC:Increases the health of the basic infantry bot.",
+  icon: "coui://ui/main/game/galactic_war/gw_play/img/tech/PNG_FILE_NAME.png",
+  audio: "/VO/Computer/gw/board_tech_available_armor",
+  requires: gwoUnit.dox,
+  buff: function (inventory) {
+    inventory.addMods(gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 }));
+  },
+});
+```
+
+It takes care of the parts you would otherwise write yourself: the card is visible on the
+board, it gives the player room for one more card, its description gains the usual line
+saying so, it has the standard `getContext`, and its `deal` works out a sensible chance
+and returns `0` until the player has the unit named in `requires`.
+
+- `name`, `description`, `icon`, `audio` — the same as
+  [`summarize`, `describe`, `icon`](#summarize-describe-icon--name-description-picture)
+  and [`audio`](#audio--the-discovery-voice-line-tech-cards) above, written as plain text
+  rather than wrapped in `_.constant`.
+- `requires` — the unit the card improves. The card is never offered until the player has
+  it.
+- `buff` — what the card does, exactly as [`buff`](#buff--what-the-card-does) above.
+- `unless` — optional. The ID of a card that should stop this one being offered, for when
+  two of your cards would fight over the same unit.
+- `chance` — optional. How often the card is offered, if the standard chance is not what
+  you want. See [`deal`](#deal--how-often-the-card-appears) for what the numbers mean.
+- `slot: false` — optional. Don't give the player an extra card slot.
+
+**It cannot take units away again**, because it writes an empty `dull`. A card that hands
+out units and needs to take them back is an ordinary tech card, written the long way.
+
+The example `unit_upgrade_card_id.js` is already written this way.
+
 ### Loadouts and `gwoCard.loadout`
 
 A loadout has more to do than a tech card. It has to give the player the game's standard
@@ -1189,9 +1245,9 @@ one card. Tick each item off as you go.
       `author`.
 - [ ] In `modinfo.json`, changed the `scenes` addresses so they contain your identifier.
 - [ ] Renamed the folder under `ui/mods/` so it matches your identifier.
-- [ ] Renamed the example card file you are using (`tech_card_id.js` or
-      `start_card_id.js`) to a unique name, and remembered that name (without `.js`) as the
-      card's ID.
+- [ ] Renamed the example card file you are using (`tech_card_id.js`,
+      `unit_upgrade_card_id.js` or `start_card_id.js`) to a unique name, and remembered
+      that name (without `.js`) as the card's ID.
 - [ ] Gave the card a name (`summarize`), a description (`describe`), and a picture
       (`icon`).
 - [ ] Made the card actually do something in its `buff` (add units, change unit stats, or
@@ -1213,6 +1269,13 @@ one card. Tick each item off as you go.
 - [ ] Added the card's ID to `model.gwoCards` in `tech_cards.js`.
 - [ ] Listed the card in `model.gwoCardsToUnits` in `tech_cards.js` (or, if it changes no
       units, in `model.gwoCardsWithoutTooltip`).
+
+**If your card improves one unit (`gwoCard.upgradeCard`), also:**
+
+- [ ] Set `requires` to the unit the card improves. There is no `deal` to fill in — the
+      chance is worked out for you.
+- [ ] Added the card's ID to `model.gwoCards` and listed it in `model.gwoCardsToUnits`, in
+      `tech_cards.js`, the same as any other tech card.
 
 - [ ] Checked the mod with ESLint (see [Checking your work](#checking-your-work)) and
       fixed anything it flagged.

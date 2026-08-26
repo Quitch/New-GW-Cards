@@ -45,9 +45,9 @@ intentional placeholders that a real mod replaces, **not** bugs to "fix" in this
 - `your_mod_id` — the `LS_KEY` in `bank.js` (localStorage key for unlocked loadouts).
 - `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,
   `YOUR_PREFIX_start_`, `YOUR_TECH_ID_*`, `UNIT_PATH`, `PATH_*`,
-  `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:...HERE` strings, and the two example
-  card files `start_card_id.js` / `tech_card_id.js` (rename to
-  `ACRONYM_EFFECT_UNITTYPE.js`, e.g. `gwc_damage_bots.js`).
+  `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:...HERE` strings, and the three example
+  card files `start_card_id.js` / `tech_card_id.js` / `unit_upgrade_card_id.js` (rename
+  to `ACRONYM_EFFECT_UNITTYPE.js`, e.g. `gwc_damage_bots.js`).
 
 When editing this repo itself, only change the template/scaffold; do **not** replace
 placeholders with concrete values (that would turn the template into one specific mod).
@@ -64,8 +64,12 @@ and the lint tooling with it. The rest of the root (`package.json`, `eslint.conf
 
 - `ui/main/game/galactic_war/cards/*.js` — the **card definitions**. This
   path shadows the base game's card directory. `tech_card_id.js` is the tech-card
-  template (dealt during play, appears on the board); `start_card_id.js` is the
+  template (dealt during play, appears on the board); `unit_upgrade_card_id.js` is the
+  same family written through `gwoCard.upgradeCard`, the single-unit shape (improves one
+  unit the player already holds, gated on `requires`); `start_card_id.js` is the
   loadout / start-card template (chosen on the pre-game loadout screen, unlockable).
+  The two factory shapes are what GWO's `docs/tech-cards.md` prescribes for new cards of
+  those families; an object literal stays correct for everything else.
 - `ui/mods/com.pa.YOURNAME.MODNAME/*.js` — the **loader / registration
   scripts** injected per scene via `modinfo.json`'s `scenes` block. These push the
   author's card IDs into GWO's `model.gwo*` arrays so GWO picks them up:
@@ -114,9 +118,9 @@ contract") for the authoritative list and its validator; the templates here mirr
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod, `op: "tag"`, on the same
   `file` and `path`, and the file must be reachable or listed in `model.gwoSpecs`. This is
-  a silent-failure warning spelled out three times over — `README.md`, `CLAUDE.md`, and the
-  comments in `tech_card_id.js` and `specs.js`. Keep those four in step, and in step with
-  GWO's `docs/specs.md`.
+  a silent-failure warning spelled out in `README.md`, `CLAUDE.md`, and the comments in
+  `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js` and `specs.js`. Keep
+  those in step with each other, and with GWO's `docs/specs.md`.
 - **A loadout ID registered with no card file of that name hangs war generation outright**,
   and the shipped `start_cards.js` does exactly that with four placeholder IDs — so an
   author who enables the template before editing it gets a Galactic War that never starts.
