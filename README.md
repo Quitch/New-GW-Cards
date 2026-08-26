@@ -417,14 +417,14 @@ getContext: gwoCard.getContext,
 
 #### `hint` — the locked message (loadouts)
 
-Shown on the loadout screen while the loadout is still locked: a picture and a line of
-text.
+Shown on the loadout screen while the loadout is still locked: the locked-commander
+picture and a line of text. `gwoCard.lockedHint` supplies the picture, so the text is all
+you write.
 
 ```js
-hint: _.constant({
-  icon: "coui://ui/main/game/galactic_war/gw_play/img/tech/gwc_commander_locked.png",
-  description: "!LOC:I could be the loadout name or a hint about what this loadout does.",
-}),
+hint: gwoCard.lockedHint(
+  "!LOC:I could be the loadout name or a hint about what this loadout does."
+),
 ```
 
 #### `deal` — how often the card appears
@@ -835,6 +835,11 @@ releaseContext: function (context) {
 `buff` is where the card's effect happens. Inside it you can do any combination of four
 things. Each is described below.
 
+**Loadouts do not write a `buff` of their own.** They hand the same code to
+`gwoCard.loadout` as `apply`, and it writes their `buff` and `dull` for them — see
+[Loadouts and `gwoCard.loadout`](#loadouts-and-gwocardloadout) below. Everything in this
+section works the same inside `apply`.
+
 #### Add a card slot
 
 Give the player room for one more card in their hand:
@@ -1067,10 +1072,51 @@ inventory.addAIMods([
 ]);
 ```
 
+### Loadouts and `gwoCard.loadout`
+
+A loadout has more to do than a tech card. It has to give the player the game's standard
+starting units as well as its own. It has to notice when the same loadout turns up again
+later in the war and hand out a card slot instead of the units a second time. And when a
+player wins a copy of it on a Guardian planet, it has to record that in your bank so the
+loadout unlocks.
+
+`gwoCard.loadout` does all of that. Give it your card and the four things below, and it
+gives you back the card's `buff` and `dull`:
+
+```js
+var loadout = gwoCard.loadout(CARD, {
+  bank: myBank,
+  start: GWCStart,
+  apply: function (inventory) {
+    inventory.addUnits([gwoUnit.dox, gwoGroup.botsBasicMobile]);
+  },
+  dulls: [gwoUnit.dox, gwoGroup.botsBasicMobile],
+});
+```
+
+- `bank` — your mod's bank, which the card lists at the top of the file. See
+  [The bank and `LS_KEY`](#the-bank-and-ls_key--remembering-unlocked-loadouts).
+- `start` — `GWCStart`, the game's standard starting units. Leave this as it is.
+- `apply` — what your loadout gives the player, written exactly the way a tech card's
+  [`buff`](#buff--what-the-card-does) is. Leave it out if your loadout changes nothing
+  beyond the standard start.
+- `dulls` — the units to take back if the player ends up on a different loadout. A list,
+  or a function that is handed the inventory and returns a list. Leave it out if your
+  loadout unlocks no units.
+
+Then use what it gives you as the card's own `buff` and `dull`:
+
+```js
+buff: loadout.buff,
+dull: loadout.dull,
+```
+
+The example `start_card_id.js` is already written this way, so you only fill in the four
+parts above.
+
 ### `dull` — cleanup after all cards
 
-`dull` runs after every card's `buff` has finished. It is mainly used to remove units. The
-way you remove units differs between tech cards and loadouts.
+`dull` runs after every card's `buff` has finished. It is mainly used to remove units.
 
 **Tech cards** remove units directly:
 
@@ -1080,19 +1126,9 @@ dull: function (inventory) {
 },
 ```
 
-**Loadouts** must remove their units through the helper `gwoCard.applyDulls`, which makes
-sure the removal happens once and only for the right copy of the loadout. Pass the card,
-the inventory, and the units to remove:
-
-```js
-dull: function (inventory) {
-  var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
-  gwoCard.applyDulls(CARD, inventory, units);
-},
-```
-
-If a loadout has no units to remove, you can leave the units out:
-`gwoCard.applyDulls(CARD, inventory);`.
+**Loadouts** write no `dull` of their own — they use the one `gwoCard.loadout` gives them,
+and list the units to remove as its `dulls`, as above. Removing a loadout's units at the
+right moment is fiddly, and this is what saves you having to get it right.
 
 ### The bank and `LS_KEY` — remembering unlocked loadouts
 
@@ -1117,10 +1153,11 @@ Your loadout cards connect to this bank in two steps, both already wired up in t
    "coui://ui/mods/<your identifier>/bank.js",
    ```
 
-2. When the loadout is earned, the card records it in the bank:
+2. The card hands that bank to `gwoCard.loadout` as `bank`. When the player earns the
+   loadout, it is recorded there:
 
    ```js
-   myBank.addStartCard(CARD);
+   bank: myBank,
    ```
 
 3. `start_cards.js` tells Galactic War Overhaul where the bank is, through
@@ -1134,8 +1171,8 @@ player's unlocks leave with the mod rather than lingering in someone else's stor
 
 There are two ways a loadout reaches your bank. If the player wins a loadout on a
 Guardian planet, Galactic War Overhaul writes it there itself — your card's own code
-does not run in that case, which is why it needs the address above. The
-`myBank.addStartCard(CARD)` line in the card covers the other route.
+does not run in that case, which is why it needs the address above. The `bank` you hand to
+`gwoCard.loadout` covers the other route.
 
 Your bank also keeps PA's "loadouts unlocked" statistic up to date as it grows. That is
 already written for you in `bank.js`; there is nothing to do.

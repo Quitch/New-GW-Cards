@@ -17,6 +17,79 @@ define([
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/unit_groups.js",
 ], function (module, GWCStart, myBank, gwoCard, gwoUnit, gwoGroup) {
   var CARD = { id: /[^/]+$/.exec(module.id).pop() };
+
+  // gwoCard.loadout writes the fiddly half of a loadout for you.  When the player
+  // starts a war with this loadout it gives them the game's standard starting
+  // units and then runs your `apply` below.  If the same loadout turns up again
+  // later in the war it hands out an extra card slot instead, and a copy won on a
+  // Guardian planet is recorded in your bank so the loadout unlocks.  All you fill
+  // in are the parts below.
+  var loadout = gwoCard.loadout(CARD, {
+    // YOUR BANK - THE FILE YOU NAMED AT THE TOP OF THIS FILE
+    bank: myBank,
+    // THE GAME'S STANDARD STARTING UNITS - LEAVE THIS LINE AS IT IS
+    start: GWCStart,
+    apply: function (inventory) {
+      // ADD UNITS TO INVENTORY
+      // Delete both lines below if your loadout doesn't unlock any units.
+      var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
+      inventory.addUnits(units);
+
+      // MODIFY UNITS
+      // An example of what goes in the list, giving Dox 50% more health and
+      // their weapon a little more range:
+      //   var mods = [
+      //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
+      //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
+      //   ];
+      //
+      // If the value you write is the NAME OF ANOTHER FILE - a weapon, a build arm,
+      // something spawned on death - it needs a second entry right after it with
+      // op: "tag" and no value.  Without it the player's other cards will not apply
+      // to what you added, and nothing will warn you.  Giving Dox a second weapon
+      // borrowed from the Ant:
+      //   var mods = [
+      //     {
+      //       file: gwoUnit.dox,
+      //       path: "tools",
+      //       op: "push",
+      //       value: { spec_id: gwoUnit.antWeapon, aim_bone: "bone_root" },
+      //     },
+      //     { file: gwoUnit.dox, path: "tools.1.spec_id", op: "tag" },
+      //   ];
+      // Dox has one tool already, so the one you pushed is number 1 (they count from
+      // 0).  A borrowed file also has to be listed in specs.js, or the tag points at
+      // nothing.  The README section "Whenever your value is a file name, tag it"
+      // walks through both halves.
+      //
+      // Delete both lines below if your loadout doesn't change any unit's stats.
+      var mods = [];
+      inventory.addMods(mods);
+
+      // MODIFY SUB COMMANDER BEHAVIOUR
+      // An example of what goes in the list, letting basic bot factories build
+      // something only advanced bot factories could build before:
+      //   var aiMods = [
+      //     {
+      //       type: "factory",
+      //       op: "append",
+      //       toBuild: "MyUnit",
+      //       idToMod: "builders",
+      //       value: "BasicBotFactory",
+      //       refId: "builders",
+      //       refValue: ["AdvancedBotFactory"],
+      //     },
+      //   ];
+      // Delete both lines below if your loadout doesn't change what the AI builds.
+      var aiMods = [];
+      inventory.addAIMods(aiMods);
+    },
+    // REMOVE UNITS FROM INVENTORY
+    // These are the units taken back if the player ends up on a different
+    // loadout.  Delete the line below if your loadout doesn't unlock any units.
+    dulls: [gwoUnit.dox, gwoGroup.botsBasicMobile],
+  });
+
   return {
     visible: _.constant(false),
     // ADD A CARD NAME
@@ -26,87 +99,10 @@ define([
     },
     // ADD A CARD DESCRIPTION
     describe: _.constant("!LOC:YOUR DESCRIPTION HERE."),
-    hint: _.constant({
-      icon: "coui://ui/main/game/galactic_war/gw_play/img/tech/gwc_commander_locked.png",
-      // ADD TEXT TO DISPLAY WHEN THE CARD IS LOCKED
-      description: "!LOC:TEXT TO SHOW WHEN CARD IS LOCKED",
-    }),
+    // ADD TEXT TO DISPLAY WHEN THE CARD IS LOCKED
+    hint: gwoCard.lockedHint("!LOC:TEXT TO SHOW WHEN CARD IS LOCKED"),
     deal: gwoCard.startCard,
-    buff: function (inventory) {
-      if (inventory.lookupCard(CARD) === 0) {
-        var buffCount = inventory.getTag("", "buffCount", 0);
-        if (!buffCount) {
-          GWCStart.buff(inventory);
-
-          // ADD UNITS TO INVENTORY
-          // Delete both lines below if your loadout doesn't unlock any units.
-          var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
-          inventory.addUnits(units);
-
-          // MODIFY UNITS
-          // An example of what goes in the list, giving Dox 50% more health and
-          // their weapon a little more range:
-          //   var mods = [
-          //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
-          //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
-          //   ];
-          //
-          // If the value you write is the NAME OF ANOTHER FILE - a weapon, a build
-          // arm, something spawned on death - it needs a second entry right after it
-          // with op: "tag" and no value.  Without it the player's other cards will
-          // not apply to what you added, and nothing will warn you.  Giving Dox a
-          // second weapon borrowed from the Ant:
-          //   var mods = [
-          //     {
-          //       file: gwoUnit.dox,
-          //       path: "tools",
-          //       op: "push",
-          //       value: { spec_id: gwoUnit.antWeapon, aim_bone: "bone_root" },
-          //     },
-          //     { file: gwoUnit.dox, path: "tools.1.spec_id", op: "tag" },
-          //   ];
-          // Dox has one tool already, so the one you pushed is number 1 (they count
-          // from 0).  A borrowed file also has to be listed in specs.js, or the tag
-          // points at nothing.  The README section "Whenever your value is a file
-          // name, tag it" walks through both halves.
-          //
-          // Delete both lines below if your loadout doesn't change any unit's stats.
-          var mods = [];
-          inventory.addMods(mods);
-
-          // MODIFY SUB COMMANDER BEHAVIOUR
-          // An example of what goes in the list, letting basic bot factories build
-          // something only advanced bot factories could build before:
-          //   var aiMods = [
-          //     {
-          //       type: "factory",
-          //       op: "append",
-          //       toBuild: "MyUnit",
-          //       idToMod: "builders",
-          //       value: "BasicBotFactory",
-          //       refId: "builders",
-          //       refValue: ["AdvancedBotFactory"],
-          //     },
-          //   ];
-          // Delete both lines below if your loadout doesn't change what the AI builds.
-          var aiMods = [];
-          inventory.addAIMods(aiMods);
-        } else {
-          inventory.maxCards(inventory.maxCards() + 1);
-        }
-        ++buffCount;
-        inventory.setTag("", "buffCount", buffCount);
-      } else {
-        inventory.maxCards(inventory.maxCards() + 1);
-        myBank.addStartCard(CARD);
-      }
-    },
-    dull: function (inventory) {
-      // REMOVE UNITS FROM INVENTORY
-      // If your loadout doesn't remove any units, delete the line below and remove
-      // `units` from the gwoCard.applyDulls() call.
-      var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
-      gwoCard.applyDulls(CARD, inventory, units);
-    },
+    buff: loadout.buff,
+    dull: loadout.dull,
   };
 });

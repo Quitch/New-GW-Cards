@@ -79,9 +79,9 @@ and the lint tooling with it. The rest of the root (`package.json`, `eslint.conf
     `model.gwoCardsWithoutTooltip` (tech cards that should have no affected-units tooltip).
   - `specs.js` (`gw_play` scene) → `model.gwoSpecs`, for modding unit specs the base
     game doesn't otherwise load (e.g. unused units).
-  - `bank.js` — a `define()` AMD module `require`d by `start_card_id.js`; persists
-    unlocked loadouts to a mod-private `localStorage` key so uninstalling the mod
-    doesn't 404 the base loadout list.
+  - `bank.js` — a `define()` AMD module `require`d by `start_card_id.js` and handed to
+    `gwoCard.loadout` as its `bank`; persists unlocked loadouts to a mod-private
+    `localStorage` key so uninstalling the mod doesn't 404 the base loadout list.
 
 `modinfo.json`'s `scenes` block is the real entry-point list — only files listed there
 load, and every URL must match the mod `identifier`. **`model` is a fresh page per
@@ -127,7 +127,8 @@ contract") for the authoritative list and its validator; the templates here mirr
   Keep those three in step. Do not "fix" it by emptying the shipped lists — the example IDs
   are what show an author the shape; the warning is the fix.
 - `dull(inventory)` reverses `buff` — applied after all `buff`s, for unit removal. Start
-  cards route removal through `gwoCard.applyDulls(CARD, inventory, units)`.
+  cards write neither `buff` nor `dull`: `gwoCard.loadout(CARD, {bank, start, apply, dulls})`
+  returns both, and the template hands them straight to the card.
 
 For fully-worked examples, point at the GWO card directory
 (`GW-AI-Overhaul/ui/main/game/galactic_war/cards/`) rather than inventing them.
