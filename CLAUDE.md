@@ -94,6 +94,24 @@ fill its placeholders in.
 A card that is not registered is never dealt. The card's ID is its file name without
 `.js`. See the README's "Feature reference" for the full list of `model.gwo*` arrays.
 
+Write the card in the shape its family calls for. GWO's `docs/tech-cards.md` prescribes
+the first two, and both factories live in its `shared/cards.js`:
+
+| Family                                   | Shape                        |
+| ---------------------------------------- | ---------------------------- |
+| Improves one unit the player already has | `gwoCard.upgradeCard({…})`   |
+| Loadouts (`*_start_*`)                   | `gwoCard.loadout(CARD, {…})` |
+| Everything else                          | An object literal            |
+
+`upgradeCard` **is** the card: it supplies `visible`, the extra card slot, `getContext`, a
+`withSlot` description and an `upgradeDeal` chance gated on `requires`, leaving `name`,
+`description`, `icon`, `audio`, `requires` and `buff` (plus optional `unless`, `chance`,
+`slot: false`). Its `dull` is empty, so it cannot remove units — a card that must is an
+object literal. `loadout(CARD, {bank, start, apply, dulls})` returns the `{buff, dull}`
+pair a start card needs and is the only shape to write one in: the
+buffCount/lookupCard/maxCards/addStartCard sequence it replaces is easy to get subtly
+wrong and fails quietly. The template's three example cards are one of each shape.
+
 - Tech card → push the ID to `model.gwoCards` in `tech_cards.js`, **and** describe its
   affected units in `model.gwoCardsToUnits`. A card that changes no units goes in
   `model.gwoCardsWithoutTooltip` instead, or GWO warns about missing tooltip data.
