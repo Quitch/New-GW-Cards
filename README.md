@@ -355,6 +355,11 @@ Each card file is a set of named parts. You will recognise them by name inside t
 file. Some parts are used by every card; a few are only used by loadouts or only by tech
 cards.
 
+You will not always have to write them all out. Two common kinds of card have most of
+these filled in for you — see
+[a card that improves one unit](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard)
+and [loadouts](#loadouts-and-gwocardloadout) below.
+
 | Part             | Used by    | What it does                                                                                                                     |
 | ---------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `visible`        | all        | Whether the player can see and discard the card on the board. Tech cards are usually visible; loadouts and hidden cards are not. |
