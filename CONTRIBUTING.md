@@ -183,7 +183,9 @@ There is no automated test suite. Follow `README.md`'s "Testing your mod": launc
 with `--devmode` and `--coherent_port=9999`, enable the mod, and watch the Coherent UI
 Debugger console. `README.md` lists the two errors/warnings PA emits normally (an
 `Uncaught TypeError: undefined is not a function` and a synchronous-XHR deprecation
-warning, up to once per scene) so they aren't mistaken for real failures. Separate
+warning, up to once per scene) plus GWO's `Warning: File not found in mod Object`, which
+is expected whenever a card changes a unit the player does not own, so they aren't
+mistaken for real failures. Separate
 manual flows are documented there for start cards (loadout screen + the localStorage
 key set as `LS_KEY` in `bank.js`) and tech cards (deal via the `X` panel, then spawn
 units in sandbox).

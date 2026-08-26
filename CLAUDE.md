@@ -165,7 +165,11 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
   `gwoCard.paths.{navigation,damage,energyWeapon}` are for.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
-  `Warning: File not found in mod` and nothing happens.
+  `Warning: File not found in mod Object` (`<GWO>` `shared/specs.js:289`) and that entry
+  is skipped. **Expect to see this warning in normal play** — a card touching several
+  units is dealt to players owning only some of them, and dropping the rest is the
+  intended behaviour. It only indicates a bug when the file _should_ have been reachable:
+  a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
 - **A value that is a file name must be followed by `op: "tag"`** on the same `file` and
   `path`. See the section below — this is the failure that is hardest to spot.

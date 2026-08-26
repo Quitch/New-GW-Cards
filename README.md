@@ -1122,7 +1122,9 @@ return gwoCard.upgradeCard({
   audio: "/VO/Computer/gw/board_tech_available_armor",
   requires: gwoUnit.dox,
   buff: function (inventory) {
-    inventory.addMods(gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 }));
+    inventory.addMods(
+      gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 })
+    );
   },
 });
 ```
@@ -1392,7 +1394,7 @@ following two messages, up to once per screen, and they are **not** a problem:
   detrimental effects to the end user's experience. For more help, check
   <http://xhr.spec.whatwg.org/>._
 
-One message is worth knowing on sight:
+Two messages are worth knowing on sight:
 
 - ERROR: _Uncaught Error: Script error for: cards/SOME_ID_
 
@@ -1402,6 +1404,22 @@ One message is worth knowing on sight:
   **loadout** list it is fatal: starting a new war will hang on a blank screen forever.
   See the warning under
   [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
+
+- WARN: _Warning: File not found in mod Object_
+
+  A card tried to change a file the player has no copy of, so the change was skipped.
+  **Seeing this is normal.** Galactic War only copies the files a player's own units
+  need, and a card that changes several units is dealt to players who own only some of
+  them — the entries for the rest are dropped, which is exactly what should happen. Expand
+  the `Object` in the debugger to see which `file` it was.
+
+  It is only a problem if the file is one the card _should_ have been able to change:
+  a unit the card `requires`, a file reachable from one of those, or a file you borrowed
+  from elsewhere and forgot to list in
+  [`model.gwoSpecs`](#modelgwospecs--extra-unit-files-to-change-in-specsjs). A typo in the
+  path looks the same, so check the `file` spelling against the
+  [unit IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js)
+  before assuming it is the harmless kind.
 
 ### Testing loadouts
 
