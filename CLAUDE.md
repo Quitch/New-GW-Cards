@@ -141,8 +141,10 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
   lands in that shared file and affects **every unit that references it**. The final
   segment is never followed (that is what `op: "tag"` exists for).
 - **`file` is one path string.** Never an array. To change several units, build one
-  descriptor per file — `gwoCard.mods(file, op, {path: value, …})` writes the entries
-  for one file, and `_.flatten(_.map(group, …))` covers a whole group.
+  descriptor per file — `gwoCard.mods(file, op, {path: value, …})` writes the entries for
+  one file and `gwoCard.flatMapMods(files, op, …)` does the same over a list or a group.
+  Both take a list of paths plus a single `value` in place of the map, which is what
+  `gwoCard.paths.{navigation,damage,energyWeapon}` are for.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
   `Warning: File not found in mod` and nothing happens.

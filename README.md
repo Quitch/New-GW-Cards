@@ -973,7 +973,7 @@ example above — must be listed in `model.gwoSpecs` (see
 makes a copy of it exist. You only need to list the weapon itself: its ammo, and anything
 that ammo spawns, are copied along with it automatically.
 
-##### A shorthand for one file — `gwoCard.mods`
+##### A shorthand for writing changes — `gwoCard.mods`
 
 Most cards change several things on the same file using the same `op`, which is repetitive
 to write out in full. `gwoCard.mods(file, op, changes)` writes those entries for you: give
@@ -990,18 +990,35 @@ inventory.addMods(
 ```
 
 That is exactly the same as writing out three `{ file, path, op, value }` entries by hand.
-It handles one file at a time, so to apply the same change to a whole family of units,
-build a list for each and join them into one:
+
+To change a whole family of units the same way, use `gwoCard.flatMapMods`, which is the
+same thing but takes a list of files:
 
 ```js
 inventory.addMods(
-  _.flatten(
-    _.map(gwoGroup.botsBasicMobile, function (unit) {
-      return gwoCard.mods(unit, "multiply", { max_health: 1.5 });
-    })
-  )
+  gwoCard.flatMapMods(gwoGroup.botsBasicMobile, "multiply", { max_health: 1.5 })
 );
 ```
+
+Some changes mean applying the same amount to several values at once — making a unit
+faster means changing its speed, acceleration, braking and turning together. For those,
+pass a **list of paths** and one amount instead of `path: value` pairs. Galactic War
+Overhaul names the three sets cards change most often, so you don't have to remember what
+each is made of:
+
+| Set                          | What it covers                                             |
+| ---------------------------- | ---------------------------------------------------------- |
+| `gwoCard.paths.navigation`   | how a unit moves: speed, braking, acceleration and turning |
+| `gwoCard.paths.damage`       | a weapon's direct damage and its splash damage             |
+| `gwoCard.paths.energyWeapon` | an energy weapon's ammo capacity, demand and cost per shot |
+
+```js
+inventory.addMods(
+  gwoCard.mods(gwoUnit.dox, "multiply", gwoCard.paths.navigation, 1.25)
+);
+```
+
+A list you write yourself works the same way, and so does `gwoCard.flatMapMods`.
 
 #### Change how the AI subcommander builds — `inventory.addAIMods(...)`
 
