@@ -76,7 +76,7 @@ If the user has no mod folder yet, create one before writing any card:
 2. In `modinfo.json`, fill in `identifier` (style `com.pa.yourname.modname`),
    `display_name`, `description` and `author`.
 3. Change every `coui://` address under `scenes` so it contains that identifier.
-   Some loaders are listed under more than one scene; keep all of them.
+   `modinfo.json` lists some loaders under more than one scene; keep all of them.
 4. Rename `ui/mods/com.pa.YOURNAME.MODNAME/` to exactly that identifier.
 5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js`, update the
    `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card, and set
@@ -91,7 +91,7 @@ fill its placeholders in.
 
 ## Registering a card
 
-A card that is not registered is never dealt. The card's ID is its file name without
+GWO never deals a card that is not registered. The card's ID is its file name without
 `.js`. See the README's "Feature reference" for the full list of `model.gwo*` arrays.
 
 Write the card in the shape its family calls for. GWO's `docs/tech-cards.md` prescribes
@@ -118,10 +118,11 @@ wrong and fails quietly. The template's three example cards are one of each shap
 - Loadout → push `{ id: "…" }` to `model.gwoStartingCards` (available immediately) or
   `model.gwoNewStartCards` (must be earned) in `start_cards.js`, never both. A loadout
   ID **must contain `_start_`** (GWO's `isStartLoadoutCardId` test) and **must not begin
-  `gwc_start`** (reserved for base-game loadouts, and routed to the base game's bank).
-  Use a mod-specific prefix matching the one registered in `model.gwoLoadoutBanks`.
+  `gwc_start`** (GWO reserves that prefix for base-game loadouts, and routes the card to
+  the base game's bank). Use a mod-specific prefix matching the one you register in
+  `model.gwoLoadoutBanks`.
 - A unit file the game does not otherwise load (an unused spec such as Ares' stomp) must
-  be listed in `model.gwoSpecs` in `specs.js`, or mods to it are dropped. So must a file
+  be listed in `model.gwoSpecs` in `specs.js`, or GWO drops mods to it. So must a file
   one unit borrows from another — see "Writing a file name into a spec" below.
 
 **A registered loadout with no card file hangs the game, and it is the template's default
@@ -146,18 +147,18 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
   leaves it alone (`:139-149`). `multiplyOrCreate` sets it to `value` when it is absent
   (`:259-268`). `add` also creates when absent, and concatenates when the value is a
   string (`:150-165`).
-- **Ops do not run in the order you write them.** Across every card in the hand, all
-  `replace` run first, then `multiplyOrCreate`, then `multiply`, then `add`; everything
+- **Ops do not run in the order you write them.** Across every card in the hand, GWO runs
+  all `replace` first, then `multiplyOrCreate`, then `multiply`, then `add`; everything
   else follows afterwards (`:7, 20-33`). So another card's `replace` still lands before
   your `multiply`. Never write two ops that depend on running in sequence.
 - **`wipe` is a string substitution, not a delete.** `value` is `[from, to]`; a bare value
   means "delete every occurrence of it" (`:238-246`).
-- **Path walking** (`:278-399`): segments are separated by dots, so a segment cannot
-  itself contain one. A number indexes into an array, and `+` appends a new object to one.
-  Missing intermediate levels are created for you. If an intermediate segment is a
-  **string**, it is treated as another spec file and followed — which means your change
-  lands in that shared file and affects **every unit that references it**. The final
-  segment is never followed (that is what `op: "tag"` exists for).
+- **Path walking** (`:278-399`): a dot separates the segments, so a segment cannot itself
+  contain one. A number indexes into an array, and `+` appends a new object to one. GWO
+  creates missing intermediate levels for you. If an intermediate segment is a
+  **string**, GWO treats it as another spec file and follows it — which means your change
+  lands in that shared file and affects **every unit that references it**. GWO never
+  follows the final segment (that is what `op: "tag"` exists for).
 - **`file` is one path string.** Never an array. To change several units, build one
   descriptor per file — `gwoCard.mods(file, op, {path: value, …})` writes the entries for
   one file and `gwoCard.flatMapMods(files, op, …)` does the same over a list or a group.
@@ -165,13 +166,13 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
   `gwoCard.paths.{navigation,damage,energyWeapon}` are for.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
-  `Warning: File not found in mod Object` (`<GWO>` `shared/specs.js:289`) and that entry
-  is skipped. **Expect to see this warning in normal play** — a card touching several
-  units is dealt to players owning only some of them, and dropping the rest is the
-  intended behaviour. It only indicates a bug when the file _should_ have been reachable:
+  `Warning: File not found in mod Object` (`<GWO>` `shared/specs.js:289`) and skips that
+  entry. **Expect to see this warning in normal play** — GWO deals a card touching several
+  units to players owning only some of them, and dropping the rest is the intended
+  behaviour. It only indicates a bug when the file _should_ have been reachable:
   a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
-- **A value that is a file name must be followed by `op: "tag"`** on the same `file` and
+- **Follow a value that is a file name with `op: "tag"`** on the same `file` and
   `path`. See the section below — this is the failure that is hardest to spot.
 - **`clone` and `eval` are advanced — avoid them**, as the README says.
 - **`dull` removes units only.** It cannot undo a stat change or an AI change; only what
@@ -180,12 +181,12 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
 ### Writing a file name into a spec — `op: "tag"`
 
 GW gives each army private copies of its specs, keyed `<path>.json<tag>`
-(`.player`, `.ai0`, …), and applies that army's mods to those copies. The copies are
-generated **before** mods run (`<GWO>` `gw_play/referee_game_files.js`, then
+(`.player`, `.ai0`, …), and applies that army's mods to those copies. GW generates the
+copies **before** mods run (`<GWO>` `gw_play/referee_game_files.js`, then
 `shared/spec_cache.js:tagSpec`), so a path a mod writes arrives untagged. Untagged paths
 still resolve — to the stock file — so the weapon fires and the unit spawns, and the
-player's entire hand misses it. Nothing is logged. This has shipped broken in GWO itself
-more than once.
+player's entire hand misses it. The game logs nothing. This has shipped broken in GWO
+itself more than once.
 
 Every mod whose `value` is a spec reference needs a second mod, `op: "tag"`, on the same
 `file` and `path` and with no `value`. The reference fields are the ones `tagSpec`
@@ -195,14 +196,14 @@ renames: `base_spec`, `tools[].spec_id`, `ammo_id`, `replaceable_units`,
 
 Two things follow.
 
-- **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so a tool pushed
-  onto a two-tool unit is tagged at `tools.2.spec_id`. Read the count from the unit's own
-  spec under `<PA>`, not from the card.
-- **The target must exist tagged**, or the tag points at nothing and the tool is lost
-  outright — a worse outcome than leaving it untagged. A file the unit already references
-  is covered. A file borrowed from another unit is not, and needs listing in
-  `model.gwoSpecs`. Tagging cascades from there: a tagged weapon brings its `ammo_id`, and
-  any `spawn_unit_on_death` on that ammo, with it.
+- **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so you tag a
+  tool pushed onto a two-tool unit at `tools.2.spec_id`. Read the count from the unit's
+  own spec under `<PA>`, not from the card.
+- **The target must exist tagged**, or the tag points at nothing and the game loses the
+  tool outright — a worse outcome than leaving it untagged. GW already tags a file the
+  unit references; it does not tag one borrowed from another unit, which therefore needs
+  listing in `model.gwoSpecs`. Tagging cascades from there: a tagged weapon brings its
+  `ammo_id`, and any `spawn_unit_on_death` on that ammo, with it.
 
 Worked examples in `<GWO>`: `cards/gwaio_upgrade_firefly.js` (replace then tag),
 `gwaio_upgrade_wyrm.js` (borrowed weapon), `gwaio_upgrade_sheller.js`
@@ -278,7 +279,7 @@ scene with no visible cause.
 
 GWO is the authority, not this file and not the README. Its `docs/tech-cards.md` holds
 the card contract, the `model.gwo*` list, and the loadout bank rules; its
-`test/modder_api.test.js` pins the surface a card is written against — the helper names
+`test/modder_api.test.js` pins the surface you write a card against — the helper names
 in `shared/cards.js`, the unit and group keys, `deal`'s arguments. If a card behaves
 unexpectedly, read that test before assuming the template is wrong: it says what GWO
 actually guarantees today.
@@ -288,8 +289,8 @@ actually guarantees today.
 There is no test suite — validation is in-game, and the README's "Testing your mod"
 section is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
 Coherent UI Debugger console, deal the card from the `X` panel, spawn the units in
-sandbox). The README also lists the two messages PA prints normally, so they are not
-mistaken for a fault.
+sandbox). The README also lists the two messages PA prints normally, so you do not mistake
+them for a fault.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance
