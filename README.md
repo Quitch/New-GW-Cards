@@ -1,14 +1,14 @@
 # New Galactic War Cards
 
-A mod template for people who want to add new loadouts and tech cards to the Galactic
-War in Planetary Annihilation: TITANS (PA). It requires the
-[Galactic War Overhaul](https://github.com/Quitch/GW-AI-Overhaul) (GWO) mod to be
-installed, because your cards plug into GWO.
+This is a mod template. Use it to add new loadouts and tech cards to the Galactic War in
+Planetary Annihilation: TITANS (PA). You must also install the
+[Galactic War Overhaul](https://github.com/Quitch/GW-AI-Overhaul) (GWO) mod, because your
+cards connect to GWO.
 
-You do **not** need to know how to program to use this template. You will be editing a
-few text files by copying the examples shown here and changing the labelled parts. This
-guide assumes you know Planetary Annihilation but nothing about coding or about Galactic
-War Overhaul.
+You do **not** need to know how to write programs. You will edit a few text files. Copy
+the examples in this guide, then change the labelled parts. This guide assumes that you
+know Planetary Annihilation. It assumes no knowledge of code, and none of Galactic War
+Overhaul.
 
 ## Contents
 
@@ -27,116 +27,117 @@ War Overhaul.
 
 Galactic War has two kinds of cards:
 
-- **Loadouts** (also called _start cards_) — the starting hand you pick before a war
-  begins. Some are available immediately, others are locked until you earn them.
-- **Tech cards** — the upgrades you are offered as you fight your way across the galaxy.
-  They can unlock units, change unit stats, and change how the AI subcommanders build.
+- **Loadouts** (also called _start cards_) — the starting hand that you pick before a war
+  begins. Some loadouts are available immediately. Others stay locked until you earn them.
+- **Tech cards** — the upgrades that the game offers you while you fight across the
+  galaxy. They can unlock units, change unit stats, and change what the AI subcommanders
+  build.
 
-This template gives you a ready-made mod folder with working examples of both. You copy
-the folder, rename it, and fill in the blanks.
+This template gives you a complete mod folder with working examples of both kinds. Copy
+the folder, rename it, and complete the blank values.
 
-> **Note:** Galactic War does not support server mods. That means you can only use and
-> modify units that ship with the game (including the Titans expansion) — you cannot add
-> brand-new custom units, or use units from other server mods, in a Galactic War card.
+> **Note:** Galactic War does not support server mods. You can therefore use and change
+> only the units that come with the game, including the Titans expansion. You cannot add a
+> new custom unit to a Galactic War card, and you cannot use a unit from another server
+> mod.
 
 ## Requirements
 
-You will be editing text files. Any plain-text editor works, but a code editor such as
-[Visual Studio Code](https://code.visualstudio.com/) is recommended because it colours
-the text and highlights mistakes.
+You will edit text files. Any plain-text editor works. A code editor such as
+[Visual Studio Code](https://code.visualstudio.com/) is better, because it colours the
+text and shows mistakes.
 
-The template also comes with a checker that reads your card files and points out mistakes
-before you ever launch the game. Setting it up is optional but strongly recommended, and
-[Checking your work](#checking-your-work) explains how.
+The template also includes a checker. The checker reads your card files and reports
+mistakes before you start the game. You do not have to install it, but we recommend that
+you do. [Checking your work](#checking-your-work) explains how.
 
-For testing you will need the
+For testing you need the
 [Coherent UI Debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip).
-This is a free tool that lets you see what the game's menus are doing. To let it connect
-to PA, add `--coherent_port=9999` to your Steam launch options for the game.
+It is a free tool, and it shows you what the menus of the game do. To let it connect to
+PA, add `--coherent_port=9999` to the Steam launch options for the game.
 
 ## Preparing the mod
 
 1. Find your [PA data directory](https://support.planetaryannihilation.com/kb/faq.php?id=176)
    and open the `client_mods` folder inside it. If that folder does not exist, create it.
-2. Copy this whole template folder into `client_mods`. Rename it to something of your
-   choice. From here on, this renamed folder is the root of your mod. It contains a few
-   files the game ignores — `README.md`, `package.json`, `eslint.config.mjs` and the
-   like. Leave them there: they are the checker described in
-   [Checking your work](#checking-your-work), and it only works from inside your mod
-   folder.
-3. Open `modinfo.json` (in your mod's root folder) and fill in these entries:
-   - `identifier` — a unique name for your mod, using the style
-     `com.pa.yourname.modname`.
-   - `display_name` — the name players see in the mod list.
+2. Copy this whole template folder into `client_mods`. Rename the copy to a name of your
+   choice. That renamed folder is now the root of your mod. It holds a few files that the
+   game ignores, such as `README.md`, `package.json` and `eslint.config.mjs`. Leave those
+   files where they are. They are the checker described in
+   [Checking your work](#checking-your-work), and the checker works only from inside your
+   mod folder.
+3. Open `modinfo.json`, in the root folder of your mod, and complete these entries:
+   - `identifier` — a unique name for your mod, in the style `com.pa.yourname.modname`.
+   - `display_name` — the name that players see in the mod list.
    - `description` — a short summary of what your mod adds.
    - `author` — your name.
-   - `scenes` — every web address listed here contains your identifier. Change that
-     part in each one so it matches the `identifier` you chose above. Do not remove
-     or reorder the entries: a loader file appears under more than one scene on
-     purpose, because Galactic War Overhaul reads your lists separately in each one.
-4. Inside your mod, open the `ui/mods/` folder. Rename the folder found there (currently
-   `com.pa.YOURNAME.MODNAME`) so its name exactly matches your `identifier`.
+   - `scenes` — every web address here contains your identifier. Change that part of each
+     address to the `identifier` that you chose above. Do not delete an entry, and do not
+     change the order. A loader file appears under more than one scene on purpose, because
+     Galactic War Overhaul reads your lists separately in each scene.
+4. Inside your mod, open the `ui/mods/` folder. Rename the folder there (at present
+   `com.pa.YOURNAME.MODNAME`) so that its name matches your `identifier` exactly.
 
-> **Keep three things in step:** the `identifier` in `modinfo.json`, the `scenes` web
-> addresses in that same file, and the folder name under `ui/mods/` must all use the same
-> identifier. If they disagree, the game silently loads nothing.
+> **Keep three things the same:** the `identifier` in `modinfo.json`, the `scenes` web
+> addresses in that same file, and the folder name under `ui/mods/`. All three must use
+> the same identifier. If they disagree, the game loads nothing and reports nothing.
 
 ## Understanding the pieces
 
-Inside your mod folder there are two important areas.
+Your mod folder has two important areas.
 
-**The cards themselves** live in `ui/main/game/galactic_war/cards/`. Each card is one
-file. The template ships three examples:
+**The cards themselves** are in `ui/main/game/galactic_war/cards/`. Each card is one file.
+The template supplies three examples:
 
 - `tech_card_id.js` — an example tech card.
-- `unit_upgrade_card_id.js` — an example tech card that improves one unit the player
-  already has. The shortest kind of card to write.
+- `unit_upgrade_card_id.js` — an example tech card that improves one unit that the player
+  already has. It is the shortest kind of card to write.
 - `start_card_id.js` — an example loadout (start card).
 
-**The loader files** live in `ui/mods/<your identifier>/`. These are the files that tell
-Galactic War Overhaul about your cards. When Galactic War loads, it reads these and adds
-your cards to the game:
+**The loader files** are in `ui/mods/<your identifier>/`. These files tell Galactic War
+Overhaul about your cards. When Galactic War loads, it reads them and adds your cards to
+the game:
 
 - `tech_cards.js` — lists your tech cards and their tooltips.
 - `start_cards.js` — lists your loadouts, and tells Galactic War Overhaul where your
   `bank.js` is.
-- `specs.js` — lists any extra unit files you want to change.
-- `bank.js` — remembers which of your locked loadouts the player has unlocked.
+- `specs.js` — lists any extra unit files that you want to change.
+- `bank.js` — records which of your locked loadouts the player has unlocked.
 
-Each of these is loaded once per screen that needs it, which is why `modinfo.json`
-lists some of them more than once. Galactic War is three separate screens — choosing
-a loadout, playing the war, and picking a loadout in a co-op game — and each one
-starts with a blank slate, so a loader that only runs on one of them leaves your
-cards missing from the others.
+The game loads each of these files once for each screen that needs it. That is why
+`modinfo.json` lists some of them more than once. Galactic War has three separate screens:
+the loadout choice, the war itself, and the loadout choice in a co-op game. Each screen
+starts empty. A loader that runs on only one screen therefore leaves your cards missing
+from the other two.
 
-The [Feature reference](#feature-reference) below explains exactly what to put in each
-file, with examples.
+The [Feature reference](#feature-reference) below explains what to put in each file, with
+examples.
 
 ## Creating a card
 
-There are two ways to start a new card. Whichever you choose, you then fill in the card's
-parts using the [Feature reference](#feature-reference) below. A short comment inside the
-example card files labels each part; the Feature reference is where each one is explained
-in full.
+There are two ways to start a new card. After you choose one, complete the parts of the
+card with the [Feature reference](#feature-reference) below. A short comment in each
+example card file labels each part. The Feature reference explains each part in full.
 
 ### Option 1: start from the template's example cards (recommended)
 
-The template already includes three ready-made cards in your mod's
-`ui/main/game/galactic_war/cards` folder, so you do not have to copy anything:
+The template already includes three complete cards in the
+`ui/main/game/galactic_war/cards` folder of your mod, so you do not have to copy a file:
 
-- `unit_upgrade_card_id.js` — makes **one unit the player already has** better, and is
-  only offered once they have it. If that is what your card does, start here: it is the
-  shortest of the three, because
+- `unit_upgrade_card_id.js` — improves **one unit that the player already has**, and the
+  game offers it only after the player has that unit. Start here if your card does that.
+  It is the shortest of the three, because
   [`gwoCard.upgradeCard`](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard)
   writes most of the card for you.
-- `tech_card_id.js` — a tech card, dealt to the player during the war. Start here for
-  anything else that happens mid-war: handing out new units, changing a whole family of
-  them, or changing what the AI builds.
-- `start_card_id.js` — a loadout, chosen on the screen before the war starts.
+- `tech_card_id.js` — a tech card, which the game deals to the player during the war.
+  Start here for any other effect during a war: new units for the player, a change to a
+  whole family of units, or a change to what the AI builds.
+- `start_card_id.js` — a loadout, which the player chooses on the screen before the war
+  starts.
 
-Each one is a complete card with every part already in place, filled with a placeholder
-and labelled by a comment right next to it. Just pick the one you need and rename it (see
-below).
+Each of the three is a complete card. Every part is already there, holds a placeholder,
+and has a comment beside it. Pick the card that you need and rename it, as described
+below.
 
 ### Option 2: copy an existing card
 
@@ -145,67 +146,66 @@ copy one of PA's own cards from
 `{PA_INSTALL_DIRECTORY}/media/ui/main/game/galactic_war/cards`, or one of Galactic War
 Overhaul's cards from its
 [cards folder on GitHub](https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards),
-and put your copy in your mod's `ui/main/game/galactic_war/cards` folder.
+and put your copy in the `ui/main/game/galactic_war/cards` folder of your mod.
 
 ### Then, whichever option you chose
 
 1. Give the file a unique name. A common style is `ACRONYM_EFFECT_UNITTYPE.js`, for
-   example `gwc_damage_bots.js`. **Remember the name without the `.js`** — this is the
-   card's ID, and you will use it in the loader files.
+   example `gwc_damage_bots.js`. **Remember the name without the `.js`** — that name is
+   the ID of the card, and you use it in the loader files.
 
-   **Loadouts have two extra rules, and breaking either fails silently.** A loadout's
-   ID must contain `_start_`, which is how the game recognises it as a loadout at all,
-   and it must **not** begin with `gwc_start`, which is reserved for the loadouts that
-   come with the game. Pick a short prefix of your own and put `_start_` after it, the
-   way the existing mods do — `gwaio_start_ceo`, `nem_start_nuke`. So
+   **Loadouts have two more rules, and a mistake in either one reports nothing.** The ID
+   of a loadout must contain `_start_`, because that is how the game recognises a loadout
+   at all. The ID must **not** start with `gwc_start`, because that prefix is reserved for
+   the loadouts that come with the game. Choose a short prefix of your own and write
+   `_start_` after it, as the existing mods do: `gwaio_start_ceo`, `nem_start_nuke`. Write
    `mym_start_engineer`, not `gwc_start_engineer`.
 
-   Getting this wrong is not obvious. An ID without `_start_` is treated as an
-   ordinary tech card, so it never appears on the loadout screen. An ID beginning
-   `gwc_start` is treated as one of the game's own, so its unlock is written into the
-   game's storage instead of your bank — and stays there, pointing at a card that no
-   longer exists, after the player removes your mod.
+   The result of a mistake here is difficult to see. The game treats an ID without
+   `_start_` as an ordinary tech card, so it never appears on the loadout screen. The game
+   treats an ID that starts with `gwc_start` as one of its own, so it writes the unlock
+   into the storage of the game instead of into your bank. That record stays there after
+   the player removes your mod, and it points at a card that no longer exists.
 
-2. Change the parts of the card to do what you want, using the
+2. Change the parts of the card to do what you want, with the
    [Feature reference](#feature-reference).
-3. Tell Galactic War Overhaul about the card by adding its ID to `tech_cards.js` (for a
-   tech card, including one that improves a single unit) or `start_cards.js` (for a
-   loadout).
+3. Tell Galactic War Overhaul about the card. Add its ID to `tech_cards.js` for a tech
+   card, including one that improves a single unit, or to `start_cards.js` for a loadout.
 
 ## Feature reference
 
-This section explains every feature you can use, with a worked example of each. Copy the
-shape shown and change the labelled parts.
+This section explains every feature that you can use, with a worked example of each. Copy
+the shape shown and change the labelled parts.
 
-Two shorthands you will see everywhere:
+You will see two short forms everywhere:
 
-- A **GWO unit ID** or **GWO group ID** is a nickname Galactic War Overhaul provides so
-  you don't have to type a full file path, for example `gwoUnit.dox` (a single unit) or
-  `gwoGroup.botsBasicMobile` (a whole family of units). These include ammos and weapons.
-  The full lists are here:
+- A **GWO unit ID** or **GWO group ID** is a short name that Galactic War Overhaul
+  supplies, so that you do not type a full file path. Examples are `gwoUnit.dox` (a single
+  unit) and `gwoGroup.botsBasicMobile` (a whole family of units). These names include
+  ammos and weapons. The full lists are here:
   [unit IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js)
   and
   [group IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/unit_groups.js).
-- A **unit path** is where a unit's file lives, written as
-  `/pa/units/SOME_LAYER/SOME_UNIT/SOME_UNIT.json`. Titans (expansion) units live under
-  `/pa_ex1/` in the game files, but the game mounts them into `/pa/`, so always write them
-  with a `/pa/` path, never `/pa_ex1/`.
+- A **unit path** is the location of the file of a unit, written as
+  `/pa/units/SOME_LAYER/SOME_UNIT/SOME_UNIT.json`. The game files hold Titans (expansion)
+  units under `/pa_ex1/`, but the game mounts them into `/pa/`. Always write a `/pa/` path
+  for them, never `/pa_ex1/`.
 
-> **Prefer GWO unit and group IDs over paths.** Whenever a GWO ID exists for the unit you
-> want, use it instead of a path: the IDs are kept up to date by Galactic War Overhaul,
-> they spare you path mistakes (such as the `/pa_ex1/` trap above), and they make your
-> card easier to read. Only fall back to a raw path when no GWO ID exists for the unit.
+> **Prefer a GWO unit ID or group ID to a path.** When a GWO ID exists for the unit that
+> you want, use it in place of a path. Galactic War Overhaul keeps the IDs up to date,
+> they prevent path mistakes such as the `/pa_ex1/` trap above, and they make your card
+> easier to read. Use a raw path only when no GWO ID exists for the unit.
 
 ### The lists that tell GWO about your cards
 
-Galactic War Overhaul keeps several lists that you add your cards to. Each list has a name
-beginning with `model.gwo`, and the heading for each one below tells you which file to add
-it in.
+Galactic War Overhaul keeps several lists, and you add your cards to them. The name of
+each list starts with `model.gwo`. The heading of each section below names the file to
+write it in.
 
 #### `model.gwoCards` — your tech-card deck (in `tech_cards.js`)
 
-The master list of tech cards that can be dealt during a war. Add each tech card's ID
-(its file name without `.js`).
+This is the main list of tech cards that the game can deal during a war. Add the ID of
+each tech card, which is its file name without `.js`.
 
 ```js
 model.gwoCards.push("gwc_damage_bots", "gwc_faster_air");
@@ -213,10 +213,10 @@ model.gwoCards.push("gwc_damage_bots", "gwc_faster_air");
 
 #### `model.gwoCardsToUnits` — tech-card tooltips (in `tech_cards.js`)
 
-Links a tech card to the units it affects, so the card's tooltip can list them. Add one
-entry per card: its ID, and the units it changes (as unit paths or GWO unit/group IDs).
-Always use the unit itself, not its ammo or weapon file, regardless of what the card
-touches.
+This list connects a tech card to the units that it changes, so that the tooltip of the
+card can list them. Add one entry for each card. The entry holds the ID of the card, and
+the units that it changes as unit paths or as GWO unit or group IDs. Always name the unit
+itself, not its ammo file or its weapon file, whatever the card changes.
 
 ```js
 model.gwoCardsToUnits.push({
@@ -227,9 +227,9 @@ model.gwoCardsToUnits.push({
 
 #### `model.gwoCardsWithoutTooltip` — tech cards with no unit tooltip (in `tech_cards.js`)
 
-A tech card that does **not** change units (for example one that only switches a feature
-on) should be listed here **instead of** in `model.gwoCardsToUnits`. If you don't,
-Galactic War Overhaul warns that the card is missing its tooltip data. Add the card's ID.
+List a tech card here when it does **not** change units, for example a card that only
+enables a feature. Use this list **in place of** `model.gwoCardsToUnits`. If you do not,
+Galactic War Overhaul warns that the card has no tooltip data. Add the ID of the card.
 
 ```js
 if (!model.gwoCardsWithoutTooltip) {
@@ -240,9 +240,10 @@ model.gwoCardsWithoutTooltip.push("gwc_enable_bounties");
 
 #### `model.gwoCardsGrantingAdvancedTech` — cards that unlock advanced tech (in `tech_cards.js`)
 
-Cards ask this list whether the player has reached advanced (T2) tech yet, through
-[`gwoCard.hasT2Access`](#cards-that-react-to-the-players-other-cards). If one of your cards
-is what grants that access, add its ID here so those cards can see it. Add the card's ID.
+Cards use this list, through
+[`gwoCard.hasT2Access`](#cards-that-react-to-the-players-other-cards), to ask whether the
+player has reached advanced (T2) tech. If one of your cards gives that access, add its ID
+here, so that those cards can see it. Add the ID of the card.
 
 ```js
 if (!model.gwoCardsGrantingAdvancedTech) {
@@ -253,9 +254,9 @@ model.gwoCardsGrantingAdvancedTech.push("gwc_enable_mybots_all");
 
 #### `model.gwoNewStartCards` — locked loadouts (in `start_cards.js`)
 
-Loadouts the player must earn before they can use them. They appear greyed-out on the
-loadout screen and can be handed out as rewards on Guardian planets. Add one entry per
-loadout, giving its ID.
+These are the loadouts that the player must earn before use. They appear grey on the
+loadout screen, and the game can award them as rewards on Guardian planets. Add one entry
+for each loadout, with its ID.
 
 ```js
 model.gwoNewStartCards.push({ id: "mym_start_myloadout" });
@@ -263,38 +264,39 @@ model.gwoNewStartCards.push({ id: "mym_start_myloadout" });
 
 #### `model.gwoStartingCards` — unlocked loadouts (in `start_cards.js`)
 
-Loadouts available from the very start. Same shape as above.
+These are the loadouts that are available from the start. The shape is the same as above.
 
 ```js
 model.gwoStartingCards.push({ id: "mym_start_myloadout" });
 ```
 
-> **Do not add a loadout to both the locked and unlocked groups.**
+> **Do not add a loadout to both the locked list and the unlocked list.**
 >
-> **Every ID in these two lists must have a card file of exactly that name, or Galactic War
-> will not start.** This is the worst mistake in the whole template, because it does not
-> break the card — it breaks the game. Galactic War Overhaul loads every loadout you list
-> here while it builds a new war. If one of them has no file, it waits for a file that will
-> never arrive: the war finishes generating and then the screen simply sits there, with no
-> error, no message, and nothing to click. Only closing the game gets you out.
+> **Every ID in these two lists must have a card file with exactly that name. If one does
+> not, Galactic War does not start.** This is the worst mistake in the whole template,
+> because it breaks the game and not only the card. Galactic War Overhaul loads every
+> loadout that you list here while it builds a new war. If one of them has no file,
+> Galactic War Overhaul waits for a file that never arrives. The war finishes its
+> generation, and the screen then stays as it is. There is no error, no message and
+> nothing to click. Only a restart of the game ends it.
 >
-> The template arrives with four example IDs already in these lists
+> The template arrives with four example IDs in these lists
 > (`YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`, `YOUR_UNLOCKED_LOADOUT_ID_1`,
-> `YOUR_UNLOCKED_LOADOUT_ID_N`) and no files to match, so **the mod does this to you the
-> first time you switch it on.** Before you enable the mod, open `start_cards.js` and delete
-> every example ID you have not replaced with a real one. Deleting them all is fine — a mod
-> with no loadouts works perfectly well.
+> `YOUR_UNLOCKED_LOADOUT_ID_N`) and with no files for them. **The mod therefore does this
+> to you the first time that you enable it.** Before you enable the mod, open
+> `start_cards.js` and delete every example ID that you have not replaced with a real ID.
+> You can delete all of them. A mod with no loadouts works correctly.
 >
-> Tech cards are more forgiving: a missing tech card file logs an error and is skipped, and
-> the war plays on.
+> Tech cards are safer. A missing tech card file logs an error, the game skips that card,
+> and the war continues.
 
 #### `model.gwoStarCardsWhichBreakAllies` — loadouts that disable the ally (in `start_cards.js`)
 
-If your loadout's effect would break the allied-commander feature, list its ID here.
-When the player picks that loadout, Galactic War Overhaul turns the allied commander off.
+List the ID of your loadout here if its effect would break the allied-commander feature.
+When the player picks that loadout, Galactic War Overhaul disables the allied commander.
 
-Unlike the other lists, Galactic War Overhaul does **not** create this one for you, so you
-must create it before adding to it (as shown).
+Galactic War Overhaul does **not** create this list for you, unlike the other lists.
+Create it yourself before you add to it, as shown.
 
 ```js
 if (!model.gwoStarCardsWhichBreakAllies) {
@@ -305,11 +307,11 @@ model.gwoStarCardsWhichBreakAllies.push("mym_start_myloadout");
 
 #### `model.gwoLoadoutBanks` — where your bank lives (in `start_cards.js`)
 
-Your locked loadouts are recorded in your own `bank.js`, under your own `LS_KEY`.
-Galactic War Overhaul has no way of guessing where that file is, so you point it at it.
-**Without this, a locked loadout can never become unlocked**, and nothing warns you.
+Your own `bank.js` records your locked loadouts, under your own `LS_KEY`. Galactic War
+Overhaul cannot find that file without help, so you give it the address. **Without this
+entry a locked loadout can never unlock**, and nothing warns you.
 
-Like the list above, Galactic War Overhaul does not create this one for you.
+Galactic War Overhaul does not create this list for you either.
 
 ```js
 if (!model.gwoLoadoutBanks) {
@@ -321,29 +323,32 @@ model.gwoLoadoutBanks.push({
 });
 ```
 
-`prefix` is the start of every loadout ID in your mod. When the player earns one of your
-loadouts, that is how Galactic War Overhaul knows the loadout is yours, and writes it to
-your bank rather than its own. It must match the start of the loadout IDs you chose.
+`prefix` is the first part of every loadout ID in your mod. When the player earns one of
+your loadouts, Galactic War Overhaul uses the prefix to see that the loadout is yours. It
+then writes the loadout to your bank instead of its own. The prefix must match the start
+of the loadout IDs that you chose.
 
-`path` is the address of your `bank.js`, and contains your identifier like every other
+`path` is the address of your `bank.js`, and it contains your identifier like every other
 address in the mod.
 
-Give this the address, not the file itself. The screens Galactic War Overhaul builds
-your loadout list on run before any file your mod loads, so handing it an address it can
-fetch when it is ready is the only way it can be sure of having your bank in time.
+Give the address, not the file itself. The screens that Galactic War Overhaul builds your
+loadout list on run before the game loads any file of your mod. An address that Galactic
+War Overhaul can read when it is ready is therefore the only way for it to have your bank
+in time.
 
 #### `model.gwoSpecs` — extra unit files to change (in `specs.js`)
 
-Galactic War only makes a player a copy of the files their own units need. List a path
-here and every player gets a copy of that file too. There are two reasons to want that.
+Galactic War makes a player a copy of only the files that their own units need. If you
+list a path here, every player also gets a copy of that file. There are two reasons to do
+this.
 
-Some unit files are not used by the game normally (for example Ares' stomp). If you want
-to change one of those, list its path here so Galactic War Overhaul loads it.
+The game does not normally use some unit files, for example the stomp of the Ares. To
+change one of those, list its path here, so that Galactic War Overhaul loads it.
 
-The other reason is lending one unit a file that belongs to another — a weapon, a build
-arm, a unit spawned on death. That is explained under
-[Whenever your value is a file name, `tag` it](#whenever-your-value-is-a-file-name-tag-it);
-list the borrowed file here, and its ammo comes along with it.
+The second reason is to lend one unit a file that belongs to another unit: a weapon, a
+build arm, or a unit that spawns on death.
+[Whenever your value is a file name, `tag` it](#whenever-your-value-is-a-file-name-tag-it)
+explains that. List the borrowed file here, and its ammo comes with it.
 
 ```js
 model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
@@ -351,35 +356,35 @@ model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
 
 ### What a card is made of
 
-Each card file is a set of named parts. You will recognise them by name inside the card
-file. Some parts are used by every card; a few are only used by loadouts or only by tech
-cards.
+Each card file is a set of named parts, and you can recognise them by name inside the card
+file. Every card uses some of the parts. A few parts belong only to loadouts, or only to
+tech cards.
 
-You will not always have to write them all out. Two common kinds of card have most of
-these filled in for you — see
+You do not always write all of them. Two common kinds of card already have most of these
+parts. See
 [a card that improves one unit](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard)
 and [loadouts](#loadouts-and-gwocardloadout) below.
 
-| Part             | Used by    | What it does                                                                                                                     |
-| ---------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `visible`        | all        | Whether the player can see and discard the card on the board. Tech cards are usually visible; loadouts and hidden cards are not. |
-| `summarize`      | all        | The card's name.                                                                                                                 |
-| `describe`       | all        | The card's description text.                                                                                                     |
-| `icon`           | all        | The card's picture.                                                                                                              |
-| `deal`           | all        | How likely the card is to be offered. See below.                                                                                 |
-| `buff`           | all        | What the card actually does. See below.                                                                                          |
-| `dull`           | all        | Cleanup, run after every card's `buff`. Usually removes units.                                                                   |
-| `audio`          | tech cards | The voice line played when the card is discovered.                                                                               |
-| `getContext`     | tech cards | Gives the `deal` part information about the galaxy. Use `gwoCard.getContext`.                                                    |
-| `hint`           | loadouts   | The picture and text shown while the loadout is still locked.                                                                    |
-| `keep`           | rare       | Called just after the card is dealt. Not what the name suggests — see below.                                                     |
-| `discard`        | rare       | Left over from PA's own cards. Galactic War Overhaul never calls it.                                                             |
-| `releaseContext` | rare       | Called just after the card is dealt, to let go of anything `getContext` made.                                                    |
+| Part             | Used by    | What it does                                                                                                                    |
+| ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `visible`        | all        | Whether the player can see the card on the board and discard it. Tech cards are usually visible. Loadouts and hidden cards are not. |
+| `summarize`      | all        | The name of the card.                                                                                                           |
+| `describe`       | all        | The description text of the card.                                                                                               |
+| `icon`           | all        | The picture of the card.                                                                                                        |
+| `deal`           | all        | How often the game offers the card. See below.                                                                                  |
+| `buff`           | all        | What the card does. See below.                                                                                                  |
+| `dull`           | all        | Cleanup. It runs after the `buff` of every card, and it usually removes units.                                                  |
+| `audio`          | tech cards | The voice line that plays when the player finds the card.                                                                       |
+| `getContext`     | tech cards | Gives the `deal` part information about the galaxy. Use `gwoCard.getContext`.                                                   |
+| `hint`           | loadouts   | The picture and text shown while the loadout is still locked.                                                                   |
+| `keep`           | rare       | Runs just after the game deals the card. It does not do what its name says. See below.                                          |
+| `discard`        | rare       | Left over from PA's own cards. Galactic War Overhaul never calls it.                                                            |
+| `releaseContext` | rare       | Runs just after the game deals the card, to release anything that `getContext` made.                                            |
 
 #### `summarize`, `describe`, `icon` — name, description, picture
 
-`summarize` is the name, `describe` is the description, `icon` is the picture. Text that
-players read is written with a `!LOC:` prefix so it can be translated.
+`summarize` is the name, `describe` is the description, and `icon` is the picture. Write
+text that players read with a `!LOC:` prefix, so that it can be translated.
 
 ```js
 summarize: _.constant("!LOC:Bot Damage"),
@@ -389,25 +394,24 @@ icon: _.constant(
 ),
 ```
 
-The picture can be one of PA's existing tech icons (as above) or an image you ship inside
+The picture can be one of PA's own tech icons, as above. It can also be an image inside
 your own mod, for example
 `coui://ui/mods/<your identifier>/SOME_FOLDER/PNG_FILE_NAME.png`.
 
-To see the icons PA already has, open
+To see the icons that PA already has, open
 `{PA_INSTALL_DIRECTORY}/media/ui/main/game/galactic_war/gw_play/img/tech` and pick a file
-name from that folder. A name that isn't in there leaves the card's picture blank, with no
-error to tell you why.
+name from that folder. A name that is not in the folder leaves the picture of the card
+empty, and no error tells you why.
 
-The example loadout does something different: its `icon` calls
-`gwoCard.loadoutIcon(CARD.id)`, which shows the medal for the hardest difficulty the
-player has ever won a war with using that loadout, and a red commander until they win
-their first. Leave that line as it is unless you want your loadout to always show one
-fixed picture.
+The example loadout is different. Its `icon` calls `gwoCard.loadoutIcon(CARD.id)`, which
+shows the medal for the most difficult war that the player has won with that loadout.
+Before their first win it shows a red commander. Leave that line as it is, unless your
+loadout must always show one fixed picture.
 
 #### `visible` — whether the card is shown
 
-`_.constant(true)` means the player can see and discard the card (normal for tech cards);
-`_.constant(false)` hides it (normal for loadouts).
+`_.constant(true)` lets the player see the card and discard it, which is normal for a tech
+card. `_.constant(false)` hides the card, which is normal for a loadout.
 
 ```js
 visible: _.constant(true),
@@ -415,8 +419,8 @@ visible: _.constant(true),
 
 #### `audio` — the discovery voice line (tech cards)
 
-The voice line played when the card is found. Choose one of the lines listed in the
-example `tech_card_id.js` file, such as `board_tech_available_bot`.
+This is the voice line that plays when the player finds the card. Choose one of the lines
+in the example file `tech_card_id.js`, such as `board_tech_available_bot`.
 
 ```js
 audio: _.constant({ found: "/VO/Computer/gw/board_tech_available_bot" }),
@@ -424,7 +428,8 @@ audio: _.constant({ found: "/VO/Computer/gw/board_tech_available_bot" }),
 
 #### `getContext` — galaxy information (tech cards)
 
-Provides the galaxy size to the `deal` part. Nearly all tech cards use the standard one:
+This part gives the galaxy size to the `deal` part. Nearly all tech cards use the standard
+one:
 
 ```js
 getContext: gwoCard.getContext,
@@ -432,9 +437,9 @@ getContext: gwoCard.getContext,
 
 #### `hint` — the locked message (loadouts)
 
-Shown on the loadout screen while the loadout is still locked: the locked-commander
-picture and a line of text. `gwoCard.lockedHint` supplies the picture, so the text is all
-you write.
+The loadout screen shows this while the loadout is still locked. It is the
+locked-commander picture and one line of text. `gwoCard.lockedHint` supplies the picture,
+so you write only the text.
 
 ```js
 hint: gwoCard.lockedHint(
@@ -444,12 +449,12 @@ hint: gwoCard.lockedHint(
 
 #### `deal` — how often the card appears
 
-`deal` returns a **chance** number. The bigger the number, the more likely the card is
-offered. `0` means never. As a rough guide, going by the chances Galactic War Overhaul's
-own cards use: under 30 is a low chance, 30–70 is a normal starting chance, and anything
-over 120 is high.
+`deal` returns a **chance** number. A larger number makes the game offer the card more
+often. `0` means never. The chances that the cards of Galactic War Overhaul use give a
+rough guide: below 30 is a low chance, 30 to 70 is a normal starting chance, and above 120
+is high.
 
-The simplest version always uses the same chance:
+The simplest form always uses the same chance:
 
 ```js
 deal: function () {
@@ -457,11 +462,11 @@ deal: function () {
 },
 ```
 
-You can make the chance depend on the situation. The `deal` part is handed four things:
-the current `system`, some galaxy `context`, the player's `inventory`, and an `rng` (a
-random number generator — see [Randomness in `deal`](#randomness-in-deal) below, which
-you can ignore unless your card needs to make a random choice). Galactic War Overhaul
-gives you helpers to check the first three:
+The chance can depend on the situation. The game gives the `deal` part four things: the
+current `system`, the galaxy `context`, the `inventory` of the player, and an `rng`. The
+`rng` is a random number generator. See [Randomness in `deal`](#randomness-in-deal) below,
+which you can ignore unless your card makes a random choice. Galactic War Overhaul
+supplies helpers for the first three:
 
 - `gwoCard.hasUnit(inventory.units(), X)` — true if the player has **any** of unit(s) X.
 - `gwoCard.hasAllUnits(inventory.units(), X)` — true if the player has **all** of unit(s) X.
@@ -484,12 +489,12 @@ deal: function (system, context, inventory) {
 
 ##### Making the chance depend on how far the player has travelled
 
-Distance is the usual way to hold a card back until later in a war, but a plain
-`system.distance()` number means different things in different galaxies: five jumps is the
-far edge of a small galaxy and barely a start in a huge one. Galactic War Overhaul does
-that adjustment for you with three ready-made checks. Each one is true once the player has
-come far enough **for the size of galaxy they are playing**, so a card using them behaves
-the same way at every galaxy size:
+Distance is the usual way to hold a card back until later in a war. A plain
+`system.distance()` number means different things in different galaxies. Five jumps is the
+far edge of a small galaxy, and it is barely a start in a very large one. Galactic War
+Overhaul makes that adjustment for you with three ready-made checks. Each check is true
+after the player has travelled far enough **for the size of galaxy that they play**. A
+card that uses them therefore behaves in the same way at every galaxy size:
 
 - `gwoCard.travelledShort(system, context, GW.balance.numberOfSystems)` — past the
   nearby systems (true once the player is further out than roughly 55% of the galaxy's
@@ -500,9 +505,9 @@ the same way at every galaxy size:
 - `gwoCard.travelledFar(system, context, GW.balance.numberOfSystems)` — deep into the
   galaxy (true once the player is further out than roughly 82% of the galaxy's stars).
 
-Pass all three arguments exactly as written. `GW.balance.numberOfSystems` is the game's
-list of galaxy sizes, and it comes from the `"shared/gw_common"` line already at the top
-of your card file.
+Give all three arguments exactly as written. `GW.balance.numberOfSystems` is the list of
+galaxy sizes of the game, and it comes from the `"shared/gw_common"` line that is already
+at the top of your card file.
 
 ```js
 deal: function (system, context) {
@@ -514,11 +519,12 @@ deal: function (system, context) {
 },
 ```
 
-If none of the three suits your card, you can set your own cutoffs with `farForSize`. The
-last value is a list of nine distances, one per galaxy size from smallest to largest, and
-the check is true when the system is further from the start than the entry for the size
-being played. Only reach for this if the three checks above can't give you the shape you
-want — for example a card that peaks in the middle of the map rather than at the edge:
+If none of the three suits your card, set your own limits with `farForSize`. The last
+value is a list of nine distances, one for each galaxy size, from the smallest to the
+largest. The check is true when the system is further from the start than the entry for
+the size in play. Use `farForSize` only when the three checks above cannot give you the
+shape that you want, for example a card that is at its best in the middle of the map
+rather than at the edge:
 
 ```js
 deal: function (system, context) {
@@ -539,8 +545,8 @@ deal: function (system, context) {
 },
 ```
 
-Any of these checks can be combined, and the chance can be nudged up or down rather than
-replaced outright:
+You can combine any of these checks. You can also increase or reduce the chance instead of
+replacing it:
 
 ```js
 deal: function (system, context, inventory) {
@@ -561,10 +567,10 @@ deal: function (system, context, inventory) {
 
 ##### Upgrade cards — `gwoCard.upgradeDeal`
 
-An **upgrade card** improves something the player already owns, and gives them an extra
-card slot in return. Because it pays for its own place in the hand, it must still be
-offered when the hand is already full. Galactic War Overhaul's own upgrade cards all use
-one helper that handles this for you, and yours should too:
+An **upgrade card** improves something that the player already owns, and it gives them one
+more card slot in return. It pays for its own place in the hand, so the game must offer it
+even when the hand is already full. Every upgrade card in Galactic War Overhaul uses one
+helper that does this for you, and your card must use it too:
 
 ```js
 deal: function (system, context, inventory) {
@@ -574,10 +580,10 @@ deal: function (system, context, inventory) {
 },
 ```
 
-Pass it a true/false answer to "does the player have the thing this card upgrades?". When
-that is true the card is offered with a chance of 60; when it is false the chance is 0, so
-an upgrade is never offered for something the player cannot use. To use a different chance,
-pass it as a second value:
+Give it a true or false answer to the question "does the player have the thing that this
+card upgrades?". When the answer is true, the game offers the card with a chance of 60.
+When it is false, the chance is 0, so the game never offers an upgrade for something that
+the player cannot use. To use a different chance, give that chance as a second value:
 
 ```js
 deal: function (system, context, inventory) {
@@ -588,7 +594,7 @@ deal: function (system, context, inventory) {
 },
 ```
 
-A card dealt this way must hand out the extra slot itself, as the first line of its `buff`:
+A card dealt in this way must give the extra slot itself, in the first line of its `buff`:
 
 ```js
 inventory.maxCards(inventory.maxCards() + 1);
@@ -596,10 +602,10 @@ inventory.maxCards(inventory.maxCards() + 1);
 
 ##### Cards that need something first — `gwoCard.conditionalDeal`
 
-`gwoCard.conditionalDeal` is the plain version of `upgradeDeal`, for cards that don't hand
-out a card slot. Give it a true/false answer and a chance, and it returns that chance when
-the answer is true and `0` when it is false — so the card stays out of the deck until the
-player can make use of it:
+`gwoCard.conditionalDeal` is the simple form of `upgradeDeal`, for a card that gives no
+card slot. Give it a true or false answer and a chance. It returns that chance when the
+answer is true, and `0` when the answer is false. The card therefore stays out of the deck
+until the player can use it:
 
 ```js
 deal: function (system, context, inventory) {
@@ -612,12 +618,12 @@ deal: function (system, context, inventory) {
 
 ##### Naval cards — `gwoCard.navalWeight`
 
-Owning ships is not the same as being able to use them: most generated systems have little
-or no water. Only two cards flood every planet the player fights on — the naval loadout
-and Tsunami Tech — and `gwoCard.navalWeight` weighs a naval card by whether the player
-holds one of them. Pass it the `inventory` and the chance you want when there is water to
-fight on; with neither card in hand it returns 40% of that chance instead, so your card is
-offered less often rather than withheld outright:
+A player who owns ships cannot always use them, because most generated systems have little
+water or none. Only two cards flood every planet that the player fights on: the naval
+loadout and Tsunami Tech. `gwoCard.navalWeight` weighs a naval card by whether the player
+holds one of those two. Give it the `inventory` and the chance that you want when there is
+water to fight on. If the player holds neither card, it returns 40% of that chance
+instead, so the game offers your card less often but does not withhold it:
 
 ```js
 deal: function (system, context, inventory) {
@@ -628,13 +634,13 @@ deal: function (system, context, inventory) {
 },
 ```
 
-That pairing is the shape of every naval tech card in Galactic War Overhaul: `navalWeight`
-decides what the map is likely to be worth, and `conditionalDeal` keeps the card out of
-the deck until the player can build ships at all.
+That pair is the shape of every naval tech card in Galactic War Overhaul. `navalWeight`
+decides what the map is likely to be worth. `conditionalDeal` keeps the card out of the
+deck until the player can build ships at all.
 
-If your card is worthless without water rather than merely weaker, pass a third number to
-replace the 40% fallback with a dry-map chance of your own. Galactic War Overhaul's
-Anti-Ship and Anti-Hover Ammo Techs drop from 70 to 15 this way:
+If your card has no value at all without water, and is not merely weaker, give a third
+number. That number replaces the 40% default with a dry-map chance of your own. The
+Anti-Ship and Anti-Hover Ammo Techs of Galactic War Overhaul go from 70 to 15 in this way:
 
 ```js
 gwoCard.navalWeight(inventory, 70, 15);
@@ -642,12 +648,12 @@ gwoCard.navalWeight(inventory, 70, 15);
 
 ##### Commander cards — `gwoCard.commanderWeight`
 
-Your own commander and every Sub Commander are built from the same unit file, so a card
-that changes commander stats improves all of them at once. That makes the size of the
-player's retinue — not how far they have travelled — the thing that decides what the
-card is worth, and `gwoCard.commanderWeight` weighs it that way. Pass it the `inventory`
-and the chance you want when the player is fighting alone; each Sub Commander they have
-adds a third of that chance on top, up to a maximum of double:
+Your own commander and every Sub Commander come from the same unit file. A card that
+changes commander stats therefore improves all of them together. The value of such a card
+depends on the size of the retinue of the player, not on how far they have travelled, and
+`gwoCard.commanderWeight` weighs it in that way. Give it the `inventory` and the chance
+that you want when the player fights alone. Each Sub Commander that they have adds one
+third of that chance, up to a maximum of double the chance:
 
 ```js
 deal: function (system, context, inventory) {
@@ -655,15 +661,15 @@ deal: function (system, context, inventory) {
 },
 ```
 
-Both values are required — unlike `upgradeDeal` there is no default chance. Use this
-instead of the distance checks above rather than alongside them: a commander card is
-worth the same at the edge of the galaxy as it is next door, and it is the retinue that
-has grown in the meantime.
+Both values are necessary. Unlike `upgradeDeal`, this helper has no default chance. Use it
+in place of the distance checks above, not with them. A commander card is worth the same
+at the edge of the galaxy as next to the start, and it is the retinue that has grown in
+the meantime.
 
-If your commander card also hands out a card slot, `upgradeDeal` cannot weigh it for you
-(it takes a true/false answer, not a chance), so write the `deal` out in full and keep
-the `allowOverflow` part yourself — that is what lets a card which pays for its own slot
-still be offered to a full hand:
+If your commander card also gives a card slot, `upgradeDeal` cannot weigh it for you,
+because `upgradeDeal` takes a true or false answer and not a chance. Write the `deal` in
+full, and keep the `allowOverflow` part yourself. `allowOverflow` is what lets the game
+offer a card that pays for its own slot to a full hand:
 
 ```js
 deal: function (system, context, inventory) {
@@ -676,11 +682,11 @@ deal: function (system, context, inventory) {
 
 ##### Sub Commander cards — `gwoCard.subcommanderWeight`
 
-Some cards improve only the Sub Commanders fighting alongside the player and leave the
-player's own commander untouched. A card like that is worth nothing at all until the
-player has recruited a Sub Commander, which is a different question to the one
-`commanderWeight` answers, and `gwoCard.subcommanderWeight` is the helper for it. Pass it
-the `inventory` and the chance you want:
+Some cards improve only the Sub Commanders that fight with the player, and they leave the
+commander of the player unchanged. Such a card has no value until the player recruits a
+Sub Commander. That is a different question from the one that `commanderWeight` answers,
+and `gwoCard.subcommanderWeight` is the helper for it. Give it the `inventory` and the
+chance that you want:
 
 ```js
 deal: function (system, context, inventory) {
@@ -688,25 +694,25 @@ deal: function (system, context, inventory) {
 },
 ```
 
-With no Sub Commanders the chance is `0`, so the card stays out of the deck entirely. With
-one it is offered at the full chance you gave — not a fraction of it, so a card that has
-only just become useful isn't buried at a throwaway weight. Each further Sub Commander
-adds a third of that chance on top, up to a ceiling of 90 so a large retinue cannot crowd
-out the deck. That ceiling applies from the first Sub Commander onwards, so there is no
-point passing a chance above 90: it is capped straight back down to 90.
+With no Sub Commander the chance is `0`, so the card stays out of the deck completely.
+With one Sub Commander the game offers the card at the full chance that you gave, and not
+at a part of it, so a card that has just become useful keeps a real weight. Each further
+Sub Commander adds one third of that chance, up to a limit of 90, so that a large retinue
+cannot fill the deck. That limit applies from the first Sub Commander, so a chance above
+90 has no purpose: the helper reduces it to 90.
 
-Both values are required. As with `commanderWeight`, use this instead of the distance
-checks rather than alongside them, and if your card also hands out a card slot, write the
-`deal` out in full with the `allowOverflow` part as shown above.
+Both values are necessary. Use this helper in place of the distance checks, not with them,
+as for `commanderWeight`. If your card also gives a card slot, write the `deal` in full
+with the `allowOverflow` part, as shown above.
 
-Choose between the two by asking who the card actually changes: `commanderWeight` for one
-that improves every commander the player fields, their own included, and
-`subcommanderWeight` for one that only helps their Sub Commanders.
+To choose between the two helpers, ask who the card changes. Use `commanderWeight` for a
+card that improves every commander that the player fields, including their own. Use
+`subcommanderWeight` for a card that helps only their Sub Commanders.
 
 ##### Cards that react to the player's other cards
 
-`inventory.hasCard("some_card_id")` is true when the player is holding that card. Use it
-to lean on another card, or to stay out of its way:
+`inventory.hasCard("some_card_id")` is true when the player holds that card. Use it to
+build on another card, or to keep away from it:
 
 ```js
 deal: function (system, context, inventory) {
@@ -714,10 +720,9 @@ deal: function (system, context, inventory) {
 },
 ```
 
-`gwoCard.hasT2Access(inventory)` is a ready-made version of that question for advanced
-(T2) tech: it is true once the player holds any card listed in
-`model.gwoCardsGrantingAdvancedTech`. Use it for a card that would be wasted before the
-player can build advanced units:
+`gwoCard.hasT2Access(inventory)` asks that question for advanced (T2) tech. It is true
+after the player holds any card that is listed in `model.gwoCardsGrantingAdvancedTech`.
+Use it for a card that would have no value before the player can build advanced units:
 
 ```js
 deal: function (system, context, inventory) {
@@ -733,10 +738,11 @@ deal: function (system, context, inventory) {
 
 ##### Counter-tech cards — `gwoCard.antiTechDeal`
 
-Galactic War Overhaul ships a family of "anti" ammo techs — Anti-Air, Anti-Ship,
-Anti-Bots and so on — which each double your damage against one kind of target at the
-expense of another. `gwoCard.antiTechDeal` is the deal they share. Give it the
-`inventory`, the chance you want, and the ID of the card that is your card's opposite:
+Galactic War Overhaul supplies a family of "anti" ammo techs: Anti-Air, Anti-Ship,
+Anti-Bots and others. Each one doubles your damage against one kind of target and reduces
+it against another. `gwoCard.antiTechDeal` is the deal that they share. Give it the
+`inventory`, the chance that you want, and the ID of the card that is the opposite of your
+card:
 
 ```js
 deal: function (system, context, inventory) {
@@ -744,19 +750,19 @@ deal: function (system, context, inventory) {
 },
 ```
 
-The chance drops to `0` when the player already holds that opposite card, so a pair can
-never cancel each other out, and halves once the player holds any of Galactic War
-Overhaul's `gwaio_anti_` cards, so the deck stops pushing more of them at a player who has
-already committed to the theme. The halving counts only cards whose ID begins with
-`gwaio_anti_`, which in practice means Galactic War Overhaul's own: yours will not be
-counted, and you should not borrow the `gwaio_` prefix to make it so — an ID that matches
-one of GWO's replaces that card's file.
+The chance falls to `0` when the player already holds that opposite card, so a pair can
+never cancel each other out. The chance also halves after the player holds any
+`gwaio_anti_` card of Galactic War Overhaul, so the deck stops offering more of them to a
+player who has already committed to the theme. The halving counts only cards whose ID
+starts with `gwaio_anti_`, which in practice means the cards of Galactic War Overhaul. It
+does not count yours. Do not use the `gwaio_` prefix to make it count them: an ID that
+matches one of Galactic War Overhaul's replaces the file of that card.
 
 ##### Co-op games — `gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards`
 
-The `inventory` your card is given is the local player's own. In a co-op war every player
-has their own hand, so a card that ought to react to the team as a whole has to look
-wider. Two helpers do that:
+The `inventory` that your card receives belongs to the local player. In a co-op war every
+player has their own hand, so a card that must react to the whole team has to look wider.
+Two helpers do that:
 
 - `gwoCard.anyPlayerHasCard(inventory, "some_card_id")` — true when the player _or_ any
   connected co-op player is holding that card.
@@ -772,14 +778,14 @@ deal: function (system, context, inventory) {
 },
 ```
 
-Outside co-op they simply answer for the one player, so they are safe to use anywhere.
-Galactic War Overhaul uses them for the things a whole war shares — whether Tsunami Tech
-floods the planets everyone fights on, for instance — but no card in GWO needs them, so
-treat them as the advanced option. Reach for `inventory.hasCard` first, and these only
-when your card's effect really is team-wide.
+Outside a co-op game they answer for the one player, so you can use them anywhere.
+Galactic War Overhaul uses them for the things that a whole war shares, for example
+whether Tsunami Tech floods the planets that everyone fights on. No card in Galactic War
+Overhaul needs them, so treat them as the advanced option. Use `inventory.hasCard` first,
+and use these two only when the effect of your card really covers the whole team.
 
-**Loadouts do not use a chance** — they are only granted when the player picks them on the
-loadout screen. A loadout's `deal` is always just:
+**Loadouts do not use a chance.** The game grants a loadout only when the player picks it
+on the loadout screen. The `deal` of a loadout is always:
 
 ```js
 deal: gwoCard.startCard,
@@ -787,8 +793,8 @@ deal: gwoCard.startCard,
 
 ##### Randomness in `deal`
 
-Most cards never need this. If your card makes a random choice while being dealt, use the
-fourth thing `deal` is handed rather than reaching for `Math.random()`:
+Most cards never need this. If your card makes a random choice while the game deals it,
+use the fourth thing that `deal` receives instead of `Math.random()`:
 
 ```js
 deal: function (system, context, inventory, rng) {
@@ -796,48 +802,49 @@ deal: function (system, context, inventory, rng) {
 },
 ```
 
-Galactic War Overhaul gives each card its own `rng`, tied to the war's seed. That is what
-makes a war repeatable: the same war dealt again offers the same cards, and in a co-op
-game every player sees the same thing. `Math.random()` is not tied to anything, so a card
-using it would deal differently every time and players in the same game would disagree
-about what was offered.
+Galactic War Overhaul gives each card its own `rng`, and that `rng` comes from the seed of
+the war. This is what makes a war repeatable. The same war dealt again offers the same
+cards, and every player in a co-op game sees the same cards. `Math.random()` has no
+connection to the seed. A card that used it would deal differently every time, and players
+in the same game would disagree about what the game offered.
 
-`rng` is **optional** — some ways of dealing a card do not supply one, in which case it
-arrives as `undefined`. `gwoCard.uniqueValue(rng)` handles that for you. If you draw a
-random value yourself, fall back when it is missing:
+`rng` is **optional**. Some ways of dealing a card do not supply one, and `rng` is then
+`undefined`. `gwoCard.uniqueValue(rng)` deals with that for you. If you take a random
+value yourself, use a second method when `rng` is absent:
 
 ```js
 var pick = rng ? rng.pick(list) : _.sample(list);
 ```
 
-> **Your `chance` must never be random.** Only `params` may be. Galactic War Overhaul
-> asks every card in the deck for its chance, several times over, and keeps just one of
-> the answers. A chance that changed between those questions would make the card's real
-> likelihood depend on how many times it happened to be asked, which is not something you
-> can predict or balance.
+> **Your `chance` must never be random.** Only `params` may be random. Galactic War
+> Overhaul asks every card in the deck for its chance several times over, and it keeps
+> only one of the answers. A chance that changed between those questions would make the
+> real likelihood of the card depend on the number of times that the dealer asked. You
+> cannot predict or balance that.
 
 #### `keep` and `discard` — rare chance adjustments
 
-**You almost certainly do not want these.** They are leftovers from the way PA's own
-cards worked, no Galactic War Overhaul card uses either, and under Galactic War Overhaul
-they do not do what their names suggest. They are documented here only so you recognise
-them if you copy a card from PA that has them.
+**You almost certainly do not want these.** They remain from the way that PA's own cards
+worked. No Galactic War Overhaul card uses either of them, and under Galactic War Overhaul
+they do not do what their names say. This guide documents them only so that you recognise
+them in a card that you copy from PA.
 
-The names come from PA, where `keep` ran when the player kept a card and `discard` when
-they threw one away, letting the card nudge its own future chance. Galactic War Overhaul
-replaces PA's dealing entirely, and in doing so:
+The names come from PA. There, `keep` ran when the player kept a card, and `discard` ran
+when the player threw a card away. That let the card change its own future chance.
+Galactic War Overhaul replaces the dealing of PA completely, and as a result:
 
-- **`discard` is never called at all.** A card relying on it silently does nothing.
-- **`keep` is called every time the card is dealt**, whether the player keeps it or not,
-  and it is handed the result of your `deal` (the `{ chance: … }` object you returned)
-  rather than PA's `params`.
+- **Nothing ever calls `discard`.** A card that depends on it does nothing, and reports
+  nothing.
+- **Galactic War Overhaul calls `keep` every time it deals the card**, whether the player
+  keeps it or not. It gives `keep` the result of your `deal`, which is the
+  `{ chance: … }` object that you returned, and not PA's `params`.
 
-So if you copy a PA card that uses either, delete them and work the logic into `deal`
-instead, where you can read the `inventory` and the `system` directly.
+So if you copy a PA card that uses either part, delete that part. Move the logic into
+`deal` instead, where you can read the `inventory` and the `system` directly.
 
 `releaseContext` is the one genuinely useful part of this group. If your card writes its
-own `getContext` and needs to clean something up afterwards, Galactic War Overhaul calls
-`releaseContext(context)` once the card has been dealt:
+own `getContext` and must release something afterwards, Galactic War Overhaul calls
+`releaseContext(context)` after it has dealt the card:
 
 ```js
 releaseContext: function (context) {
@@ -847,13 +854,13 @@ releaseContext: function (context) {
 
 ### `buff` — what the card does
 
-`buff` is where the card's effect happens. Inside it you can do any combination of four
-things. Each is described below.
+`buff` holds the effect of the card. Inside it you can do any combination of four things.
+Each one is described below.
 
-**Loadouts do not write a `buff` of their own.** They hand the same code to
-`gwoCard.loadout` as `apply`, and it writes their `buff` and `dull` for them — see
+**A loadout does not write its own `buff`.** It gives the same code to `gwoCard.loadout`
+as `apply`, and `gwoCard.loadout` then writes its `buff` and its `dull`. See
 [Loadouts and `gwoCard.loadout`](#loadouts-and-gwocardloadout) below. Everything in this
-section works the same inside `apply`.
+section works in the same way inside `apply`.
 
 #### Add a card slot
 
@@ -865,8 +872,8 @@ inventory.maxCards(inventory.maxCards() + 1);
 
 #### Unlock units — `inventory.addUnits(...)`
 
-Give the player one or more units. You can pass a single unit or a list, using paths or
-GWO unit/group IDs.
+Give the player one unit or more. You can give a single unit or a list, as paths or as GWO
+unit or group IDs.
 
 ```js
 inventory.addUnits([
@@ -878,13 +885,13 @@ inventory.addUnits([
 
 #### Change unit stats — `inventory.addMods(...)`
 
-Change numbers or values inside a unit's file. Each change is described by four labels:
+Change a number or a value inside the file of a unit. Four labels describe each change:
 
-- `file` — which unit file to change (a path or GWO unit ID).
-- `path` — which value inside that file. A single value is just its name, such as
-  `max_health`; a value nested deeper is written with dots, such as
+- `file` — which unit file to change (a path or a GWO unit ID).
+- `path` — which value inside that file. A value at the top level is only its name, such
+  as `max_health`. A value deeper in the file uses dots, such as
   `events.fired.effect_spec`. If a step along the path is the name of another file rather
-  than a value, the game follows that reference into the other file and carries on from
+  than a value, the game follows that reference into the other file and continues from
   there.
 - `op` — the kind of change. The everyday choices are `multiply`, `multiplyOrCreate`,
   `add`, `replace`, `merge`, `push`, `prepend`, `pull`, and `wipe`. There is also `tag`,
@@ -893,10 +900,10 @@ Change numbers or values inside a unit's file. Each change is described by four 
   advanced and best avoided.
 - `value` — the amount or value to use.
 
-Reach for `multiply` when the unit already has the value you are scaling, and
-`multiplyOrCreate` when it might not: `multiply` leaves a missing value alone, while
-`multiplyOrCreate` sets it to your `value` instead. `add` behaves like the latter — on a
-missing value it simply sets it.
+Use `multiply` when the unit already has the value that you scale, and `multiplyOrCreate`
+when it may not. `multiply` makes no change to a missing value, but `multiplyOrCreate`
+sets that value to your `value`. `add` behaves like `multiplyOrCreate`: on a missing value
+it simply sets the value.
 
 ```js
 inventory.addMods([
@@ -905,37 +912,39 @@ inventory.addMods([
 ]);
 ```
 
-Most of the `op` choices do what their name suggests (`push` adds to the end of a list,
-`prepend` to the start, `pull` takes something back out of one, `merge` folds your value
-into an existing set of settings). Four do not:
+Most of the `op` choices do what their name says. `push` adds to the end of a list,
+`prepend` adds to the start, `pull` takes something back out of a list, and `merge` folds
+your value into an existing set of settings. Four choices are different:
 
-- `wipe` — despite the name this does not clear the value. It is a find-and-replace inside
-  a piece of text: `value` is a pair, `[what to find, what to put in its place]`, and a
+- `wipe` — despite the name, this does not clear the value. It finds and replaces text
+  inside a string. `value` is a pair, `[what to find, what to put in its place]`, and a
   single value on its own means "delete every occurrence of this".
 - `clone` — writes whatever is at `path` into the file named by `value`.
-- `tag` — points the file name at `path` at the player's own copy of that file. It takes
-  no `value`. See the next section: this one is not optional when you need it.
-- `eval` — runs `value` as raw JavaScript. The thing at `path` is handed to you as
-  `attribute`, and you can do whatever you like with it; if you used a `path`, remember to
+- `tag` — points the file name at `path` to the player's own copy of that file. It takes
+  no `value`. See the next section. This op is not optional when you need it.
+- `eval` — runs `value` as raw JavaScript. The game gives you the thing at `path` as
+  `attribute`, and you can do what you like with it. If you used a `path`, remember to
   return `attribute` at the end.
 
-> **`clone` and `eval` are advanced — avoid them.** They are easy to get wrong, and
-> anything you can do with them you can nearly always do more safely with one of the
-> everyday ops. `eval` in particular runs your own code inside the game, so a mistake
-> there can break the war rather than just change a number.
+> **`clone` and `eval` are advanced. Avoid them.** They are easy to get wrong, and one of
+> the everyday ops can nearly always do the same work more safely. `eval` in particular
+> runs your own code inside the game, so a mistake there can break the war rather than
+> only change a number.
 
 ##### Whenever your value is a file name, `tag` it
 
-Galactic War does not change the game's unit files. It gives each player a **private copy**
-of every file their units need, and applies that player's whole hand of cards to the
-copies. The copies are what they fight with.
+Galactic War does not change the unit files of the game. It gives each player a **private
+copy** of every file that their units need, and it applies the whole hand of that player
+to the copies. The player fights with the copies.
 
-Those copies are made **before** any card runs. So a file name your card writes is a name
-your card invented, and it points at the original, untouched file — not the player's copy.
-Nothing breaks: the weapon still fires, the unit still spawns. It simply gets none of the
-player's other tech. No health card, no damage card, nothing. There is no warning.
+The game makes those copies **before** any card runs. A file name that your card writes is
+therefore a name that your card invented, and it points at the original file, not at the
+copy of the player. Nothing breaks. The weapon still fires and the unit still spawns. They
+simply get none of the other tech of the player: no health card, no damage card, nothing.
+There is no warning.
 
-The fix is a second entry: same `file`, same `path`, `op: "tag"`, and no `value` at all.
+The correction is a second entry with the same `file`, the same `path`, `op: "tag"`, and
+no `value` at all.
 
 ```js
 inventory.addMods([
@@ -962,27 +971,27 @@ inventory.addMods([
 | `base_spec`                                                                | the file this one inherits from           |
 | `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule                          |
 
-**Getting the number right.** Tools are numbered from `0`, and the numbering you must tag
-is the one **after** your change has been made. Every `replace` in every card in the hand
-happens before any `push`, `prepend` or `tag`, so count like this: open the unit's file in
-the game install, count the tools it already has, and your pushed tool is that number. The
-Dox has one tool, so the pushed one is number `1`. A `prepend` goes in at `0` instead and
-shifts the rest along.
+**Use the correct number.** Tools start at number `0`, and you must tag the numbering that
+exists **after** your change. Every `replace` in every card in the hand runs before any
+`push`, `prepend` or `tag`, so count in this way: open the file of the unit in the game
+install, count the tools that it already has, and your pushed tool takes that number. The
+Dox has one tool, so the pushed tool is number `1`. A `prepend` enters at `0` instead, and
+it moves the other tools along by one.
 
-**The file you borrow has to be in play.** Tagging a file the player has no copy of leaves
-the tool pointing at nothing, and it disappears altogether — worse than not tagging. You
-are safe if the file already belongs to the unit you are changing, or to a unit your card
-requires the player to own. Anything borrowed from elsewhere — the Ant's weapon in the
-example above — must be listed in `model.gwoSpecs` (see
-[`model.gwoSpecs`](#modelgwospecs--extra-unit-files-to-change-in-specsjs)), which is what
-makes a copy of it exist. You only need to list the weapon itself: its ammo, and anything
-that ammo spawns, are copied along with it automatically.
+**The file that you borrow must be in play.** A tag on a file that the player has no copy
+of leaves the tool with no target, and the tool then disappears completely. That result is
+worse than no tag. You are safe when the file already belongs to the unit that you change,
+or to a unit that your card requires the player to own. A file borrowed from elsewhere,
+such as the weapon of the Ant in the example above, must be listed in `model.gwoSpecs`
+(see [`model.gwoSpecs`](#modelgwospecs--extra-unit-files-to-change-in-specsjs)). That list
+is what makes a copy of the file exist. List only the weapon itself. The game copies its
+ammo, and anything that the ammo spawns, with it.
 
 ##### A shorthand for writing changes — `gwoCard.mods`
 
-Most cards change several things on the same file using the same `op`, which is repetitive
-to write out in full. `gwoCard.mods(file, op, changes)` writes those entries for you: give
-it the file, the op, and one `path: value` pair per change.
+Most cards change several things in the same file with the same `op`, which is repetitive
+to write out in full. `gwoCard.mods(file, op, changes)` writes those entries for you. Give
+it the file, the op, and one `path: value` pair for each change.
 
 ```js
 inventory.addMods(
@@ -994,10 +1003,10 @@ inventory.addMods(
 );
 ```
 
-That is exactly the same as writing out three `{ file, path, op, value }` entries by hand.
+That is exactly the same as three `{ file, path, op, value }` entries written by hand.
 
-To change a whole family of units the same way, use `gwoCard.flatMapMods`, which is the
-same thing but takes a list of files:
+To change a whole family of units in the same way, use `gwoCard.flatMapMods`. It does the
+same work, but it takes a list of files:
 
 ```js
 inventory.addMods(
@@ -1005,11 +1014,11 @@ inventory.addMods(
 );
 ```
 
-Some changes mean applying the same amount to several values at once — making a unit
-faster means changing its speed, acceleration, braking and turning together. For those,
-pass a **list of paths** and one amount instead of `path: value` pairs. Galactic War
-Overhaul names the three sets cards change most often, so you don't have to remember what
-each is made of:
+Some changes apply the same amount to several values together. To make a unit faster, you
+change its speed, acceleration, braking and turning together. For those changes, give a
+**list of paths** and one amount in place of `path: value` pairs. Galactic War Overhaul
+names the three sets that cards change most often, so that you do not have to remember the
+contents of each one:
 
 | Set                          | What it covers                                             |
 | ---------------------------- | ---------------------------------------------------------- |
@@ -1023,30 +1032,30 @@ inventory.addMods(
 );
 ```
 
-A list you write yourself works the same way, and so does `gwoCard.flatMapMods`.
+A list that you write yourself works in the same way, and so does `gwoCard.flatMapMods`.
 
 #### Change how the AI subcommander builds — `inventory.addAIMods(...)`
 
-Change what the enemy (or your subcommander) chooses to build. Each change is described by
-these labels:
+Change what the enemy, or your own subcommander, chooses to build. These labels describe
+each change:
 
 - `type` — which set of AI build files to change: `fabber`, `factory`, `platoon`, or
   `template`.
 - `op` — the kind of change: `load`, `append`, `prepend`, `replace`, `remove`, `new`, or
-  `squad`. `squad` only works on `template`, and `append`, `prepend`, `replace`, `remove`
-  and `new` only work on `fabber`, `factory`, and `platoon`. A build op pointed at
-  `template` quietly does nothing, but `squad` pointed at one of the other three breaks the
-  AI setup outright, so check the pairing.
+  `squad`. `squad` works only on `template`. `append`, `prepend`, `replace`, `remove` and
+  `new` work only on `fabber`, `factory` and `platoon`. A build op aimed at `template`
+  does nothing and reports nothing, but `squad` aimed at one of the other three breaks the
+  AI setup completely, so check the pair.
 - `value` — the value to apply.
-- `toBuild` — which thing in the AI's build list to target (not needed for `load`).
+- `toBuild` — which thing in the build list of the AI to change (not needed for `load`).
 - `idToMod` — which part of that entry to change (for example `builders` or `priority`).
-- `refId` and `refValue` — optional. Only make the change when the entry already has
+- `refId` and `refValue` — optional. Make the change only when the entry already has
   `refValue` at `refId`.
 - `matchAll` — optional. Change every build condition on the entry, instead of only the
   ones where `refId` holds `refValue`.
 
-Each op needs a particular set of these, and one that is missing a label it needs simply
-does nothing at all — no error, no change:
+Each op needs a particular set of these labels. An op without a label that it needs does
+nothing at all. There is no error and no change:
 
 | `op`                           | needs, besides `type`         |
 | ------------------------------ | ----------------------------- |
@@ -1054,22 +1063,22 @@ does nothing at all — no error, no change:
 | `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
 | `remove`, `new`, `squad`       | `toBuild`, `value`            |
 
-`toBuild` has to match one of the AI's own build entries exactly. Those names are the
-`to_build` values inside the AI's build files, which you can read in
-`{PA_INSTALL_DIRECTORY}/media/pa/ai/` (and `media/pa_ex1/ai/`, `media/pa_ex1/ai_queller/`
-for the Titans and Queller AIs). The role names you put in `builders` come from
-`media/pa/ai/unit_maps/ai_unit_map.json`. A name that does not appear in those files
-changes nothing and says nothing.
+`toBuild` must match one of the build entries of the AI exactly. Those names are the
+`to_build` values inside the build files of the AI. You can read them in
+`{PA_INSTALL_DIRECTORY}/media/pa/ai/`, and in `media/pa_ex1/ai/` and
+`media/pa_ex1/ai_queller/` for the Titans and Queller AIs. The role names that you put in
+`builders` come from `media/pa/ai/unit_maps/ai_unit_map.json`. A name that is not in those
+files changes nothing and reports nothing.
 
-One piece of shape worth knowing before you use `new` or `remove`: an entry's
-`build_conditions` is a **list of lists**. Each inner list is a group of tests that must
-all pass, and the entry is built if any one group passes.
+Learn one part of the shape before you use `new` or `remove`. The `build_conditions` of an
+entry is a **list of lists**. Each inner list is a group of tests, and every test in that
+group must pass. The AI builds the entry if one group passes.
 
-The simplest AI change loads a whole ready-made AI build file (this is how most upgrade
-cards teach the AI to use a new unit). `load` is the odd one out: it uses only `type`,
-`op`, and `value`, where `value` is the name of a JSON file GWO reads from `/pa/ai_tech/`.
-The `type` decides which folder inside it is used: `fabber_builds/`, `factory_builds/`,
-`platoon_builds/`, or — for `template` — `platoon_templates/`.
+The simplest AI change loads a whole ready-made AI build file. Most upgrade cards teach
+the AI to use a new unit in this way. `load` is different from the other ops. It uses only
+`type`, `op` and `value`, where `value` is the name of a JSON file that GWO reads from
+`/pa/ai_tech/`. The `type` decides which folder inside it the game uses: `fabber_builds/`,
+`factory_builds/`, `platoon_builds/`, or `platoon_templates/` for `template`.
 
 ```js
 inventory.addAIMods([
@@ -1077,18 +1086,18 @@ inventory.addAIMods([
 ]);
 ```
 
-That file has to exist, and it is yours to write: ship it in your own mod at the matching
-path, for example `pa/ai_tech/factory_builds/my_upgrade_myunit.json`, alongside your `ui`
-folder. Give it a name no other mod is likely to use — a file with the same name as one of
-Galactic War Overhaul's own would replace it — and remember the `.json` on the end of
+That file must exist, and you write it. Put it in your own mod at the matching path, for
+example `pa/ai_tech/factory_builds/my_upgrade_myunit.json`, beside your `ui` folder. Give
+it a name that no other mod is likely to use, because a file with the same name as one of
+Galactic War Overhaul's own would replace it. Also remember the `.json` at the end of
 `value`.
 
-> **Check that file really is there before you share the mod.** If a `load` names a file
-> that is missing, the battle never starts: the loading screen simply hangs, with no error
-> message pointing at the cause.
+> **Check that the file really is there before you share the mod.** If a `load` names a
+> file that is missing, the battle never starts. The loading screen hangs, and no error
+> message points at the cause.
 
-A more targeted change — here, letting basic bot factories also build a unit, but only
-when the entry is for the advanced bot factory:
+A more exact change follows. It lets basic bot factories build a unit too, but only when
+the entry is the one for the advanced bot factory:
 
 ```js
 inventory.addAIMods([
@@ -1106,13 +1115,13 @@ inventory.addAIMods([
 
 ### A shortcut for a card that improves one unit — `gwoCard.upgradeCard`
 
-Plenty of cards do the same simple thing: take one unit the player already has, make it
-better, and only turn up once the player has that unit. Every part of such a card is the
-same every time except the unit and the change, so Galactic War Overhaul will write the
-rest for you.
+Many cards do the same simple thing. They take one unit that the player already has, they
+make it better, and the game offers them only after the player has that unit. Every part
+of such a card is the same each time, except the unit and the change, so Galactic War
+Overhaul writes the rest for you.
 
-`gwoCard.upgradeCard` **is** the card — you return what it gives you, and there is no
-list of parts to fill in:
+`gwoCard.upgradeCard` **is** the card. You return what it gives you, and there is no list
+of parts to complete:
 
 ```js
 return gwoCard.upgradeCard({
@@ -1129,39 +1138,40 @@ return gwoCard.upgradeCard({
 });
 ```
 
-It takes care of the parts you would otherwise write yourself: the card is visible on the
-board, it gives the player room for one more card, its description gains the usual line
-saying so, it has the standard `getContext`, and its `deal` works out a sensible chance
+It writes the parts that you would otherwise write yourself. The card is visible on the
+board. It gives the player room for one more card, and its description gets the usual line
+that says so. It has the standard `getContext`. Its `deal` works out a sensible chance,
 and returns `0` until the player has the unit named in `requires`.
 
 - `name`, `description`, `icon`, `audio` — the same as
   [`summarize`, `describe`, `icon`](#summarize-describe-icon--name-description-picture)
   and [`audio`](#audio--the-discovery-voice-line-tech-cards) above, written as plain text
-  rather than wrapped in `_.constant`.
-- `requires` — the unit the card improves. The card is never offered until the player has
-  it.
+  rather than inside `_.constant`.
+- `requires` — the unit that the card improves. The game never offers the card until the
+  player has it.
 - `buff` — what the card does, exactly as [`buff`](#buff--what-the-card-does) above.
-- `unless` — optional. The ID of a card that should stop this one being offered, for when
-  two of your cards would fight over the same unit.
-- `chance` — optional. How often the card is offered, if the standard chance is not what
-  you want. See [`deal`](#deal--how-often-the-card-appears) for what the numbers mean.
-- `slot: false` — optional. Don't give the player an extra card slot.
+- `unless` — optional. The ID of a card that stops the game from offering this one. Use it
+  when two of your cards would fight over the same unit.
+- `chance` — optional. How often the game offers the card, when the standard chance is not
+  what you want. See [`deal`](#deal--how-often-the-card-appears) for the meaning of the
+  numbers.
+- `slot: false` — optional. Do not give the player an extra card slot.
 
-**It cannot take units away again**, because it writes an empty `dull`. A card that hands
-out units and needs to take them back is an ordinary tech card, written the long way.
+**It cannot take units away again**, because it writes an empty `dull`. A card that gives
+units and must take them back is an ordinary tech card, written the long way.
 
 The example `unit_upgrade_card_id.js` is already written this way.
 
 ### Loadouts and `gwoCard.loadout`
 
-A loadout has more to do than a tech card. It has to give the player the game's standard
-starting units as well as its own. It has to notice when the same loadout turns up again
-later in the war and hand out a card slot instead of the units a second time. And when a
-player wins a copy of it on a Guardian planet, it has to record that in your bank so the
-loadout unlocks.
+A loadout has more to do than a tech card. It must give the player the standard starting
+units of the game as well as its own. It must see when the same loadout appears again
+later in the war, and then give a card slot in place of the units a second time. When a
+player wins a copy of it on a Guardian planet, it must record that in your bank, so that
+the loadout unlocks.
 
 `gwoCard.loadout` does all of that. Give it your card and the four things below, and it
-gives you back the card's `buff` and `dull`:
+gives you back the `buff` and the `dull` of the card:
 
 ```js
 var loadout = gwoCard.loadout(CARD, {
@@ -1174,29 +1184,29 @@ var loadout = gwoCard.loadout(CARD, {
 });
 ```
 
-- `bank` — your mod's bank, which the card lists at the top of the file. See
+- `bank` — the bank of your mod, which the card lists at the top of the file. See
   [The bank and `LS_KEY`](#the-bank-and-ls_key--remembering-unlocked-loadouts).
-- `start` — `GWCStart`, the game's standard starting units. Leave this as it is.
-- `apply` — what your loadout gives the player, written exactly the way a tech card's
-  [`buff`](#buff--what-the-card-does) is. Leave it out if your loadout changes nothing
-  beyond the standard start.
-- `dulls` — the units to take back if the player ends up on a different loadout. A list,
-  or a function that is handed the inventory and returns a list. Leave it out if your
+- `start` — `GWCStart`, the standard starting units of the game. Leave this as it is.
+- `apply` — what your loadout gives the player. Write it exactly the way that you write
+  the [`buff`](#buff--what-the-card-does) of a tech card. Omit it if your loadout changes
+  nothing beyond the standard start.
+- `dulls` — the units to take back if the player moves to a different loadout. Give a
+  list, or a function that receives the inventory and returns a list. Omit it if your
   loadout unlocks no units.
 
-Then use what it gives you as the card's own `buff` and `dull`:
+Then use what it gives you as the `buff` and the `dull` of the card:
 
 ```js
 buff: loadout.buff,
 dull: loadout.dull,
 ```
 
-The example `start_card_id.js` is already written this way, so you only fill in the four
+The example `start_card_id.js` is already written this way, so you complete only the four
 parts above.
 
 ### `dull` — cleanup after all cards
 
-`dull` runs after every card's `buff` has finished. It is mainly used to remove units.
+`dull` runs after the `buff` of every card has finished. It mainly removes units.
 
 **Tech cards** remove units directly:
 
@@ -1206,25 +1216,26 @@ dull: function (inventory) {
 },
 ```
 
-**Loadouts** write no `dull` of their own — they use the one `gwoCard.loadout` gives them,
-and list the units to remove as its `dulls`, as above. Removing a loadout's units at the
-right moment is fiddly, and this is what saves you having to get it right.
+**Loadouts** write no `dull` of their own. They use the one that `gwoCard.loadout` gives
+them, and they list the units to remove as its `dulls`, as above. It is difficult to
+remove the units of a loadout at the correct moment, and this helper does it for you.
 
 ### The bank and `LS_KEY` — remembering unlocked loadouts
 
-Locked loadouts (the ones you list in `model.gwoNewStartCards`) need somewhere to record
-that the player has unlocked them. That is what `bank.js` is for. It saves the unlocked
-list into the player's local storage under a private key called `LS_KEY`.
+Locked loadouts, which are the ones that you list in `model.gwoNewStartCards`, need
+somewhere to record that the player has unlocked them. `bank.js` is that place. It saves
+the unlocked list into the local storage of the player, under a private key called
+`LS_KEY`.
 
-Set `LS_KEY` in your `bank.js` to something unique to your mod, so it never clashes with
-another mod's storage:
+Set `LS_KEY` in your `bank.js` to a value that is unique to your mod, so that it never
+conflicts with the storage of another mod:
 
 ```js
 var LS_KEY = "myname_mymod_bank";
 ```
 
-Your loadout cards connect to this bank in two steps, both already wired up in the example
-`start_card_id.js`:
+Your loadout cards connect to this bank in two steps, and the example `start_card_id.js`
+already contains both. A third step, in `start_cards.js`, completes the connection:
 
 1. At the top of the loadout card, it lists your `bank.js` so the card can use it. **Make
    sure this address matches your mod's identifier:**
@@ -1242,25 +1253,25 @@ Your loadout cards connect to this bank in two steps, both already wired up in t
 
 3. `start_cards.js` tells Galactic War Overhaul where the bank is, through
    [`model.gwoLoadoutBanks`](#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
-   Miss this step and the loadout stays locked forever.
+   If you miss this step, the loadout stays locked for ever.
 
-The loadout screen then checks your bank (using the same `LS_KEY`) to decide whether to
-show your loadout as unlocked. Using your own key means that if the player later removes
-your mod, PA's built-in loadout list is not left pointing at missing cards, and the
-player's unlocks leave with the mod rather than lingering in someone else's storage.
+The loadout screen then reads your bank, with the same `LS_KEY`, to decide whether to show
+your loadout as unlocked. Your own key has two benefits. If the player removes your mod
+later, the built-in loadout list of PA does not point at missing cards. The unlocks of the
+player also leave with the mod, and they do not stay in the storage of another mod.
 
-There are two ways a loadout reaches your bank. If the player wins a loadout on a
-Guardian planet, Galactic War Overhaul writes it there itself — your card's own code
-does not run in that case, which is why it needs the address above. The `bank` you hand to
-`gwoCard.loadout` covers the other route.
+A loadout reaches your bank in two ways. If the player wins a loadout on a Guardian
+planet, Galactic War Overhaul writes it to the bank itself. The code of your card does not
+run in that case, and that is why Galactic War Overhaul needs the address above. The
+`bank` that you give to `gwoCard.loadout` covers the other way.
 
-Your bank also keeps PA's "loadouts unlocked" statistic up to date as it grows. That is
-already written for you in `bank.js`; there is nothing to do.
+Your bank also keeps the "loadouts unlocked" statistic of PA up to date as it grows.
+`bank.js` already does that for you, and there is nothing to do.
 
 ## Minimum required changes
 
-You don't have to use every feature above. This is the shortest path to a working mod with
-one card. Tick each item off as you go.
+You do not have to use every feature above. This is the shortest path to a working mod
+with one card. Mark each item as you complete it.
 
 **Every mod:**
 
@@ -1270,39 +1281,39 @@ one card. Tick each item off as you go.
 - [ ] In `modinfo.json`, changed the `scenes` addresses so they contain your identifier.
 - [ ] Renamed the folder under `ui/mods/` so it matches your identifier.
 - [ ] Renamed the example card file you are using (`tech_card_id.js`,
-      `unit_upgrade_card_id.js` or `start_card_id.js`) to a unique name, and remembered
-      that name (without `.js`) as the card's ID.
+      `unit_upgrade_card_id.js` or `start_card_id.js`) to a unique name, and kept that
+      name, without `.js`, as the ID of the card.
 - [ ] Gave the card a name (`summarize`), a description (`describe`), and a picture
       (`icon`).
-- [ ] Made the card actually do something in its `buff` (add units, change unit stats, or
-      change the AI).
-- [ ] Replaced or removed every leftover placeholder in the card, such as `UNIT_PATH`,
-      `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` text. A leftover
-      placeholder will break the card.
-- [ ] **Deleted the example loadout IDs you are not using from `start_cards.js`**
+- [ ] Made the card do something in its `buff`: add units, change unit stats, or change
+      the AI.
+- [ ] Replaced or removed every placeholder left in the card, such as `UNIT_PATH`,
+      `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` text. A placeholder that
+      stays breaks the card.
+- [ ] **Deleted from `start_cards.js` every example loadout ID that you do not use**
       (`YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`,
-      `YOUR_UNLOCKED_LOADOUT_ID_1`, `YOUR_UNLOCKED_LOADOUT_ID_N`). Do this even if you are
-      only making a tech card. Leaving them there stops Galactic War starting at all — see
-      the warning under
+      `YOUR_UNLOCKED_LOADOUT_ID_1`, `YOUR_UNLOCKED_LOADOUT_ID_N`). Do this also when you
+      make only a tech card. If they stay, Galactic War does not start at all. See the
+      warning under
       [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 **If your card is a tech card, also:**
 
-- [ ] In the card's `deal`, set `chance` to a number above `0`. It starts at `0`, which
-      means the card is never offered.
+- [ ] In the `deal` of the card, set `chance` to a number above `0`. It starts at `0`, and
+      the game then never offers the card.
 - [ ] Added the card's ID to `model.gwoCards` in `tech_cards.js`.
-- [ ] Listed the card in `model.gwoCardsToUnits` in `tech_cards.js` (or, if it changes no
-      units, in `model.gwoCardsWithoutTooltip`).
+- [ ] Listed the card in `model.gwoCardsToUnits` in `tech_cards.js`, or in
+      `model.gwoCardsWithoutTooltip` if it changes no units.
 
 **If your card improves one unit (`gwoCard.upgradeCard`), also:**
 
-- [ ] Set `requires` to the unit the card improves. There is no `deal` to fill in — the
-      chance is worked out for you.
+- [ ] Set `requires` to the unit that the card improves. There is no `deal` to complete,
+      because the helper works out the chance.
 - [ ] Added the card's ID to `model.gwoCards` and listed it in `model.gwoCardsToUnits`, in
       `tech_cards.js`, the same as any other tech card.
 
 - [ ] Checked the mod with ESLint (see [Checking your work](#checking-your-work)) and
-      fixed anything it flagged.
+      corrected everything that it reported.
 
 **If your card is a loadout, also:**
 
@@ -1312,68 +1323,69 @@ one card. Tick each item off as you go.
 - [ ] Changed the `bank.js` address at the top of the loadout card so it matches your
       identifier.
 - [ ] Set `prefix` and `path` in the `model.gwoLoadoutBanks` entry in `start_cards.js`.
-      Without this a locked loadout can never be unlocked.
+      Without this a locked loadout can never unlock.
 
 ## Checking your work
 
-Do this before you launch the game. A card is only text until PA reads it, and PA is
-unforgiving: **one typo takes out the whole file**, not just the line it is on. A missing
-comma or an unclosed bracket means your card simply never appears, with no error message
-and nothing in the game to tell you why. The checker catches that in seconds.
+Do this before you start the game. A card is only text until PA reads it, and PA is
+strict: **one typing mistake stops the whole file**, not only the line that it is on.
+After a missing comma or a bracket that you did not close, your card simply never appears.
+There is no error message, and nothing in the game tells you why. The checker finds that
+fault in seconds.
 
 ### The editor extension (recommended)
 
 If you use [Visual Studio Code](https://code.visualstudio.com/), install the **ESLint**
-extension (by Microsoft) from the Extensions panel — click the blocks icon in the sidebar,
-search for `ESLint`, press Install.
+extension from Microsoft. Open the Extensions panel with the blocks icon in the sidebar,
+search for `ESLint`, and press Install.
 
-You also need to set the checker up once, which needs [Node.js](https://nodejs.org/)
-installed:
+You must also install the checker once, and that needs [Node.js](https://nodejs.org/):
 
 1. Open your mod folder in Visual Studio Code.
 2. Open a terminal in it (Terminal → New Terminal) and run `npm install`. This downloads
-   the checker. You only ever do this once.
+   the checker. You do this once only.
 
-From then on mistakes are underlined in red as you type, in the file you are editing,
-with an explanation when you hover over them. Nothing to run and nothing to remember —
-which is the point, because the mistakes this catches are exactly the ones that are
-invisible until the game refuses to load your card.
+After that, the editor underlines a mistake in red while you type, in the file that you
+edit, and it shows an explanation when you put the pointer on the mistake. You run nothing
+and you remember nothing. That is the purpose, because the mistakes that this catches are
+exactly the ones that stay invisible until the game refuses to load your card.
 
-There is nothing to move or point at: `package.json` and `eslint.config.mjs` came with the
-template and are already sitting next to your `ui` folder. The game ignores them.
+You move nothing and you configure nothing. `package.json` and `eslint.config.mjs` came
+with the template, and they already sit beside your `ui` folder. The game ignores them.
 
 ### From a terminal
 
 If you do not use Visual Studio Code, or you want to check the whole mod at once before
-releasing it, run this in your mod folder after the `npm install` above:
+you release it, run this in your mod folder after the `npm install` above:
 
 ```bash
 npm run lint:js
 ```
 
-It prints one line per problem, with the file and line number. No output means no
+It prints one line for each problem, with the file and the line number. No output means no
 problems.
 
 ### What it catches
 
-- **Typos and syntax mistakes** — missing commas, unclosed brackets and quotes.
-- **Newer JavaScript PA cannot run.** PA's built-in browser is very old. Modern
-  JavaScript you may have seen elsewhere — `let`, `=>`, backtick strings, `class` — will
-  not even load, and takes the whole file down with it. The checker knows exactly which
-  features PA supports and flags the rest.
+- **Typing and syntax mistakes** — a missing comma, or a bracket or quotation mark that
+  you did not close.
+- **Newer JavaScript that PA cannot run.** The browser inside PA is very old. Modern
+  JavaScript that you may have seen elsewhere, such as `let`, `=>`, backtick strings and
+  `class`, does not even load, and it takes the whole file down with it. The checker knows
+  exactly which features PA supports, and it reports the rest.
 - **Functions that do not exist in PA**, such as `Object.assign` and `Array.from`. These
-  are worse than a typo: the file loads, and the card fails only at the moment a player
-  uses it.
+  are worse than a typing mistake. The file loads, and the card fails only at the moment
+  when a player uses it.
 
-The list of what PA does and does not support lives in `eslint.config.mjs`. If you are
-ever unsure whether you can use something, that file is the answer — but the easy version
-is to write the card, and see whether anything goes red.
+`eslint.config.mjs` holds the list of what PA supports and what it does not. That file is
+the answer when you are not sure whether you can use something. The simple method is to
+write the card and to see whether anything turns red.
 
 ## Testing your mod
 
 Run the checker first — see [Checking your work](#checking-your-work). It finds the
-mistakes that stop a card loading at all, and those are the hardest to diagnose from
-inside the game, where the only symptom is a card that never shows up.
+mistakes that stop a card from loading at all, and those are the most difficult ones to
+diagnose from inside the game, where the only symptom is a card that never appears.
 
 1. Add `--devmode` to your PA
    [launch options](https://help.steampowered.com/en/faqs/view/7D01-D2DD-D75E-2955) (keep
@@ -1386,40 +1398,40 @@ inside the game, where the only symptom is a card that never shows up.
 7. Click Start Page.
 8. Change to the Console tab.
 
-During testing you will watch the Console for errors. Note that PA normally produces the
-following two messages, up to once per screen, and they are **not** a problem:
+During a test you watch the Console for errors. PA prints the following two messages in
+normal operation, up to once for each screen, and they are **not** a problem:
 
 - ERROR: _Uncaught TypeError: undefined is not a function_
 - WARN: _Synchronous XMLHttpRequest on the main thread is deprecated because of its
   detrimental effects to the end user's experience. For more help, check
   <http://xhr.spec.whatwg.org/>._
 
-Two messages are worth knowing on sight:
+Learn these two messages:
 
 - ERROR: _Uncaught Error: Script error for: cards/SOME_ID_
 
-  You listed `SOME_ID` somewhere but there is no `SOME_ID.js` in
-  `ui/main/game/galactic_war/cards/`. Usually a typo, or an example ID you forgot to
-  delete. From a **tech card** list this is harmless — the card is skipped. From a
-  **loadout** list it is fatal: starting a new war will hang on a blank screen forever.
-  See the warning under
+  You listed `SOME_ID` somewhere, but there is no `SOME_ID.js` in
+  `ui/main/game/galactic_war/cards/`. The usual cause is a typing mistake, or an example
+  ID that you forgot to delete. From a **tech card** list this is harmless, because the
+  game skips the card. From a **loadout** list it is fatal: a new war then hangs on a
+  blank screen for ever. See the warning under
   [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 - WARN: _Warning: File not found in mod Object_
 
-  A card tried to change a file the player has no copy of, so the change was skipped.
-  **Seeing this is normal.** Galactic War only copies the files a player's own units
-  need, and a card that changes several units is dealt to players who own only some of
-  them — the entries for the rest are dropped, which is exactly what should happen. Expand
-  the `Object` in the debugger to see which `file` it was.
+  A card tried to change a file that the player has no copy of, so the game skipped the
+  change. **This message is normal.** Galactic War copies only the files that the units of
+  a player need, and it deals a card that changes several units to players who own only
+  some of them. It drops the entries for the rest, which is exactly what should happen.
+  Open the `Object` in the debugger to see which `file` it was.
 
-  It is only a problem if the file is one the card _should_ have been able to change:
-  a unit the card `requires`, a file reachable from one of those, or a file you borrowed
-  from elsewhere and forgot to list in
-  [`model.gwoSpecs`](#modelgwospecs--extra-unit-files-to-change-in-specsjs). A typo in the
-  path looks the same, so check the `file` spelling against the
+  It is a problem only when the file is one that the card _should_ have been able to
+  change: a unit that the card `requires`, a file reachable from one of those, or a file
+  that you borrowed from elsewhere and forgot to list in
+  [`model.gwoSpecs`](#modelgwospecs--extra-unit-files-to-change-in-specsjs). A typing
+  mistake in the path looks the same, so check the spelling of `file` against the
   [unit IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js)
-  before assuming it is the harmless kind.
+  before you decide that the message is the harmless kind.
 
 ### Testing loadouts
 
@@ -1465,11 +1477,12 @@ When your mod is ready to share, update these entries in `modinfo.json`:
    is fine).
 5. `icon` — the web address of a publicly visible PNG image for your mod.
 
-Then zip up your mod folder. If you ran `npm install`, that folder now also contains a
-`node_modules` folder holding the checker — it is large and nobody else needs it, so leave
-it out of the ZIP. Everything else can stay; the game ignores what it does not recognise,
-and the next person to open your mod gets the checker and this guide along with it.
+Then put your mod folder into a ZIP file. If you ran `npm install`, that folder now also
+contains a `node_modules` folder that holds the checker. It is large, and nobody else
+needs it, so keep it out of the ZIP. Everything else can stay. The game ignores what it
+does not recognise, and the next person who opens your mod gets the checker and this guide
+with it.
 
-Put your mod's ZIP file somewhere anyone can download it (GitHub is preferred). Then post
-the download location to the `#new-mod-submissions` channel on the
+Put the ZIP file of your mod where anyone can download it. GitHub is the preferred place.
+Then post the download address to the `#new-mod-submissions` channel on the
 [official PA Discord](https://discord.gg/pa).

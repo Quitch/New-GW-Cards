@@ -1,7 +1,8 @@
-/* We want to write our start cards to a different localStorage key so that if
-   the mod is uninstalled the gw_start loadout list isn't messed up by 404s */
+/* This mod writes its start cards to its own localStorage key.  If the player
+   removes the mod, the gw_start loadout list then keeps working, because it
+   does not point at cards that have gone. */
 define(function () {
-  // SET THIS VARIABLE TO SOMETHING UNIQUE
+  // SET THIS VARIABLE TO A VALUE THAT IS UNIQUE TO YOUR MOD
   var LS_KEY = "your_mod_id";
 
   var self;

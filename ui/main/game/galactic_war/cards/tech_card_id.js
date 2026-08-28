@@ -1,12 +1,12 @@
-// Every part of a card is explained in plain English, with worked examples, in the
-// "Feature reference" section of the README.  Keep it open beside this file.
+// The "Feature reference" section of the README explains every part of a card in
+// plain English, with worked examples.  Keep the README open beside this file.
 //
-// For examples of what fully implemented cards look like see the GWO repository
+// For examples of complete cards, see the GWO repository
 // https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards
 //
-// If this file and the README ever disagree with the game, GWO is the authority:
-// its docs/tech-cards.md describes what a card may contain and what each part is
-// handed, and its test/modder_api.test.js is what holds that steady.
+// If this file or the README disagrees with the game, GWO is the authority.  Its
+// docs/tech-cards.md says what a card can contain and what the game gives to each
+// part.  Its test/modder_api.test.js keeps that stable.
 define([
   "shared/gw_common",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js",
@@ -20,7 +20,7 @@ define([
     // ADD A CARD NAME
     summarize: _.constant("!LOC:CARD NAME HERE"),
     // SET A PATH TO YOUR CHOSEN ICON
-    // this path can also be to a custom icon shipped with your mod e.g.
+    // This path can also point to a custom icon inside your own mod, for example
     // "coui://ui/mods/com.pa.YOURNAME.MODNAME/SOME_FOLDER/PNG_FILE_NAME.png"
     icon: _.constant(
       "coui://ui/main/game/galactic_war/gw_play/img/tech/PNG_FILE_NAME.png"
@@ -51,12 +51,12 @@ define([
     audio: _.constant({ found: "/VO/Computer/gw/CHOSEN_LINE_HERE" }),
     getContext: gwoCard.getContext,
     // MODIFY CHANCE OF CARD APPEARING
-    // The four things below are unused in this template.  The first three are what
-    // you test to decide the chance.  The fourth, rng, is only needed if your card
-    // makes a random choice - use it instead of Math.random(), or the same war will
-    // deal differently each time it is played and players in a co-op game will
-    // disagree about what was offered.  Whatever you do here, the chance itself must
-    // never be random.  See the README's "Randomness in `deal`".
+    // This template uses none of the four arguments below.  You test the first
+    // three to decide the chance.  You need the fourth, rng, only if your card
+    // makes a random choice.  Use rng instead of Math.random().  With
+    // Math.random() the same war deals differently each time you play it, and
+    // players in a co-op game see different offers.  The chance itself must never
+    // be random.  See "Randomness in `deal`" in the README.
     // eslint-disable-next-line no-unused-vars
     deal: function (system, context, inventory, rng) {
       var chance = 0;
@@ -64,23 +64,24 @@ define([
     },
     buff: function (inventory) {
       // ADD UNITS TO INVENTORY
-      // Delete both lines below if your card doesn't unlock any units.
+      // Delete the two lines below if your card unlocks no units.
       var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
       inventory.addUnits(units);
 
       // MODIFY UNITS
-      // An example of what goes in the list, giving Dox 50% more health and
-      // their weapon a little more range:
+      // An example of the list contents.  It gives the Dox 50% more health, and
+      // it gives their weapon more range:
       //   var mods = [
       //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
       //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
       //   ];
       //
-      // If the value you write is the NAME OF ANOTHER FILE - a weapon, a build arm,
-      // something spawned on death - it needs a second entry right after it with
-      // op: "tag" and no value.  Without it the player's other cards will not apply
-      // to what you added, and nothing will warn you.  Giving Dox a second weapon
-      // borrowed from the Ant:
+      // If the value that you write is the NAME OF ANOTHER FILE - a weapon, a
+      // build arm, or something that spawns on death - it needs a second entry
+      // directly after it, with op: "tag" and no value.  Without that entry the
+      // other cards of the player do not apply to what you added, and nothing
+      // warns you.  This example gives the Dox a second weapon, borrowed from the
+      // Ant:
       //   var mods = [
       //     {
       //       file: gwoUnit.dox,
@@ -90,18 +91,18 @@ define([
       //     },
       //     { file: gwoUnit.dox, path: "tools.1.spec_id", op: "tag" },
       //   ];
-      // Dox has one tool already, so the one you pushed is number 1 (they count from
-      // 0).  A borrowed file also has to be listed in specs.js, or the tag points at
-      // nothing.  The README section "Whenever your value is a file name, tag it"
-      // walks through both halves.
+      // The Dox already has one tool, so the tool that you pushed is number 1.
+      // Tools count from 0.  You must also list a borrowed file in specs.js, or
+      // the tag points at nothing.  The README section "Whenever your value is a
+      // file name, tag it" explains both halves.
       //
-      // Delete both lines below if your card doesn't change any unit's stats.
+      // Delete the two lines below if your card changes no unit stats.
       var mods = [];
       inventory.addMods(mods);
 
       // MODIFY SUB COMMANDER BEHAVIOUR
-      // An example of what goes in the list, letting basic bot factories build
-      // something only advanced bot factories could build before:
+      // An example of the list contents.  It lets basic bot factories build
+      // something that only advanced bot factories could build before:
       //   var aiMods = [
       //     {
       //       type: "factory",
@@ -113,13 +114,14 @@ define([
       //       refValue: ["AdvancedBotFactory"],
       //     },
       //   ];
-      // Delete both lines below if your card doesn't change what the AI builds.
+      // Delete the two lines below if your card does not change what the AI
+      // builds.
       var aiMods = [];
       inventory.addAIMods(aiMods);
     },
     dull: function (inventory) {
       // REMOVE UNITS FROM INVENTORY
-      // Delete both lines below if your card doesn't unlock any units.
+      // Delete the two lines below if your card unlocks no units.
       var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
       inventory.removeUnits(units);
     },

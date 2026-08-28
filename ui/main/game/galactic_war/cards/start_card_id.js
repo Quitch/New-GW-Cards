@@ -1,12 +1,12 @@
-// Every part of a card is explained in plain English, with worked examples, in the
-// "Feature reference" section of the README.  Keep it open beside this file.
+// The "Feature reference" section of the README explains every part of a card in
+// plain English, with worked examples.  Keep the README open beside this file.
 //
-// For examples of what fully implemented cards look like see the GWO repository
+// For examples of complete cards, see the GWO repository
 // https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards
 //
-// If this file and the README ever disagree with the game, GWO is the authority:
-// its docs/tech-cards.md describes what a card may contain and what each part is
-// handed, and its test/modder_api.test.js is what holds that steady.
+// If this file or the README disagrees with the game, GWO is the authority.  Its
+// docs/tech-cards.md says what a card can contain and what the game gives to each
+// part.  Its test/modder_api.test.js keeps that stable.
 define([
   "module",
   "cards/gwc_start",
@@ -18,12 +18,12 @@ define([
 ], function (module, GWCStart, myBank, gwoCard, gwoUnit, gwoGroup) {
   var CARD = { id: /[^/]+$/.exec(module.id).pop() };
 
-  // gwoCard.loadout writes the fiddly half of a loadout for you.  When the player
-  // starts a war with this loadout it gives them the game's standard starting
-  // units and then runs your `apply` below.  If the same loadout turns up again
-  // later in the war it hands out an extra card slot instead, and a copy won on a
-  // Guardian planet is recorded in your bank so the loadout unlocks.  All you fill
-  // in are the parts below.
+  // gwoCard.loadout writes the difficult half of a loadout for you.  When the
+  // player starts a war with this loadout, it gives them the standard starting
+  // units of the game and then runs your `apply` below.  If the same loadout
+  // appears again later in the war, it gives an extra card slot instead.  If the
+  // player wins a copy on a Guardian planet, it records that copy in your bank,
+  // and the loadout then unlocks.  You complete only the parts below.
   var loadout = gwoCard.loadout(CARD, {
     // YOUR BANK - THE FILE YOU NAMED AT THE TOP OF THIS FILE
     bank: myBank,
@@ -31,23 +31,24 @@ define([
     start: GWCStart,
     apply: function (inventory) {
       // ADD UNITS TO INVENTORY
-      // Delete both lines below if your loadout doesn't unlock any units.
+      // Delete the two lines below if your loadout unlocks no units.
       var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
       inventory.addUnits(units);
 
       // MODIFY UNITS
-      // An example of what goes in the list, giving Dox 50% more health and
-      // their weapon a little more range:
+      // An example of the list contents.  It gives the Dox 50% more health, and
+      // it gives their weapon more range:
       //   var mods = [
       //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
       //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
       //   ];
       //
-      // If the value you write is the NAME OF ANOTHER FILE - a weapon, a build arm,
-      // something spawned on death - it needs a second entry right after it with
-      // op: "tag" and no value.  Without it the player's other cards will not apply
-      // to what you added, and nothing will warn you.  Giving Dox a second weapon
-      // borrowed from the Ant:
+      // If the value that you write is the NAME OF ANOTHER FILE - a weapon, a
+      // build arm, or something that spawns on death - it needs a second entry
+      // directly after it, with op: "tag" and no value.  Without that entry the
+      // other cards of the player do not apply to what you added, and nothing
+      // warns you.  This example gives the Dox a second weapon, borrowed from the
+      // Ant:
       //   var mods = [
       //     {
       //       file: gwoUnit.dox,
@@ -57,18 +58,18 @@ define([
       //     },
       //     { file: gwoUnit.dox, path: "tools.1.spec_id", op: "tag" },
       //   ];
-      // Dox has one tool already, so the one you pushed is number 1 (they count from
-      // 0).  A borrowed file also has to be listed in specs.js, or the tag points at
-      // nothing.  The README section "Whenever your value is a file name, tag it"
-      // walks through both halves.
+      // The Dox already has one tool, so the tool that you pushed is number 1.
+      // Tools count from 0.  You must also list a borrowed file in specs.js, or
+      // the tag points at nothing.  The README section "Whenever your value is a
+      // file name, tag it" explains both halves.
       //
-      // Delete both lines below if your loadout doesn't change any unit's stats.
+      // Delete the two lines below if your loadout changes no unit stats.
       var mods = [];
       inventory.addMods(mods);
 
       // MODIFY SUB COMMANDER BEHAVIOUR
-      // An example of what goes in the list, letting basic bot factories build
-      // something only advanced bot factories could build before:
+      // An example of the list contents.  It lets basic bot factories build
+      // something that only advanced bot factories could build before:
       //   var aiMods = [
       //     {
       //       type: "factory",
@@ -80,13 +81,14 @@ define([
       //       refValue: ["AdvancedBotFactory"],
       //     },
       //   ];
-      // Delete both lines below if your loadout doesn't change what the AI builds.
+      // Delete the two lines below if your loadout does not change what the AI
+      // builds.
       var aiMods = [];
       inventory.addAIMods(aiMods);
     },
     // REMOVE UNITS FROM INVENTORY
-    // These are the units taken back if the player ends up on a different
-    // loadout.  Delete the line below if your loadout doesn't unlock any units.
+    // These are the units to take back if the player moves to a different
+    // loadout.  Delete the line below if your loadout unlocks no units.
     dulls: [gwoUnit.dox, gwoGroup.botsBasicMobile],
   });
 
