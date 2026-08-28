@@ -60,12 +60,32 @@ PA, add `--coherent_port=9999` to the Steam launch options for the game.
 
 1. Find your [PA data directory](https://support.planetaryannihilation.com/kb/faq.php?id=176)
    and open the `client_mods` folder inside it. If that folder does not exist, create it.
-2. Copy this whole template folder into `client_mods`. Rename the copy to a name of your
-   choice. That renamed folder is now the root of your mod. It holds a few files that the
-   game ignores, such as `README.md`, `package.json` and `eslint.config.mjs`. Leave those
-   files where they are. They are the checker described in
-   [Checking your work](#checking-your-work), and the checker works only from inside your
-   mod folder.
+2. Get your own copy of this template into `client_mods`. There are two ways. Choose one
+   now, because it decides how you release the mod later.
+
+   - **Use this template on GitHub (recommended).** This repository is a GitHub template.
+     On its [GitHub page](https://github.com/Quitch/New-GW-Cards), click **Use this
+     template** and then **Create a new repository**. GitHub makes a new repository under
+     your account that starts with the contents of this one. You can do this as many
+     times as you like, so one account can hold several card mods. Then
+     [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+     your new repository into `client_mods`. Work on the files in that clone, and
+     [commit and push](https://docs.github.com/en/get-started/using-git/about-git#example-contribute-to-an-existing-repository)
+     your changes to your repository as you go. When the mod is ready, it is already
+     published. Do not use the **Fork** button instead: GitHub allows only one fork of a
+     repository per account, and a fork is tied to this template in ways that a new
+     repository is not.
+   - **Download the files.** On the [GitHub page](https://github.com/Quitch/New-GW-Cards),
+     click **Code** and then **Download ZIP**. Unpack the ZIP into `client_mods` and
+     rename the unpacked folder to a name of your choice. You publish the mod later by
+     uploading the files to a repository of your own; see
+     [Releasing your mod](#releasing-your-mod).
+
+   Whichever way you chose, that folder in `client_mods` is now the root of your mod. It
+   holds a few files that the game ignores, such as `README.md`, `package.json` and
+   `eslint.config.mjs`. Leave those files where they are. They are the checker described
+   in [Checking your work](#checking-your-work), and the checker works only from inside
+   your mod folder.
 3. Open `modinfo.json`, in the root folder of your mod, and complete these entries:
    - `identifier` — a unique name for your mod, in the style `com.pa.yourname.modname`.
    - `display_name` — the name that players see in the mod list.
@@ -1275,7 +1295,8 @@ with one card. Mark each item as you complete it.
 
 **Every mod:**
 
-- [ ] Copied this template folder into `client_mods` and renamed it.
+- [ ] Put your own copy of this template into `client_mods` (see
+      [Preparing the mod](#preparing-the-mod)).
 - [ ] In `modinfo.json`, filled in `identifier`, `display_name`, `description`, and
       `author`.
 - [ ] In `modinfo.json`, changed the `scenes` addresses so they contain your identifier.
@@ -1477,12 +1498,20 @@ When your mod is ready to share, update these entries in `modinfo.json`:
    is fine).
 5. `icon` — the web address of a publicly visible PNG image for your mod.
 
-Then put your mod folder into a ZIP file. If you ran `npm install`, that folder now also
-contains a `node_modules` folder that holds the checker. It is large, and nobody else
-needs it, so keep it out of the ZIP. Everything else can stay. The game ignores what it
-does not recognise, and the next person who opens your mod gets the checker and this guide
-with it.
+Then make sure that your mod is on GitHub as a repository of its own, with `modinfo.json`
+in the root of the repository. Do **not** upload a ZIP file to a repository.
 
-Put the ZIP file of your mod where anyone can download it. GitHub is the preferred place.
-Then post the download address to the `#new-mod-submissions` channel on the
+- If you started from **Use this template** in [Preparing the mod](#preparing-the-mod),
+  commit and push your final changes. Your repository is the release.
+- If you **downloaded the files**, create an empty repository on GitHub and upload the
+  contents of your mod folder into it, so that `modinfo.json` sits at the top level and
+  not inside a subfolder.
+
+If you ran `npm install`, your mod folder now also contains a `node_modules` folder that
+holds the checker. It is large, and nobody else needs it, so keep it out of the
+repository. The `.gitignore` file in the template already excludes it. Everything else can
+stay. The game ignores what it does not recognise, and the next person who opens your mod
+gets the checker and this guide with it.
+
+Then post the address of your repository to the `#new-mod-submissions` channel on the
 [official PA Discord](https://discord.gg/pa).
