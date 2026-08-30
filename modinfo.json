@@ -25,5 +25,6 @@
   },
   "priority": 100,
   "titansOnly": true,
+  "galacticWarMod": false,
   "dependencies": ["com.pa.quitch.gwaioverhaul"]
 }

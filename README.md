@@ -102,6 +102,43 @@ PA, add `--coherent_port=9999` to the Steam launch options for the game.
 > addresses in that same file, and the folder name under `ui/mods/`. All three must use
 > the same identifier. If they disagree, the game loads nothing and reports nothing.
 
+### Sharing your mod in a co-op war — `galacticWarMod`
+
+`modinfo.json` also holds a `galacticWarMod` entry. The template sets it to `false`. The
+entry changes nothing in a war that you play alone. It applies only to a co-op Galactic
+War. There it decides whether all the players must have your mod.
+
+**Only the host decides.** A co-op war belongs to the player who starts it. That player is
+the host. The war uses the host's mods. The other players join the war as viewers. A
+viewer plays the host's war and receives the host's cards. The game therefore reads
+`galacticWarMod` only from the mods that the host turned on. Your own copy of the entry
+changes nothing when you join a war as a viewer. It only decides whether your mods agree
+with the host's mods.
+
+**`false` (the default).** Your mod stays your own. You can host a co-op war, or join one,
+and no other player needs your mod. Use `false` for a mod that only you need, such as a
+personal loadout.
+
+**`true`.** All the players in a war that you host must have your mod. The game adds your
+mod to the list of mods that the war requires. Each player who joins must have the same
+mod, with the same `version`. The game refuses a player who:
+
+- does not have your mod. The game shows that player the name of the mod that they must
+  install.
+- has your mod when you, the host, do not have it turned on.
+
+The host's list is the full list, and a viewer must match it exactly. Use `true` for a mod
+that changes the war for all the players, such as new tech cards that all players receive.
+
+To turn it on, open `modinfo.json` and change the line to:
+
+```json
+  "galacticWarMod": true,
+```
+
+The `version` must also agree. Each time that you release a new version of the mod, all
+the players in the war must therefore update it together.
+
 ## Understanding the pieces
 
 Your mod folder has two important areas.
@@ -1497,6 +1534,10 @@ When your mod is ready to share, update these entries in `modinfo.json`:
 4. `forum` — the web address of your mod's discussion thread (Steam or GitHub Discussions
    is fine).
 5. `icon` — the web address of a publicly visible PNG image for your mod.
+
+Then decide whether a co-op war that you host must
+[require your mod](#sharing-your-mod-in-a-co-op-war--galacticwarmod). All the players in
+such a war need the same `version`. Keep the two entries in agreement.
 
 Then make sure that your mod is on GitHub as a repository of its own, with `modinfo.json`
 in the root of the repository. Do **not** upload a ZIP file to a repository.

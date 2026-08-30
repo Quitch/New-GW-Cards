@@ -82,6 +82,13 @@ If the user has no mod folder yet, create one before writing any card:
    `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card, and set
    `prefix`/`path` on the `model.gwoLoadoutBanks` entry in `start_cards.js`. GWO reads
    that entry to find the mod's bank; without it a locked loadout never unlocks.
+6. Leave `galacticWarMod` at `false` unless the user asks for it. `true` makes the mod
+   mandatory in a co-op war, and the flag is read from the host's mods only - a viewer
+   plays the host's war with the host's cards, so its own copy of the flag decides
+   nothing. The host's flagged mods are published as the war's required client mods, and a
+   viewer missing one, holding a flagged mod the host lacks, or running a different
+   `version` of one, is refused at connect. It has no effect in a solo war. README's
+   "Sharing your mod in a co-op war" section is the author-facing explanation.
 
 The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
 must agree. If they disagree the game loads nothing and reports nothing.
