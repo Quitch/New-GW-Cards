@@ -158,6 +158,7 @@ the game:
 - `tech_cards.js` — lists your tech cards and their tooltips.
 - `start_cards.js` — lists your loadouts, and tells Galactic War Overhaul where your
   `bank.js` is.
+- `decks.js` — optional: offers a whole deck of your own in the Techs picker.
 - `specs.js` — lists any extra unit files that you want to change.
 - `bank.js` — records which of your locked loadouts the player has unlocked.
 
@@ -267,6 +268,46 @@ each tech card, which is its file name without `.js`.
 ```js
 model.gwoCards.push("gwc_damage_bots", "gwc_faster_air");
 ```
+
+#### `model.gwoDecks` — your own deck in the Techs picker (in `decks.js`)
+
+This list is optional. The Techs picker in the war setup normally offers two decks:
+**Basic** (the base game's tech cards) and **Galactic War Overhaul** (the full GWO deck).
+A deck that you add here appears beside them, and a war started with it deals only that
+deck's cards. Cards pushed onto `model.gwoCards` are an addition to **every** deck, so
+you do not need a deck to add cards — add one when you want players to choose a different
+set of cards, for example a smaller themed deck.
+
+```js
+model.gwoDecks.push({
+  id: "mym-nomad",
+  name: "!LOC:Nomad",
+  tooltip: "!LOC:Nomad-only tech.",
+  include: ["Basic"],
+  cards: ["mym_card_a", "gwc_minion"],
+});
+```
+
+- `id` — a unique name for the deck. The war save remembers it.
+- `name` — shown in the picker and on the war panel. The game already labels these
+  places "deck", so do not put the word Deck in the name.
+- `tooltip` — optional. One line for the Techs tooltip, describing the deck.
+- `include` — optional. The IDs of other decks whose cards this deck contains: `"Basic"`,
+  `"Expanded"` (the full GWO deck, which already contains Basic), or another mod's deck.
+  To include another mod's deck, list that mod in `dependencies` in your `modinfo.json`
+  **and** give your mod a **higher** `priority` number than that mod, so it loads first.
+  Leave `include` out for a standalone deck.
+- `cards` — optional. Individual card IDs: your own cards, or any stock card, so you can
+  cherry-pick without including a whole deck.
+
+A deck needs at least one card between `include` and `cards`. A card appears once however
+many times these lists name it. Register the deck in all three scenes — `modinfo.json`
+already lists `decks.js` under each. If the player removes your mod, a war started with
+your deck deals the Galactic War Overhaul deck instead.
+
+Unlike the other loaders, `decks.js` starts with its example commented out, because an
+example deck would appear in the picker as soon as the mod is enabled. Remove the comment
+marks and edit the values to use it.
 
 #### `model.gwoCardsToUnits` — tech-card tooltips (in `tech_cards.js`)
 
@@ -1382,6 +1423,12 @@ with one card. Mark each item as you complete it.
       identifier.
 - [ ] Set `prefix` and `path` in the `model.gwoLoadoutBanks` entry in `start_cards.js`.
       Without this a locked loadout can never unlock.
+
+**If you add a deck, also:**
+
+- [ ] Removed the comment marks from the example in `decks.js`, set `id` and `name`, and
+      replaced or removed every placeholder in it (see
+      [`model.gwoDecks`](#modelgwodecks--your-own-deck-in-the-techs-picker-in-decksjs)).
 
 ## Checking your work
 
