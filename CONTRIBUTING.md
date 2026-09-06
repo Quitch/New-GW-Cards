@@ -192,9 +192,11 @@ template and the game disagree.
   so that Node loads the ESM file `eslint.config.mjs`. That config file is the only `.js`
   file that Node itself runs. ESLint only parses the game code, as
   `sourceType: "script"`, and Node never runs it.
-- The loader scripts (`start_cards.js`, `tech_cards.js`, `specs.js`) put their body in a
-  `try`/`catch` block that sends failures to `console.error`. Keep that pattern. A throw
-  in a loader would break the scene in the game and show no cause.
+- The loader scripts (`start_cards.js`, `tech_cards.js`, `decks.js`, `specs.js`) are
+  each one immediately invoked function, `(function () { ... })();`, so that they declare
+  nothing in the shared scene scope. Inside it they put their body in a `try`/`catch`
+  block that sends failures to `console.error`. Keep both patterns. A throw in a loader
+  would break the scene in the game and show no cause.
 - LICENSE is public domain (Unlicense).
 - The audience of this mod is people who may know nothing about code. The mod must guide
   the user at every step. Write many more comments, in much more detail, than is normal,

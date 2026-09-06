@@ -1,4 +1,4 @@
-function addSpecs() {
+(function () {
   try {
     requireGW(
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
@@ -27,5 +27,4 @@ function addSpecs() {
     console.error(e);
     console.error("New GW Cards: " + (e.stack || e.message || e));
   }
-}
-addSpecs();
+})();
