@@ -15,7 +15,7 @@
 // Tech cards (tech_cards.js) are safer.  The game logs a missing file there,
 // skips that card, and the war continues.
 
-function addStartCards() {
+(function () {
   try {
     // Add locked loadouts.  GWO's shared/loadouts.js reads this list to build
     // the loadout screen, and its gw_play/treasure_loadouts.js reads it to
@@ -84,5 +84,4 @@ function addStartCards() {
     console.error(e);
     console.error("New GW Cards: " + (e.stack || e.message || e));
   }
-}
-addStartCards();
+})();

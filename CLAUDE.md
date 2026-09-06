@@ -278,9 +278,11 @@ shipped. Anything not on that list is not allowed. It came with the template and
 the mod folder alongside `package.json`, so checking a card is `npm install` once in that
 folder, then `npm run lint:js`.
 
-The loader files (`tech_cards.js`, `start_cards.js`, `specs.js`) wrap their body in
-`try`/`catch` and `console.error` the failure. Keep that: a throw there breaks the whole
-scene with no visible cause.
+The loader files (`tech_cards.js`, `start_cards.js`, `decks.js`, `specs.js`) are each
+one immediately invoked function, `(function () { ... })();`, and wrap their body in
+`try`/`catch` and `console.error` the failure. Keep both: every mod shares one scope per
+scene, so a top-level name can collide, and a throw there breaks the whole scene with no
+visible cause.
 
 ## When something here disagrees with the game
 

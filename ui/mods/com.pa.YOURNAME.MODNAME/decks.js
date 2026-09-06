@@ -6,7 +6,7 @@
 // To add a deck, remove the comment marks from the lines below and edit them.
 // Unlike the other loaders, this one starts inactive: an example deck would
 // appear in the picker, named "YOUR NAME HERE", the moment the mod is enabled.
-function addDecks() {
+(function () {
   try {
     // Add decks to the picker.  GWO's shared/deck_mods.js reads this list.
     // The fields of a deck:
@@ -41,5 +41,4 @@ function addDecks() {
   } catch (e) {
     console.error("New GW Cards: " + (e.stack || e.message || e));
   }
-}
-addDecks();
+})();
