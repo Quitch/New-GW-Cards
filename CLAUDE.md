@@ -56,6 +56,10 @@ watching. Look each one up.
 | AI `builders` roles and platoon template names          | keys of `<PA>/pa/ai/unit_maps/ai_unit_map.json` and `<GWO>` → `pa/ai_penchant/unit_maps/ai_unit_map.json`                                                                 |
 | Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above               |
 | What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available |
+| Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                    |
+| The game's existing wording for a stock term            | `<PA>/ui/main/_i18n/locales/<lang>/*.json`                                                                                                                                |
+| Worked examples of translation files                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/translations/<lang>.json`                                                                                                   |
+| How Mod Translations behaves                            | `<data>/download/com.pa.quitch.modtranslations.zip`, otherwise the README and `docs/design.md` on the **`main`** branch of `Quitch/Mod-Translations`                      |
 
 Two path rules that catch everyone:
 
@@ -91,7 +95,9 @@ If the user has no mod folder yet, create one before writing any card:
    "Sharing your mod in a co-op war" section is the author-facing explanation.
 
 The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
-must agree. If they disagree the game loads nothing and reports nothing.
+must agree. If they disagree the game loads nothing and reports nothing. A mod that ships
+translations has a fourth: the string passed to `ModTranslations.register` (see "Shipping
+translations").
 
 Work in the user's copy. The template repo's own tree is the pristine skeleton — do not
 fill its placeholders in.
@@ -271,6 +277,62 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
   Worked example: `<GWO>` `cards/gwaio_start_rapid.js`; reference: GWO's
   `docs/ai-pipeline.md`.
 
+## Shipping translations
+
+Only when the user asks for translations. The template ships none of it — no
+`translations.js`, no `translations/` folder, no `modinfo.json` wiring — and the mod
+works in English without it. The README's "Translating your mod" is the author-facing
+procedure; the framework is the Mod Translations mod (`com.pa.quitch.modtranslations`),
+whose README ("For mod authors") and `docs/design.md` are the authority. Every step below
+fails silently: the text just stays English.
+
+1. **Dependency.** Add `"com.pa.quitch.modtranslations"` to `dependencies` in
+   `modinfo.json`, beside GWO.
+2. **`ui/mods/<identifier>/translations.js`**, in the loader shape from "Code rules"
+   (IIFE, `try`/`catch`, `console.error`), whose body is
+   `if (window.ModTranslations) { window.ModTranslations.register("<identifier>"); }`.
+   The guard keeps the mod working when the framework is absent. That string is a
+   **fourth** place the identifier must agree — it is also the folder `register` reads
+   the files from.
+3. **`scenes.global_mod_list`, and no scene list.** Add
+   `"global_mod_list": ["coui://ui/mods/<identifier>/translations.js"]` beside the three
+   existing scene keys. This is the one loader that does not follow the
+   "every scene that needs it" rule: stock `locUpdateDocument()` runs at `document.ready`
+   and stock model constructors call `loc()` eagerly and cache the result, both before
+   any scene-list script. A registration from `gw_play`/`gw_start` lands after them, and
+   whatever they translated stays English for the life of the page.
+4. **`ui/mods/<identifier>/translations/<lang>.json`**, one per language, shaped
+   `{ "English key": { "message": "…" } }`. A regional locale falls back to its base
+   (`de-AT.json`, then `de.json`). An optional `en-US.json` catalogue is never loaded.
+
+**Keys.** The key is the text after `!LOC:`, trimmed
+(`<PA>/ui/main/shared/js/localization.js`, the `_.trim` in `loc()`), and nothing else is
+normalised: case, punctuation, numbers and `<br>` all count. Harvest every `"!LOC:…"`
+literal from the user's `ui/**` rather than typing keys, and cover `summarize`,
+`describe`, `hint`, `upgradeCard`'s `name`/`description`, and a deck's `name`/`tooltip`.
+After **any** edit to English text, re-check that every key in every `<lang>.json` still
+exists in the source — a stale key is silent. An entry with an empty `message`, or a key
+containing `;;` or `::`, is skipped and counted `invalid`. Keep numbers and `<br>`
+identical in the message. The "Adds a new slot for another technology." line that
+`upgradeCard` appends (`withSlot` in `<GWO>` `shared/cards.js`) is GWO's key, already
+translated — do not ship it.
+
+**Priority.** Keep `priority` above 50 (the template's 100 is right): Community Mods
+loads in ascending `priority`, Mod Translations is 50, and at 50 or below the script can
+run before `window.ModTranslations` exists. When two mods ship the same key the later
+registration — the higher number — wins everywhere the key appears, and GWO is 200. So
+ship only the user's own keys. `register` never throws, and logs one line per page:
+`[ModTranslations] <id> <lng> {"languages":[…],"added":n,"replaced":n,"invalid":n}`. No
+line means steps 1–3 or the priority; `languages: []` means the file name or folder; a
+`console.error` naming the URL means invalid JSON.
+
+**Unit names in translated text.** The unit's own spec decides. Read `display_name` from
+`<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`. Without `!LOC:` (`"Dox"`, `"Ant"`,
+`"Colonel"`, most Titans-only units) the game shows the name unchanged in every language:
+write it unchanged, and a `"Dox"` key does nothing because nothing looks it up. With
+`!LOC:` (`"!LOC:Bot Factory"`, `"!LOC:Radar Jamming Station"`) the game translates it:
+use the game's own wording for that language.
+
 ## Code rules
 
 This code runs in PA's embedded **Chrome 40**, and a parse error takes out the entire
@@ -312,4 +374,5 @@ Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH
 `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance
 above `0` that does not depend on its optional fourth argument `rng` (only `params` may be
 random, and a card drawing at all should use `rng`, not `Math.random()`); the card ID is registered in the right list; and the identifier is the same in
-all three places.
+all three places — four when the mod ships translations, where every key in every
+`<lang>.json` must also still match a `!LOC:` literal in the source.
