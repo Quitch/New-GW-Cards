@@ -108,6 +108,23 @@ That is why `start_cards.js` appears three times and `tech_cards.js` appears twi
 register loadouts only in `gw_start`, they are absent from the `gw_play` treasure pool, so
 the game can never award them, and they are also absent from the co-op loadout picker.
 
+### Translations
+
+The template deliberately ships no translation scaffold. There is no `translations.js`
+and no `translations/` folder, and `modinfo.json` has no `global_mod_list` entry and no
+dependency on Mod Translations (`com.pa.quitch.modtranslations`). This was the decision
+on issue #8, on 2026-09-17: the documents give the author the steps, and a mod that ships
+no translations carries nothing extra. Do not add the scaffold.
+
+Three places describe the steps: the `README.md` section "Translating your mod", the
+`CLAUDE.md` section "Shipping translations", and the "If you ship translations, also:"
+block of the `README.md` checklist. Keep those three consistent with each other. The
+README of Mod Translations is the authority on how the framework behaves, so keep them
+consistent with it too: the `priority` of 50, the `global_mod_list` rule, the key format
+and the format of the `[ModTranslations]` log line. A `translations.js` is the one loader
+that goes under `global_mod_list` and under no scene, which is the opposite of the rule
+above.
+
 ## Card contract
 
 Cards are AMD modules (`define([deps], function(...) {...})`). Each returns an object with

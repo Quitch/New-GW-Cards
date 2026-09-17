@@ -21,7 +21,8 @@ Overhaul.
 7. [Minimum required changes](#minimum-required-changes)
 8. [Checking your work](#checking-your-work)
 9. [Testing your mod](#testing-your-mod)
-10. [Releasing your mod](#releasing-your-mod)
+10. [Translating your mod](#translating-your-mod)
+11. [Releasing your mod](#releasing-your-mod)
 
 ## What this template does
 
@@ -86,6 +87,7 @@ PA, add `--coherent_port=9999` to the Steam launch options for the game.
    `eslint.config.mjs`. Leave those files where they are. They are the checker described
    in [Checking your work](#checking-your-work), and the checker works only from inside
    your mod folder.
+
 3. Open `modinfo.json`, in the root folder of your mod, and complete these entries:
    - `identifier` — a unique name for your mod, in the style `com.pa.yourname.modname`.
    - `display_name` — the name that players see in the mod list.
@@ -161,6 +163,9 @@ the game:
 - `decks.js` — optional: offers a whole deck of your own in the Techs picker.
 - `specs.js` — lists any extra unit files that you want to change.
 - `bank.js` — records which of your locked loadouts the player has unlocked.
+
+There is one more loader, `translations.js`, which is optional. The template does not
+include it, and you create it yourself. See [Translating your mod](#translating-your-mod).
 
 The game loads each of these files once for each screen that needs it. That is why
 `modinfo.json` lists some of them more than once. Galactic War has three separate screens:
@@ -463,26 +468,27 @@ parts. See
 [a card that improves one unit](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard)
 and [loadouts](#loadouts-and-gwocardloadout) below.
 
-| Part             | Used by    | What it does                                                                                                                    |
-| ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Part             | Used by    | What it does                                                                                                                        |
+| ---------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `visible`        | all        | Whether the player can see the card on the board and discard it. Tech cards are usually visible. Loadouts and hidden cards are not. |
-| `summarize`      | all        | The name of the card.                                                                                                           |
-| `describe`       | all        | The description text of the card.                                                                                               |
-| `icon`           | all        | The picture of the card.                                                                                                        |
-| `deal`           | all        | How often the game offers the card. See below.                                                                                  |
-| `buff`           | all        | What the card does. See below.                                                                                                  |
-| `dull`           | all        | Cleanup. It runs after the `buff` of every card, and it usually removes units.                                                  |
-| `audio`          | tech cards | The voice line that plays when the player finds the card.                                                                       |
-| `getContext`     | tech cards | Gives the `deal` part information about the galaxy. Use `gwoCard.getContext`.                                                   |
-| `hint`           | loadouts   | The picture and text shown while the loadout is still locked.                                                                   |
-| `keep`           | rare       | Runs just after the game deals the card. It does not do what its name says. See below.                                          |
-| `discard`        | rare       | Left over from PA's own cards. Galactic War Overhaul never calls it.                                                            |
-| `releaseContext` | rare       | Runs just after the game deals the card, to release anything that `getContext` made.                                            |
+| `summarize`      | all        | The name of the card.                                                                                                               |
+| `describe`       | all        | The description text of the card.                                                                                                   |
+| `icon`           | all        | The picture of the card.                                                                                                            |
+| `deal`           | all        | How often the game offers the card. See below.                                                                                      |
+| `buff`           | all        | What the card does. See below.                                                                                                      |
+| `dull`           | all        | Cleanup. It runs after the `buff` of every card, and it usually removes units.                                                      |
+| `audio`          | tech cards | The voice line that plays when the player finds the card.                                                                           |
+| `getContext`     | tech cards | Gives the `deal` part information about the galaxy. Use `gwoCard.getContext`.                                                       |
+| `hint`           | loadouts   | The picture and text shown while the loadout is still locked.                                                                       |
+| `keep`           | rare       | Runs just after the game deals the card. It does not do what its name says. See below.                                              |
+| `discard`        | rare       | Left over from PA's own cards. Galactic War Overhaul never calls it.                                                                |
+| `releaseContext` | rare       | Runs just after the game deals the card, to release anything that `getContext` made.                                                |
 
 #### `summarize`, `describe`, `icon` — name, description, picture
 
 `summarize` is the name, `describe` is the description, and `icon` is the picture. Write
-text that players read with a `!LOC:` prefix, so that it can be translated.
+text that players read with a `!LOC:` prefix,
+[so that it can be translated](#translating-your-mod).
 
 ```js
 summarize: _.constant("!LOC:Bot Damage"),
@@ -1467,6 +1473,18 @@ with one card. Mark each item as you complete it.
       replaced or removed every placeholder in it (see
       [`model.gwoDecks`](#modelgwodecks--your-own-deck-in-the-techs-picker-in-decksjs)).
 
+**If you ship translations, also:**
+
+- [ ] Added `"com.pa.quitch.modtranslations"` to `dependencies` in `modinfo.json`, and
+      kept `priority` above `50`.
+- [ ] Created `translations.js` in `ui/mods/<your identifier>/`, with your identifier in
+      it.
+- [ ] Listed `translations.js` under `global_mod_list` in `modinfo.json`, and under no
+      other scene.
+- [ ] Wrote one `translations/<lang>.json` for each language, with every key copied
+      exactly from the text after `!LOC:` (see
+      [Translating your mod](#translating-your-mod)).
+
 ## Checking your work
 
 Do this before you start the game. A card is only text until PA reads it, and PA is
@@ -1605,6 +1623,188 @@ Learn these two messages:
 8. Begin a fight.
 9. Confirm no unexpected errors appear in the Console.
 10. Use the sandbox to spawn your changed units and check they behave correctly.
+
+## Translating your mod
+
+**This section is optional.** Your mod works in English without it. Do it only if you want
+players to read your cards in their own language.
+
+The game cannot load translations from a mod by itself. The
+[Mod Translations](https://github.com/Quitch/Mod-Translations) mod adds that ability, and
+Galactic War Overhaul already uses it. A player who does not have Mod Translations sees
+your text in English. A player whose language you have no file for also sees English.
+Nothing breaks in either case.
+
+There are four steps. Each one fails without a message if you get it wrong, so do them in
+order, and then do the [test](#testing-your-translations) at the end.
+
+### Step 1: add the dependency in `modinfo.json`
+
+Open `modinfo.json` and add `"com.pa.quitch.modtranslations"` to `dependencies`, beside
+Galactic War Overhaul. Community Mods then installs Mod Translations together with your
+mod.
+
+```json
+  "dependencies": ["com.pa.quitch.gwaioverhaul", "com.pa.quitch.modtranslations"]
+```
+
+In the same file, keep `priority` above `50`. The template sets it to `100`, and that
+value is correct. The game loads mods from the lowest `priority` number to the highest,
+and Mod Translations uses `50`. A mod at `50` or below can run before Mod Translations
+exists. Your text then stays English, and no error tells you why.
+
+### Step 2: create the register script
+
+Create a new file, `translations.js`, in `ui/mods/<your identifier>/`, beside
+`tech_cards.js`. Put this in it, and change `<your identifier>` to the `identifier` of
+your mod:
+
+```js
+(function () {
+  try {
+    // Mod Translations supplies window.ModTranslations.  If the player does
+    // not have that mod, this script does nothing and your text stays English.
+    if (window.ModTranslations) {
+      window.ModTranslations.register("<your identifier>");
+    }
+  } catch (e) {
+    console.error(e);
+    console.error("New GW Cards: " + (e.stack || e.message || e));
+  }
+})();
+```
+
+> **This is a fourth place for your identifier.** [Preparing the mod](#preparing-the-mod)
+> names three places that must agree. The identifier in this script must agree with them
+> too. Mod Translations uses it to find your files, so a different identifier finds
+> nothing and reports nothing.
+
+### Step 3: list the script under `global_mod_list`, and nowhere else
+
+Open `modinfo.json` again and add a `global_mod_list` entry to `scenes`, beside the three
+entries that are already there:
+
+```json
+  "scenes": {
+    "global_mod_list": ["coui://ui/mods/<your identifier>/translations.js"],
+    "gw_play": [
+```
+
+Do not add `translations.js` to `gw_play`, `gw_start` or
+`gw_coop_per_player_loadout`. This is the one exception to the rule in
+[Understanding the pieces](#understanding-the-pieces) that a loader goes under every
+screen that needs it.
+
+The reason is timing. The game translates the text of its own screens, and remembers the
+result, before it runs the list of any one screen. A script under `gw_play` or `gw_start`
+therefore registers your translations too late, and some of your text stays English until
+the player leaves that screen. A script under `global_mod_list` runs on every screen, and
+it runs before that first translation.
+
+### Step 4: write the translation files
+
+Create a folder named `translations` in `ui/mods/<your identifier>/`. Put one file in it
+for each language, named `<lang>.json`.
+
+`<lang>` must be the name of a folder in
+`{PA_INSTALL_DIRECTORY}/media/ui/main/_i18n/locales/`, for example `de`, `fr`, `es-ES`,
+`ru` or `zh-CN`. Copy the name exactly. A name that is not in that folder never loads.
+
+A regional language also reads the file of its base language. A player who uses `de-AT`
+(Austrian German) gets `de-AT.json` first and then `de.json`, so one `de.json` serves
+both.
+
+Each file is a list of your English texts, and each text has its translation as
+`message`:
+
+```json
+{
+  "Bot Damage": { "message": "Bot-Schaden" },
+  "Increases the damage of your basic bots.": {
+    "message": "Erhöht den Schaden deiner einfachen Bots."
+  }
+}
+```
+
+You can also keep an `en-US.json` that lists every key, with a `description` of each one
+for your translators. The game never loads that file. It is only a catalogue.
+
+#### The key must be your English text, exactly
+
+The key is the English text exactly as you wrote it after `!LOC:` in the card. Every
+character counts, including capital letters, punctuation, numbers and `<br>`. Only spaces
+at the very start and the very end do not count. For `"!LOC:Bot Damage"` the key is
+`"Bot Damage"`.
+
+**A key that does not match leaves that one text in English, and no message tells you.**
+Copy each key out of the card file. Do not type it again.
+
+These rules follow from that:
+
+- If you change the English wording in a card, you change the key. Update that key in
+  every language file at the same time.
+- `message` must not be empty. Mod Translations ignores an empty `message`.
+- A key that contains `;;` or `::` can never work. Change the English text in the card so
+  that it contains neither.
+- Keep numbers and `<br>` the same in the translation as in the English text.
+
+Text that needs a key:
+
+- `summarize`, `describe` and `hint` in a card.
+- `name` and `description` in a `gwoCard.upgradeCard` card.
+- `name` and `tooltip` in a deck.
+
+Text that needs no key: the line "Adds a new slot for another technology." that
+`gwoCard.upgradeCard` adds to a description. That line belongs to Galactic War Overhaul,
+which already translates it.
+
+**Put only your own text in your files.** When two mods translate the same key, the mod
+with the higher `priority` number wins everywhere that the key appears. The `priority` of
+Galactic War Overhaul is `200`, so it wins against the `100` of the template.
+
+#### Unit names
+
+The name of a unit in your text is a special case, and the file of the unit decides it.
+Open the `.json` file of the unit in the PA install, and read the `display_name` entry:
+
+- **Without `!LOC:`**, for example `"Dox"`, `"Ant"`, `"Colonel"`, and most of the units
+  that Titans added. The game shows that name unchanged in every language. Write the name
+  unchanged in your translated text. A `"Dox"` key of your own does nothing, because the
+  game never looks that name up.
+- **With `!LOC:`**, for example `"!LOC:Bot Factory"`. The game translates that name. Use
+  the wording of the game for that language, so that your card agrees with the rest of
+  the screen. The files of the game are in
+  `{PA_INSTALL_DIRECTORY}/media/ui/main/_i18n/locales/<lang>/`.
+
+### Testing your translations
+
+1. Do the steps in [Testing your mod](#testing-your-mod), so that the Console is open.
+2. In the game, open Settings and change the language to one that you have a file for.
+3. Open Galactic War again, and read the text of your cards.
+4. In the Console, find a line that starts with `[ModTranslations]`, followed by your
+   identifier and the language:
+
+   ```text
+   [ModTranslations] com.pa.yourname.modname de {"languages":["de"],"added":2,"replaced":0,"invalid":0}
+   ```
+
+   `languages` lists the files that the game found. `added` is the number of texts that
+   it took from them. `invalid` counts the entries that it ignored.
+
+If something is wrong, the result tells you where to look:
+
+- **No `[ModTranslations]` line with your identifier.** `translations.js` is not under
+  `global_mod_list`, the address there does not contain your identifier, Mod Translations
+  is not enabled, or your `priority` is `50` or below.
+- **`languages` is empty, or `added` is `0`.** The game did not find your file. Check the
+  name of the `translations` folder, the name of the file against the `locales` folder,
+  and the identifier in `translations.js`.
+- **A red error that names your file.** The file is not valid JSON. The usual cause is a
+  missing comma or quotation mark.
+- **`invalid` is above `0`.** An entry has an empty `message`, or its key contains `;;`
+  or `::`.
+- **One text is still English.** Its key does not match the English text in the card.
+  Copy the text from the card again.
 
 ## Releasing your mod
 
