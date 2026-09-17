@@ -148,7 +148,9 @@ follow it:
   GWO unit IDs or group IDs. It uses `inventory.addMods(...)` for unit-spec stat mods,
   which have the shape `{file, path, op, value}`. It uses `inventory.addAIMods(...)` for
   AI build-order descriptors, which have the shape
-  `{type, op, toBuild, idToMod, value, refId, refValue, matchAll, treeOnly}`. The comments in the
+  `{type, op, toBuild, idToMod, value, refId, refValue, matchAll, treeOnly}`. `unset`
+  carries no `value`. `silence` carries only `type`, `op`, `value`, and the optional
+  `treeOnly`, and its `value` is an object `{builders, except}`. The comments in the
   templates document the op tables and the meaning of each field. GWO applies spec mods in
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod with `op: "tag"`, on the

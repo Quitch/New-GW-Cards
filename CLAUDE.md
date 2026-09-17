@@ -229,17 +229,23 @@ Line references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/ref
 **Fields each op needs.** All need `type`. Missing any of these makes the descriptor do
 nothing:
 
-| op                             | also needs                    |
-| ------------------------------ | ----------------------------- |
-| `load`                         | `value`                       |
-| `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
-| `remove`, `new`                | `toBuild`, `value`            |
-| `squad`                        | `toBuild`, `value`            |
+| op                             | also needs                       |
+| ------------------------------ | -------------------------------- |
+| `load`                         | `value`                          |
+| `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value`    |
+| `unset`                        | `toBuild`, `idToMod`             |
+| `remove`, `new`                | `toBuild`, `value`               |
+| `silence`                      | `value` (`{ builders, except }`) |
+| `squad`                        | `toBuild`, `value`               |
 
-`squad` works only with `type: "template"`; the other five work only with `fabber`,
-`factory` and `platoon`. Getting that pairing wrong is not always harmless: a build op
-aimed at a template file quietly does nothing, but `squad` aimed at a build list
-**throws** and takes the AI setup down with it (`:154-159`).
+`squad` works only with `type: "template"`; the other seven (`append`, `prepend`,
+`replace`, `unset`, `remove`, `new`, `silence`) work only with `fabber`, `factory`, and
+`platoon`. `unset` deletes `idToMod` from the matched entry (`:146-161`) and honours
+`refId`/`refValue`/`matchAll` like `replace`.
+
+Getting that pairing wrong is not always harmless: a build op aimed at a template file
+quietly does nothing, but `squad` aimed at a build list **throws** and takes the AI setup
+down with it (`:154-159`).
 
 **What the files look like.** `fabber`/`factory`/`platoon` files are
 `{ "build_list": [ … ] }`, where each entry has `to_build`, `priority`, `builders`,
@@ -257,7 +263,17 @@ Penchant AI trees — `refId: "priority"` with the priority that tree uses.
 **Things that silently do nothing:** a `toBuild` no file contains; `append`/`prepend`/
 `replace` with no `idToMod`; `replace` against a field the entry does not already have (it
 cannot create one); `remove` whose `value` is not an exact copy of a whole test object;
-`squad` naming a template that does not exist.
+`squad` naming a template that does not exist; `silence` with a `value` that is not
+`{builders: [...], except: [...]}`.
+
+**`op: "silence"`** (`:194-206`). `value` is `{ builders: [...], except: [...] }`, both
+string arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
+`builders` are **all** in `value.builders`, unless its `to_build` is in `value.except`. An
+entry with any builder outside the list, or with no `builders`, is untouched. It ignores
+`toBuild`, `idToMod`, `refId`, `refValue`, and `matchAll`, and it reads `treeOnly`. Use it
+when a card changes what a builder can build and the AI must stop ordering everything else
+from that builder. **Unreleased:** it landed on GWO `develop` after v7.3.1; on v7.3.1 and
+earlier the descriptor logs "Invalid AI mod operation" and does nothing.
 
 **`op: "load"`.** It reads `/pa/ai_tech/<folder>/<value>` from your own mod, where the
 folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds/`,
@@ -271,9 +287,10 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 - GWO walks a loaded file like any other build file, so every descriptor of that `type`
   lands on it — your card's own, and those of every other card in the hand.
 - `treeOnly: true` on a build-list descriptor keeps it off every file under `/pa/ai_tech/`
-  (`aiModsInScopeOfFile`, `:351-377`). A card that zeroes stock entries and re-supplies
-  them under the same `toBuild` from its `load` file **needs** it, or it silently zeroes
-  its own replacements and the AI builds nothing. `load` and `squad` do not read it.
+  (`aiModsInScopeOfFile`, `:366-392`). A card that zeroes stock entries — by `replace` on
+  `priority`, or by `silence` — and re-supplies them from its `load` file **needs** it, or
+  it silently zeroes its own replacements and the AI builds nothing. `load` and `squad` do
+  not read it.
   Worked example: `<GWO>` `cards/gwaio_start_rapid.js`; reference: GWO's
   `docs/ai-pipeline.md`.
 

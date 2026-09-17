@@ -1145,13 +1145,16 @@ each change:
 
 - `type` — which set of AI build files to change: `fabber`, `factory`, `platoon`, or
   `template`.
-- `op` — the kind of change: `load`, `append`, `prepend`, `replace`, `remove`, `new`, or
-  `squad`. `squad` works only on `template`. `append`, `prepend`, `replace`, `remove` and
-  `new` work only on `fabber`, `factory` and `platoon`. A build op aimed at `template`
-  does nothing and reports nothing, but `squad` aimed at one of the other three breaks the
-  AI setup completely, so check the pair.
-- `value` — the value to apply.
-- `toBuild` — which thing in the build list of the AI to change (not needed for `load`).
+- `op` — the kind of change: `load`, `append`, `prepend`, `replace`, `unset`, `remove`,
+  `new`, `silence`, or `squad`. `squad` works only on `template`. `append`, `prepend`,
+  `replace`, `unset`, `remove`, `new`, and `silence` work only on `fabber`, `factory`, and
+  `platoon`. A build op aimed at `template` does nothing and reports nothing, but `squad`
+  aimed at one of the other three breaks the AI setup completely, so check the pair.
+- `value` — the value to apply. `unset` takes no `value`. For `silence`, `value` is an
+  object. See
+  [Stop everything else that a builder builds](#stop-everything-else-that-a-builder-builds--silence).
+- `toBuild` — which thing in the build list of the AI to change (not needed for `load` or
+  `silence`).
 - `idToMod` — which part of that entry to change (for example `builders` or `priority`).
 - `refId` and `refValue` — optional. Make the change only when the entry already has
   `refValue` at `refId`.
@@ -1166,9 +1169,13 @@ nothing at all. There is no error and no change:
 
 | `op`                           | needs, besides `type`         |
 | ------------------------------ | ----------------------------- |
-| `load`                         | `value`                       |
+| `load`, `silence`              | `value`                       |
 | `append`, `prepend`, `replace` | `toBuild`, `idToMod`, `value` |
+| `unset`                        | `toBuild`, `idToMod`          |
 | `remove`, `new`, `squad`       | `toBuild`, `value`            |
+
+`unset` is the opposite of `replace`. It removes the `idToMod` part from the entry, thus
+it has no `value`.
 
 `toBuild` must match one of the build entries of the AI exactly. Those names are the
 `to_build` values inside the build files of the AI. You can read them in
@@ -1237,6 +1244,10 @@ inventory.addAIMods([
 loads. The Rapid Deployment loadout of Galactic War Overhaul is a full example. Read
 `gwaio_start_rapid.js` in its `cards` folder.
 
+`silence` is a second way to stop the AI's own builds. It reads `treeOnly` too. If your
+card uses `silence` and also loads replacement entries, put `treeOnly: true` on the
+`silence` change, or it stops the loaded entries as well.
+
 A more exact change follows. It lets basic bot factories build a unit too, but only when
 the entry is the one for the advanced bot factory:
 
@@ -1253,6 +1264,40 @@ inventory.addAIMods([
   },
 ]);
 ```
+
+##### Stop everything else that a builder builds — `silence`
+
+Some cards change what a builder can build. For example, the factories of the Rapid
+Deployment loadout build only fabricators. The AI must then stop its orders for everything
+else from that builder. One `replace` for each entry is a long list, and it misses the
+entries that other mods add. `silence` does the work with one change:
+
+```js
+inventory.addAIMods([
+  {
+    type: "factory", // fabber, factory, or platoon
+    op: "silence",
+    value: {
+      builders: ["BasicBotFactory", "AdvancedBotFactory"],
+      except: ["BasicBotFabber", "AdvancedBotFabber"],
+    },
+    treeOnly: true, // optional
+  },
+]);
+```
+
+`silence` sets the `priority` to `0` on every entry whose `builders` are **all** in
+`value.builders`. It does not change an entry whose `to_build` name is in `value.except`.
+It also does not change an entry that has one builder outside `value.builders`, or an
+entry that has no `builders`.
+
+`silence` uses only `type`, `op`, `value`, and `treeOnly`. It does not read `toBuild`,
+`idToMod`, `refId`, `refValue`, or `matchAll`. `builders` and `except` must both be lists
+of names, but `except` can be an empty list. A `value` with a wrong shape changes nothing
+and reports nothing.
+
+> **`silence` needs a version of Galactic War Overhaul newer than v7.3.1.** An older
+> version does not know the op, and the change does nothing.
 
 ### A shortcut for a card that improves one unit — `gwoCard.upgradeCard`
 
