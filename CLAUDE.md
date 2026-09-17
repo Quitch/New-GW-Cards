@@ -243,9 +243,10 @@ nothing:
 `platoon`. `unset` deletes `idToMod` from the matched entry (`:146-161`) and honours
 `refId`/`refValue`/`matchAll` like `replace`.
 
-Getting that pairing wrong is not always harmless: a build op aimed at a template file
-quietly does nothing, but `squad` aimed at a build list **throws** and takes the AI setup
-down with it (`:154-159`).
+Getting that pairing wrong quietly does nothing, in both directions: a build op finds no
+`build_list` in a template file, and `squad` finds no `platoon_templates` in a build list
+(`:208-213`). `applyAiMods` also wraps every op in `try`/`catch` (`:225-237`), so an op
+that throws logs an error and is skipped; it does not take the AI setup down.
 
 **What the files look like.** `fabber`/`factory`/`platoon` files are
 `{ "build_list": [ … ] }`, where each entry has `to_build`, `priority`, `builders`,

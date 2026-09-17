@@ -1148,8 +1148,8 @@ each change:
 - `op` — the kind of change: `load`, `append`, `prepend`, `replace`, `unset`, `remove`,
   `new`, `silence`, or `squad`. `squad` works only on `template`. `append`, `prepend`,
   `replace`, `unset`, `remove`, `new`, and `silence` work only on `fabber`, `factory`, and
-  `platoon`. A build op aimed at `template` does nothing and reports nothing, but `squad`
-  aimed at one of the other three breaks the AI setup completely, so check the pair.
+  `platoon`. An op aimed at the wrong `type` does nothing and reports nothing, so check the
+  pair.
 - `value` — the value to apply. `unset` takes no `value`. For `silence`, `value` is an
   object. See
   [Stop everything else that a builder builds](#stop-everything-else-that-a-builder-builds--silence).
