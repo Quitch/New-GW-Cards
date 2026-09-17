@@ -262,7 +262,14 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 - **If that file is missing the battle never starts.** Nothing errors; loading just hangs.
   Confirm the file exists on disk before shipping a `load`.
 - Name it after your card ID. A name another mod also uses replaces that mod's file.
-- Your other AI mods of the same `type` also apply to the file you loaded.
+- GWO walks a loaded file like any other build file, so every descriptor of that `type`
+  lands on it — your card's own, and those of every other card in the hand.
+- `treeOnly: true` on a build-list descriptor keeps it off every file under `/pa/ai_tech/`
+  (`aiModsInScopeOfFile`, `:351-377`). A card that zeroes stock entries and re-supplies
+  them under the same `toBuild` from its `load` file **needs** it, or it silently zeroes
+  its own replacements and the AI builds nothing. `load` and `squad` do not read it.
+  Worked example: `<GWO>` `cards/gwaio_start_rapid.js`; reference: GWO's
+  `docs/ai-pipeline.md`.
 
 ## Code rules
 

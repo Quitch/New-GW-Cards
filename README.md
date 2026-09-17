@@ -1151,6 +1151,9 @@ each change:
   `refValue` at `refId`.
 - `matchAll` — optional. Change every build condition on the entry, instead of only the
   ones where `refId` holds `refValue`.
+- `treeOnly` — optional. `true` keeps the change away from a file that a `load` added. See
+  [When your card replaces builds](#when-your-card-replaces-builds--treeonly). `load` and
+  `squad` do not read it.
 
 Each op needs a particular set of these labels. An op without a label that it needs does
 nothing at all. There is no error and no change:
@@ -1193,6 +1196,40 @@ Galactic War Overhaul's own would replace it. Also remember the `.json` at the e
 > **Check that the file really is there before you share the mod.** If a `load` names a
 > file that is missing, the battle never starts. The loading screen hangs, and no error
 > message points at the cause.
+
+##### When your card replaces builds — `treeOnly`
+
+A file that you load joins the build files of the AI. Thus every other AI change of the
+same `type` also applies to that file. This includes the other changes of your card, and
+the changes of every other card that the player holds. Usually that is what you want,
+because an upgrade card then improves your new entries too.
+
+But there is a trap. Some cards stop the AI's own builds and supply their own instead.
+Such a card sets the `priority` of an entry to `0`, and its `load` file has a replacement
+entry with the same `toBuild` name. The change then sets the replacement to `0` too. The
+AI builds nothing, and nothing reports it.
+
+To prevent this, put `treeOnly: true` on each change that must not apply to a loaded file:
+
+```js
+inventory.addAIMods([
+  // Stop the AI's own bot factory builds...
+  {
+    type: "fabber",
+    op: "replace",
+    toBuild: "BasicBotFactory",
+    idToMod: "priority",
+    value: 0,
+    treeOnly: true,
+  },
+  // ...and supply your own from this file.
+  { type: "fabber", op: "load", value: "mym_start_myloadout.json" },
+]);
+```
+
+`treeOnly` keeps the change away from every loaded file, not only the file that your card
+loads. The Rapid Deployment loadout of Galactic War Overhaul is a full example. Read
+`gwaio_start_rapid.js` in its `cards` folder.
 
 A more exact change follows. It lets basic bot factories build a unit too, but only when
 the entry is the one for the advanced bot factory:
