@@ -16,7 +16,7 @@ define([
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/unit_groups.js",
 ], function (module, GWCStart, myBank, gwoCard, gwoUnit, gwoGroup) {
-  var CARD = { id: /[^/]+$/.exec(module.id).pop() };
+  var CARD = { id: module.id.substring(module.id.lastIndexOf("/") + 1) };
 
   // gwoCard.loadout writes the difficult half of a loadout for you.  When the
   // player starts a war with this loadout, it gives them the standard starting
