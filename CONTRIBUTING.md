@@ -201,13 +201,19 @@ template and the game disagree.
   the specification, so use `var`), block-scoped function declarations, and
   `String.prototype.startsWith` and `String.prototype.endsWith` (PA's own polyfill takes
   one argument, drops the position argument without a message, and returns the wrong
-  answer, so use `indexOf` or `slice`). The config also declares the known engine globals
+  answer, so use `_.startsWith` or `_.endsWith`). The config also declares the known engine globals
   (`api`, `model`, `_`, `requireGW`, `ko`, and the browser, jquery and amd sets).
 - The ESLint config is a flat config. It uses `js/recommended` and
   `curly: ["error", "all"]`, and it applies the Prettier config last to disable rules that
   conflict. To run it, use `npm install`, then `npm run lint:js`. `package.json` pins the
-  five lint dependencies (`eslint`, `@eslint/js`, `eslint-config-prettier`,
-  `eslint-plugin-es-x` and `globals`) with caret ranges. It also sets `"type": "module"`,
+  six lint dependencies (`eslint`, `@eslint/js`, `eslint-config-prettier`,
+  `eslint-plugin-es-x`, `eslint-plugin-lodash`, and `globals`) with caret ranges.
+  The `eslint-plugin-lodash` `v3` rules apply to `ui/**` only, with every
+  non-`prefer-*` rule on and, of the `prefer-*` rules, only `prefer-get`,
+  `prefer-includes`, and `prefer-startswith` kept (there the lodash method stands in
+  for a post-ES5 feature Chrome 40 lacks). ESLint is held at 9.x because that plugin
+  calls `context.getSourceCode`, which ESLint 10 removed, and `eslint-plugin-es-x` is
+  held at 9.x for the same reason (its 10.x needs ESLint >= 10.6). It also sets `"type": "module"`,
   so that Node loads the ESM file `eslint.config.mjs`. That config file is the only `.js`
   file that Node itself runs. ESLint only parses the game code, as
   `sourceType: "script"`, and Node never runs it.

@@ -356,14 +356,16 @@ use the game's own wording for that language.
 This code runs in PA's embedded **Chrome 40**, and a parse error takes out the entire
 screen, not just the card. Use `var`; no `let`/`const`, arrow functions, template
 literals or `class`. Do not use `String.prototype.startsWith`/`endsWith` — PA's own
-polyfill ignores the position argument and returns the wrong answer; use `indexOf` or
-`slice`. `_` (lodash), `ko`, jQuery, `api` and `model` are globals.
+polyfill ignores the position argument and returns the wrong answer; use `_.startsWith`
+or `_.endsWith`. `_` (lodash), `ko`, jQuery, `api`, and `model` are globals.
 
 `eslint.config.mjs` is the authoritative answer to "may I use X?": it forbids everything
 after ES5 and then switches back on, one at a time, the features Chrome 40 genuinely
 shipped. Anything not on that list is not allowed. It came with the template and sits in
 the mod folder alongside `package.json`, so checking a card is `npm install` once in that
 folder, then `npm run lint:js`.
+
+The `eslint-plugin-lodash` `v3` rules apply to shipped code only, because `_` is a PA runtime global the Node tooling does not have. Every non-`prefer-*` rule is on. Of the `prefer-*` rules only `prefer-get`, `prefer-includes`, and `prefer-startswith` are kept, since there the lodash method stands in for a post-ES5 feature Chrome 40 lacks; the other fourteen are off as style preferences over ES5 equivalents. ESLint is held at **9.x**: `eslint-plugin-lodash` calls `context.getSourceCode`, which ESLint 10 removed. `eslint-plugin-es-x` is held at 9.x for the same reason (its 10.x needs ESLint >= 10.6).
 
 The loader files (`tech_cards.js`, `start_cards.js`, `decks.js`, `specs.js`) are each
 one immediately invoked function, `(function () { ... })();`, and wrap their body in
