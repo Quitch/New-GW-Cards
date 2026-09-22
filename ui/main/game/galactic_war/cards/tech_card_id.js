@@ -1,12 +1,19 @@
-// The "Feature reference" section of the README explains every part of a card in
-// plain English, with worked examples.  Keep the README open beside this file.
+// AN EXAMPLE TECH CARD
 //
-// For examples of complete cards, see the GWO repository
-// https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards
+// The README explains every part of a card in plain English, with worked
+// examples.  Keep it open beside this file.  Read "How to read the card files"
+// in the README first if you have never edited a file like this before.
 //
-// If this file or the README disagrees with the game, GWO is the authority.  Its
-// docs/tech-cards.md says what a card can contain and what the game gives to each
-// part.  Its test/modder_api.test.js keeps that stable.
+// 1. Rename this file.  The file name without ".js" is the ID of the card, for
+//    example "mym_damage_bots.js" has the ID "mym_damage_bots".  Start it with a
+//    prefix of your own.  Never start it with "gwc_" or "gwaio_", because a card
+//    with the same name as one of the game's or GWO's replaces that card.
+// 2. Change the parts marked in CAPITALS below.
+// 3. Add the ID to tech_cards.js, in model.gwoCards and in
+//    model.gwoCardsToUnits.  The game never deals a card that is not there.
+//
+// Do not change the define([ ... ]) block or the "function (...) {" line below
+// it.  They load the tools that the card uses.
 define([
   "shared/gw_common",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js",
@@ -15,17 +22,22 @@ define([
 ], function (GW, gwoCard, gwoUnit, gwoGroup) {
   return {
     visible: _.constant(true),
+    // ADD A CARD NAME
+    // Keep the "!LOC:" at the start.  It lets the text be translated.
+    summarize: _.constant("!LOC:CARD NAME HERE"),
     // ADD A CARD DESCRIPTION
     describe: _.constant("!LOC:YOUR DESCRIPTION HERE."),
-    // ADD A CARD NAME
-    summarize: _.constant("!LOC:CARD NAME HERE"),
     // SET A PATH TO YOUR CHOSEN ICON
-    // This path can also point to a custom icon inside your own mod, for example
-    // "coui://ui/mods/com.pa.YOURNAME.MODNAME/SOME_FOLDER/PNG_FILE_NAME.png"
+    // Replace PNG_FILE_NAME with the name of a picture from the PA install
+    // folder, media/ui/main/game/galactic_war/gw_play/img/tech, for example
+    // gwc_bot_combat.  The path can also point to a picture inside your own
+    // mod, for example
+    // "coui://ui/mods/com.pa.YOURNAME.MODNAME/img/my_icon.png"
     icon: _.constant(
       "coui://ui/main/game/galactic_war/gw_play/img/tech/PNG_FILE_NAME.png"
     ),
     /* CHOOSE WHAT VOICE LINE TO USE ON DISCOVERY
+     * Replace CHOSEN_LINE_HERE, further down, with one of these:
      *
      * board_slot_increased
      * board_tech_available_air
@@ -50,13 +62,19 @@ define([
      */
     audio: _.constant({ found: "/VO/Computer/gw/CHOSEN_LINE_HERE" }),
     getContext: gwoCard.getContext,
-    // MODIFY CHANCE OF CARD APPEARING
-    // This template uses none of the four arguments below.  You test the first
-    // three to decide the chance.  You need the fourth, rng, only if your card
-    // makes a random choice.  Use rng instead of Math.random().  With
-    // Math.random() the same war deals differently each time you play it, and
-    // players in a co-op game see different offers.  The chance itself must never
-    // be random.  See "Randomness in `deal`" in the README.
+    // SET THE CHANCE OF THE CARD APPEARING
+    // CHANGE THE 0 BELOW TO A NUMBER.  0 means that the game never offers the
+    // card.  60 is a normal chance, and a bigger number means more often.
+    //
+    // The chance can also depend on what the player has, or on how far they
+    // have travelled.  The README section "deal" shows how, with ready-made
+    // checks such as gwoCard.conditionalDeal and gwoCard.upgradeDeal.
+    //
+    // You need the fourth value, rng, only if your card makes a random
+    // choice.  See "Randomness in `deal`" in the README.  The chance itself
+    // must never be random.
+    // The next line stops the checker warning that the four values are not
+    // used yet.  Leave it.
     // eslint-disable-next-line no-unused-vars
     deal: function (system, context, inventory, rng) {
       var chance = 0;
@@ -64,13 +82,16 @@ define([
     },
     buff: function (inventory) {
       // ADD UNITS TO INVENTORY
+      // Replace the three examples in the list with the units that your card
+      // gives: a unit path in quotation marks, a GWO unit ID such as
+      // gwoUnit.dox, or a GWO group ID such as gwoGroup.botsBasicMobile.
       // Delete the two lines below if your card unlocks no units.
       var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
       inventory.addUnits(units);
 
       // MODIFY UNITS
       // An example of the list contents.  It gives the Dox 50% more health, and
-      // it gives their weapon more range:
+      // it gives their weapon 20 more range:
       //   var mods = [
       //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
       //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
@@ -79,9 +100,8 @@ define([
       // If the value that you write is the NAME OF ANOTHER FILE - a weapon, a
       // build arm, or something that spawns on death - it needs a second entry
       // directly after it, with op: "tag" and no value.  Without that entry the
-      // other cards of the player do not apply to what you added, and nothing
-      // warns you.  This example gives the Dox a second weapon, borrowed from the
-      // Ant:
+      // player's other cards do not apply to what you added, and nothing warns
+      // you.  This example gives the Dox a second weapon, borrowed from the Ant:
       //   var mods = [
       //     {
       //       file: gwoUnit.dox,
@@ -100,9 +120,12 @@ define([
       var mods = [];
       inventory.addMods(mods);
 
-      // MODIFY SUB COMMANDER BEHAVIOUR
-      // An example of the list contents.  It lets basic bot factories build
-      // something that only advanced bot factories could build before:
+      // MODIFY WHAT YOUR SUB COMMANDERS BUILD
+      // Most cards do not need this.  An example of the list contents.  It lets
+      // basic bot factories build something that only advanced bot factories
+      // could build before.  "MyUnit" must be replaced with a real to_build
+      // name from the game's AI files - see "Change what your Sub Commanders
+      // build" in the README:
       //   var aiMods = [
       //     {
       //       type: "factory",
@@ -121,6 +144,8 @@ define([
     },
     dull: function (inventory) {
       // REMOVE UNITS FROM INVENTORY
+      // This runs after every card, to take units away again.  It usually
+      // lists the same units as "ADD UNITS TO INVENTORY" above.
       // Delete the two lines below if your card unlocks no units.
       var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
       inventory.removeUnits(units);

@@ -1,12 +1,20 @@
-// The "Feature reference" section of the README explains every part of a card in
-// plain English, with worked examples.  Keep the README open beside this file.
+// AN EXAMPLE CARD THAT IMPROVES ONE UNIT
 //
-// For examples of complete cards, see the GWO repository
-// https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards
+// The README explains every part of a card in plain English, with worked
+// examples.  Keep it open beside this file.  Read "How to read the card files"
+// in the README first if you have never edited a file like this before.
 //
-// If this file or the README disagrees with the game, GWO is the authority.  Its
-// docs/tech-cards.md says what a card can contain and what the game gives to each
-// part.  Its test/modder_api.test.js keeps that stable.
+// 1. Rename this file.  The file name without ".js" is the ID of the card, for
+//    example "mym_upgrade_dox_health.js" has the ID "mym_upgrade_dox_health".
+//    Start it with a prefix of your own.  Never start it with "gwc_" or
+//    "gwaio_", because a card with the same name as one of the game's or GWO's
+//    replaces that card.
+// 2. Change the parts marked in CAPITALS below.
+// 3. Add the ID to tech_cards.js, in model.gwoCards and in
+//    model.gwoCardsToUnits.  The game never deals a card that is not there.
+//
+// Do not change the define([ ... ]) block or the "function (...) {" line below
+// it.  They load the tools that the card uses.
 define([
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js",
@@ -21,34 +29,40 @@ define([
   // back, use tech_card_id.js instead.
   return gwoCard.upgradeCard({
     // ADD A CARD NAME
+    // Keep the "!LOC:" at the start.  It lets the text be translated.
     name: "!LOC:CARD NAME HERE",
     // ADD A CARD DESCRIPTION
     // The helper adds a line that tells the player about the extra card slot.
     description: "!LOC:YOUR DESCRIPTION HERE.",
     // SET A PATH TO YOUR CHOSEN ICON
-    // This path can also point to a custom icon inside your own mod, for example
-    // "coui://ui/mods/com.pa.YOURNAME.MODNAME/SOME_FOLDER/PNG_FILE_NAME.png"
+    // Replace PNG_FILE_NAME with the name of a picture from the PA install
+    // folder, media/ui/main/game/galactic_war/gw_play/img/tech, for example
+    // gwc_bot_combat.  The path can also point to a picture inside your own
+    // mod, for example "coui://ui/mods/com.pa.YOURNAME.MODNAME/img/my_icon.png"
     icon: "coui://ui/main/game/galactic_war/gw_play/img/tech/PNG_FILE_NAME.png",
     // CHOOSE WHAT VOICE LINE TO USE ON DISCOVERY
-    // tech_card_id.js lists the lines that you can pick from.
+    // Replace CHOSEN_LINE_HERE with one of the lines listed in tech_card_id.js,
+    // for example board_tech_available_armor.
     audio: "/VO/Computer/gw/CHOSEN_LINE_HERE",
     // SET THE UNIT THIS CARD IMPROVES
     // The game never offers the card until the player has this unit.
     requires: gwoUnit.dox,
     buff: function (inventory) {
       // MODIFY THE UNIT
-      // An example.  It gives the Dox 50% more health, and it gives their weapon
-      // more range.  Change it to what your card does.
+      // An example.  The first line gives the Dox 50% more health, and the
+      // second gives its weapon 20 more range.  Change them to what your card
+      // does, and delete any line that you do not need.
       //
       // If a value that you write is the NAME OF ANOTHER FILE - a weapon, a build
       // arm, or something that spawns on death - it needs a second entry with
-      // op: "tag" and no value.  Without that entry the other cards of the player
+      // op: "tag" and no value.  Without that entry the player's other cards
       // do not apply to what you added, and nothing warns you.  The README
       // section "Whenever your value is a file name, tag it" explains it.
       inventory.addMods(
-        gwoCard
-          .mods(gwoUnit.dox, "multiply", { max_health: 1.5 })
-          .concat(gwoCard.mods(gwoUnit.doxWeapon, "add", { max_range: 20 }))
+        gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 })
+      );
+      inventory.addMods(
+        gwoCard.mods(gwoUnit.doxWeapon, "add", { max_range: 20 })
       );
     },
     // You can add three more parts here.  The "gwoCard.upgradeCard" section of

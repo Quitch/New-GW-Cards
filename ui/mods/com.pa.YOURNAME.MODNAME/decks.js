@@ -3,12 +3,12 @@
 // tech_cards.js reach every deck already, so most mods do not need this file -
 // if yours does not, delete it and its lines in modinfo.json.
 //
-// To add a deck, remove the comment marks from the lines below and edit them.
+// To add a deck, remove the comment marks (//) from the lines below and edit
+// them.
 // Unlike the other loaders, this one starts inactive: an example deck would
 // appear in the picker, named "YOUR NAME HERE", the moment the mod is enabled.
 (function () {
   try {
-    // Add decks to the picker.  GWO's shared/deck_mods.js reads this list.
     // The fields of a deck:
     // - id: a unique ID for the deck.  The war save remembers it, so changing
     //   it later disconnects old wars from the deck.
@@ -39,6 +39,9 @@
     //   cards: ["YOUR_CARD_ID_1", "YOUR_CARD_ID_N"],
     // });
   } catch (e) {
+    console.error(e);
+    // You can change "New GW Cards" to the name of your mod, so that errors in
+    // the debugger say which mod they came from.
     console.error("New GW Cards: " + (e.stack || e.message || e));
   }
 })();

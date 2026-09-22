@@ -10,16 +10,21 @@
 // The example IDs below have no files, so this happens the first time that you
 // enable the mod.  DELETE THE IDS THAT YOU HAVE NOT REPLACED, even if you write
 // only tech cards.  You can delete all of them - a mod with no loadouts works
-// correctly.
+// correctly.  Keep the push( and ); around them, for example:
+//   model.gwoNewStartCards.push();
 //
 // Tech cards (tech_cards.js) are safer.  The game logs a missing file there,
 // skips that card, and the war continues.
+//
+// Change only the lists and the values marked in CAPITALS.  Leave the other
+// lines as they are: they wrap the file so that a mistake in it cannot break
+// the rest of the game.
 
 (function () {
   try {
-    // Add locked loadouts.  GWO's shared/loadouts.js reads this list to build
-    // the loadout screen, and its gw_play/treasure_loadouts.js reads it to
-    // decide what a Guardian planet can award.
+    // LOCKED LOADOUTS
+    // The player must earn these.  They appear grey on the loadout screen, and
+    // a Guardian planet can award them.
     if (!model.gwoNewStartCards) {
       model.gwoNewStartCards = [];
     }
@@ -34,7 +39,8 @@
       { id: "YOUR_LOCKED_LOADOUT_ID_N" }
     );
 
-    // Add unlocked loadouts.  GWO's shared/loadouts.js reads this list.
+    // UNLOCKED LOADOUTS
+    // These are available from the start.
     if (!model.gwoStartingCards) {
       model.gwoStartingCards = [];
     }
@@ -50,6 +56,8 @@
     );
 
     // TELL GALACTIC WAR OVERHAUL WHERE YOUR BANK IS
+    // A mod with only tech cards can leave this block as it is, or delete it.
+    //
     // Your own bank.js records your locked loadouts.  Galactic War Overhaul
     // cannot find that file without help, so you give it the address here.
     // Without this entry a locked loadout can never unlock, and nothing warns
@@ -58,7 +66,8 @@
     // prefix - the first part of every loadout ID in this mod.  When the player
     //          earns one of your loadouts, Galactic War Overhaul uses the prefix
     //          to see that the loadout is yours.  It then writes the loadout to
-    //          your bank instead of its own.
+    //          your bank instead of its own.  CHANGE YOUR_PREFIX_start_
+    //          to the start of your loadout IDs, for example "mym_start_".
     // path   - the address of your bank.js.  CHANGE THE IDENTIFIER TO MATCH
     //          YOURS.
     if (!model.gwoLoadoutBanks) {
@@ -74,14 +83,16 @@
     // list its ID here.  Galactic War Overhaul then disables the ally when the
     // player picks the loadout.  Galactic War Overhaul never creates this list
     // itself, unlike the lists above, so you must create it before you add to
-    // it.  See "Feature reference" in the README.  Remove the comment marks from
-    // the lines below and edit them if you need this list.
+    // it.  See "Feature reference" in the README.  Remove the comment marks
+    // (//) from the lines below and edit them if you need this list.
     // if (!model.gwoStarCardsWhichBreakAllies) {
     //   model.gwoStarCardsWhichBreakAllies = [];
     // }
     // model.gwoStarCardsWhichBreakAllies.push("YOUR_UNLOCKED_LOADOUT_ID_1");
   } catch (e) {
     console.error(e);
+    // You can change "New GW Cards" to the name of your mod, so that errors in
+    // the debugger say which mod they came from.
     console.error("New GW Cards: " + (e.stack || e.message || e));
   }
 })();

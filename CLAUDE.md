@@ -386,8 +386,9 @@ actually guarantees today.
 
 There is no test suite — validation is in-game, and the README's "Testing your mod"
 section is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
-Coherent UI Debugger console, deal the card from the `X` panel, spawn the units in
-sandbox). The README also lists the two messages PA prints normally, so you do not mistake
+Coherent UI Debugger console, deal the card from the `X` panel, then build the units in a
+GW battle — a skirmish or sandbox game uses stock specs, so it cannot show a card's
+effect). The panel's give-card box finds only IDs in `model.gwoCards`. The README also lists the two messages PA prints normally, so you do not mistake
 them for a fault.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
