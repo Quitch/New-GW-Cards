@@ -10,7 +10,11 @@
 //    game.  Use a prefix of your own, for example "mym_start_engineer.js".
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to start_cards.js, in the locked list or in the unlocked list.
-//    Also set LS_KEY in bank.js - see "The bank and LS_KEY" in the README.
+// 4. In the same file, set prefix and path in model.gwoLoadoutBanks, and set
+//    LS_KEY in bank.js - see "The bank and LS_KEY" in the README.  Without
+//    the model.gwoLoadoutBanks entry a locked loadout can never unlock, and
+//    nothing warns you.  "Minimum required changes" in the README lists every
+//    step.
 //
 // Do not change the define([ ... ]) block or the "function (...) {" line below
 // it, except the bank.js address.  They load the tools that the card uses.

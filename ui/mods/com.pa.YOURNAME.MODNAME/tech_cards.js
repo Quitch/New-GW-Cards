@@ -2,7 +2,9 @@
 //
 // This file tells Galactic War Overhaul (GWO) about your tech cards, including
 // cards made with gwoCard.upgradeCard.  GWO never deals a card that is not
-// listed here.
+// listed here or in a deck's cards list in decks.js.  A card listed here
+// joins every deck, so list a card only in decks.js if it belongs to one
+// deck alone.
 //
 // Replace every example ID below with the ID of one of your cards: its file
 // name without ".js".  Delete the entries that you do not need.  An example ID

@@ -57,8 +57,10 @@ They are **not** faults to correct in this repo:
   `start_card_id.js`, `tech_card_id.js` and `unit_upgrade_card_id.js` are also
   placeholders. The author renames them to `PREFIX_EFFECT_UNITTYPE.js`, for example
   `mym_damage_bots.js`. Never use a `gwc_` or `gwaio_` prefix in an example: those are
-  the stock and GWO card namespaces, and a same-named mod card shadows the original
-  (`gwc_damage_bots.js` is a real stock card).
+  the stock and GWO card namespaces, and of two same-named card files the game silently
+  loads only the one from the mod with the higher `priority`. GWO (priority 200) beats
+  this template (priority 100), so GWO's copy wins, not the author's
+  (`gwc_damage_bots.js` is a real stock card, and GWO ships its own copy).
 
 When you edit this repo, change only the template and the scaffold. Do **not** replace a
 placeholder with a real value, because that would make the template into one specific mod.
@@ -167,10 +169,10 @@ follow it:
   that never starts. This was verified in the game on 2026-08-11 against GWO DEV v6.10.1.
   It is the worst failure mode of the template, because it breaks the game rather than the
   card. Three places state it: `README.md` (step 6 of "Preparing the mod", the blockquote
-  under `model.gwoStartingCards`, and a checklist item), `CLAUDE.md` ("Registering a card"), and the header comment in
-  `start_cards.js`. Keep those three consistent. Do not correct the problem by emptying
-  the supplied lists. The example IDs show an author the shape, and the warning is the
-  correction.
+  under `model.gwoStartingCards`, and a checklist item), `CLAUDE.md` ("Registering a
+  card"), and the header comment in `start_cards.js`. Keep those three consistent. Do not
+  correct the problem by emptying the supplied lists. The example IDs show an author the
+  shape, and the warning is the correction.
 - `dull(inventory)` reverses `buff`, and the game applies it after every `buff`. Use it to
   remove units. A start card writes neither `buff` nor `dull`.
   `gwoCard.loadout(CARD, {bank, start, apply, dulls})` returns both, and the template

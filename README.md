@@ -392,9 +392,11 @@ a different style, so they are harder to start from.
    `PREFIX` is a short prefix of your own. For example, `mym_damage_bots.js`.
 
    **Never start a name with `gwc_` or `gwaio_`.** The game's own cards use `gwc_`, and
-   GWO's cards use `gwaio_`. A card file with the same name as one of theirs replaces
-   their card for every player of your mod. `gwc_damage_bots.js`, for example, already
-   exists in PA.
+   GWO's cards use `gwaio_`. When a card file has the same name as one of theirs, the game
+   silently ignores one of the two files, and which one depends on the `priority` of each
+   mod. GWO's copy of a `gwc_` or `gwaio_` card normally wins, so your card is never dealt
+   and nothing tells you why. `gwc_damage_bots.js`, for example, already exists in PA and
+   in GWO.
 
    **Loadouts have two more rules, and a mistake in either one reports nothing.** The ID
    of a loadout must contain `_start_`, because that is how the game recognises a loadout
@@ -403,11 +405,13 @@ a different style, so they are harder to start from.
    existing mods do: `gwaio_start_ceo`, `nem_start_nuke`. Write `mym_start_engineer`, not
    `gwc_start_engineer`.
 
-   A mistake here is hard to spot. The game treats an ID without `_start_` as an ordinary
-   tech card, so it never appears on the loadout screen. The game treats an ID that starts
-   with `gwc_start` as one of its own, so it writes the unlock into the game's storage
-   instead of into your bank. That record stays behind after the player removes your
-   mod, and it points at a card that no longer exists.
+   A mistake here is hard to spot. An ID without `_start_` still appears on the loadout
+   screen, and the player can still pick it, so the mod looks fine. The damage is inside
+   the war: GWO handles the card as ordinary tech, so a copy that the player wins on a
+   Guardian planet is never recorded in your bank, and a locked loadout never unlocks. The
+   game treats an ID that starts with `gwc_start` as one of its own, so it writes the
+   unlock into the game's storage instead of into your bank. That record stays behind
+   after the player removes your mod, and it points at a card that no longer exists.
 
 2. **Change the parts of the card** to do what you want, with the
    [Feature reference](#feature-reference).
@@ -1098,8 +1102,8 @@ The chance falls to `0` when the player already holds the opposite card, so that
 can never cancel each other out. The chance also halves once the player holds any
 `gwaio_anti_` card, so that the deck stops pushing the theme on a player who already has
 it. Only IDs that start with `gwaio_anti_` count, which in practice means GWO's own cards,
-not yours. Don't give your card a `gwaio_` ID to make it count: an ID that matches one of
-GWO's replaces that card.
+not yours. Don't give your card a `gwaio_` ID to make it count: when an ID matches one of
+GWO's, the game silently ignores one of the two cards, and normally that is yours.
 
 ##### Loadouts
 

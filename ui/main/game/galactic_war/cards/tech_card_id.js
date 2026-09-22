@@ -6,11 +6,15 @@
 //
 // 1. Rename this file.  The file name without ".js" is the ID of the card, for
 //    example "mym_damage_bots.js" has the ID "mym_damage_bots".  Start it with a
-//    prefix of your own.  Never start it with "gwc_" or "gwaio_", because a card
-//    with the same name as one of the game's or GWO's replaces that card.
+//    prefix of your own.  Never start it with "gwc_" or "gwaio_".  If a card has
+//    the same name as one of the game's or GWO's, the game silently ignores one
+//    of the two files, and which one depends on which mod loads last.
 // 2. Change the parts marked in CAPITALS below.
-// 3. Add the ID to tech_cards.js, in model.gwoCards and in
-//    model.gwoCardsToUnits.  The game never deals a card that is not there.
+// 3. Add the ID to tech_cards.js, in model.gwoCards.  Also list it in
+//    model.gwoCardsToUnits if it changes units, or in
+//    model.gwoCardsWithoutTooltip INSTEAD if it changes no units.  The game
+//    never deals a card that is not in model.gwoCards or in a deck's cards
+//    list in decks.js.
 //
 // Do not change the define([ ... ]) block or the "function (...) {" line below
 // it.  They load the tools that the card uses.

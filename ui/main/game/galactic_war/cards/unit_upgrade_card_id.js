@@ -7,11 +7,13 @@
 // 1. Rename this file.  The file name without ".js" is the ID of the card, for
 //    example "mym_upgrade_dox_health.js" has the ID "mym_upgrade_dox_health".
 //    Start it with a prefix of your own.  Never start it with "gwc_" or
-//    "gwaio_", because a card with the same name as one of the game's or GWO's
-//    replaces that card.
+//    "gwaio_".  If a card has the same name as one of the game's or GWO's, the
+//    game silently ignores one of the two files, and which one depends on
+//    which mod loads last.
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to tech_cards.js, in model.gwoCards and in
-//    model.gwoCardsToUnits.  The game never deals a card that is not there.
+//    model.gwoCardsToUnits.  The game never deals a card that is not in
+//    model.gwoCards or in a deck's cards list in decks.js.
 //
 // Do not change the define([ ... ]) block or the "function (...) {" line below
 // it.  They load the tools that the card uses.
@@ -49,9 +51,12 @@ define([
     requires: gwoUnit.dox,
     buff: function (inventory) {
       // MODIFY THE UNIT
-      // An example.  The first line gives the Dox 50% more health, and the
-      // second gives its weapon 20 more range.  Change them to what your card
-      // does, and delete any line that you do not need.
+      // An example.  The first inventory.addMods(...); gives the Dox 50% more
+      // health, and the second gives its weapon 20 more range.  Change them to
+      // what your card does.  To remove one, delete the whole
+      // inventory.addMods(...); statement - all three lines - because
+      // inventory.addMods(); with nothing inside breaks the battle, and the
+      // checker does not warn you.
       //
       // If a value that you write is the NAME OF ANOTHER FILE - a weapon, a build
       // arm, or something that spawns on death - it needs a second entry with
