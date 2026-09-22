@@ -32,7 +32,7 @@ define([
     // CHOOSE WHAT VOICE LINE TO USE ON DISCOVERY
     // tech_card_id.js lists the lines that you can pick from.
     audio: "/VO/Computer/gw/CHOSEN_LINE_HERE",
-    // THE UNIT THIS CARD IMPROVES
+    // SET THE UNIT THIS CARD IMPROVES
     // The game never offers the card until the player has this unit.
     requires: gwoUnit.dox,
     buff: function (inventory) {

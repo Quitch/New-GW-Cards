@@ -2,7 +2,6 @@
   try {
     requireGW(
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
-      // gwoUnit stays unused until you enable the push below
       // eslint-disable-next-line no-unused-vars
       function (gwoUnit) {
         if (!model.gwoSpecs) {

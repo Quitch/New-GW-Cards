@@ -25,9 +25,7 @@ define([
   // player wins a copy on a Guardian planet, it records that copy in your bank,
   // and the loadout then unlocks.  You complete only the parts below.
   var loadout = gwoCard.loadout(CARD, {
-    // YOUR BANK - THE FILE YOU NAMED AT THE TOP OF THIS FILE
     bank: myBank,
-    // THE GAME'S STANDARD STARTING UNITS - LEAVE THIS LINE AS IT IS
     start: GWCStart,
     apply: function (inventory) {
       // ADD UNITS TO INVENTORY
