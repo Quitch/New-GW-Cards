@@ -52,11 +52,15 @@ They are **not** faults to correct in this repo:
 - `your_mod_id` — the `LS_KEY` in `bank.js`. It is the localStorage key for unlocked
   loadouts.
 - `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,
-  `YOUR_PREFIX_start_`, `YOUR_TECH_ID_*`, `UNIT_PATH`, `PATH_*`, `PNG_FILE_NAME`,
+  `YOUR_PREFIX_start_`, `UNIT_PATH`, `PATH_*`, `PNG_FILE_NAME`,
   `CHOSEN_LINE_HERE` and the `!LOC:...HERE` strings. The three example card files
   `start_card_id.js`, `tech_card_id.js` and `unit_upgrade_card_id.js` are also
-  placeholders. The author renames them to `ACRONYM_EFFECT_UNITTYPE.js`, for example
-  `gwc_damage_bots.js`.
+  placeholders. The author renames them to `PREFIX_EFFECT_UNITTYPE.js`, for example
+  `mym_damage_bots.js`. Never use a `gwc_` or `gwaio_` prefix in an example: those are
+  the stock and GWO card namespaces, and of two same-named card files the game silently
+  loads only the one from the mod with the higher `priority`. GWO (priority 200) beats
+  this template (priority 100), so GWO's copy wins, not the author's
+  (`gwc_damage_bots.js` is a real stock card, and GWO ships its own copy).
 
 When you edit this repo, change only the template and the scaffold. Do **not** replace a
 placeholder with a real value, because that would make the template into one specific mod.
@@ -164,11 +168,11 @@ follow it:
   An author who enables the template before they edit it therefore gets a Galactic War
   that never starts. This was verified in the game on 2026-08-11 against GWO DEV v6.10.1.
   It is the worst failure mode of the template, because it breaks the game rather than the
-  card. Three places state it: `README.md` (the blockquote under `model.gwoStartingCards`,
-  and a checklist item), `CLAUDE.md` ("Registering a card"), and the header comment in
-  `start_cards.js`. Keep those three consistent. Do not correct the problem by emptying
-  the supplied lists. The example IDs show an author the shape, and the warning is the
-  correction.
+  card. Three places state it: `README.md` (step 6 of "Preparing the mod", the blockquote
+  under `model.gwoStartingCards`, and a checklist item), `CLAUDE.md` ("Registering a
+  card"), and the header comment in `start_cards.js`. Keep those three consistent. Do not
+  correct the problem by emptying the supplied lists. The example IDs show an author the
+  shape, and the warning is the correction.
 - `dull(inventory)` reverses `buff`, and the game applies it after every `buff`. Use it to
   remove units. A start card writes neither `buff` nor `dull`.
   `gwoCard.loadout(CARD, {bank, start, apply, dulls})` returns both, and the template
@@ -242,4 +246,6 @@ messages for real failures.
 
 `README.md` documents separate manual procedures for the two card types. For start cards,
 check the loadout screen and the localStorage key that `LS_KEY` sets in `bank.js`. For
-tech cards, deal the card through the `X` panel, then spawn the units in the sandbox.
+tech cards, deal the card through the `X` panel, then build the changed units in a GW
+battle. A skirmish or sandbox game uses the stock specs, so it cannot show a card's
+effect.

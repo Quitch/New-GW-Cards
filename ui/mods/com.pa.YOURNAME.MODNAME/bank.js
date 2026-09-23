@@ -1,8 +1,17 @@
-/* This mod writes its start cards to its own localStorage key.  If the player
-   removes the mod, the gw_start loadout list then keeps working, because it
-   does not point at cards that have gone. */
+/* YOUR LOADOUT BANK
+
+   This file remembers which of your locked loadouts the player has unlocked.
+   It saves them in the game's storage on the player's computer, under the
+   name in LS_KEY below.  Because your mod keeps its own record, removing the
+   mod later does not break the game's loadout screen.
+
+   If your mod has no loadouts, you do not need to change this file.
+
+   CHANGE ONLY LS_KEY.  Everything below it makes the bank work.  Leave it
+   alone.  See "The bank and LS_KEY" in the README. */
 define(function () {
-  // SET THIS VARIABLE TO A VALUE THAT IS UNIQUE TO YOUR MOD
+  // SET THIS TO A VALUE THAT IS UNIQUE TO YOUR MOD, for example
+  // "yourname_modname_bank".  Keep the quotation marks.
   var LS_KEY = "your_mod_id";
 
   var self;

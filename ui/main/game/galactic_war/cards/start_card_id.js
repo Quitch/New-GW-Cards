@@ -1,21 +1,33 @@
-// The "Feature reference" section of the README explains every part of a card in
-// plain English, with worked examples.  Keep the README open beside this file.
+// AN EXAMPLE LOADOUT (START CARD)
 //
-// For examples of complete cards, see the GWO repository
-// https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards
+// The README explains every part of a card in plain English, with worked
+// examples.  Keep it open beside this file.  Read "How to read the card files"
+// in the README first if you have never edited a file like this before.
 //
-// If this file or the README disagrees with the game, GWO is the authority.  Its
-// docs/tech-cards.md says what a card can contain and what the game gives to each
-// part.  Its test/modder_api.test.js keeps that stable.
+// 1. Rename this file.  The file name without ".js" is the ID of the loadout.
+//    A loadout ID MUST contain "_start_", and it must NOT start with
+//    "gwc_start" - that prefix belongs to the loadouts that come with the
+//    game.  Use a prefix of your own, for example "mym_start_engineer.js".
+// 2. Change the parts marked in CAPITALS below.
+// 3. Add the ID to start_cards.js, in the locked list or in the unlocked list.
+// 4. In the same file, set prefix and path in model.gwoLoadoutBanks, and set
+//    LS_KEY in bank.js - see "The bank and LS_KEY" in the README.  Without
+//    the model.gwoLoadoutBanks entry a locked loadout can never unlock, and
+//    nothing warns you.  "Minimum required changes" in the README lists every
+//    step.
+//
+// Do not change the define([ ... ]) block or the "function (...) {" line below
+// it, except the bank.js address.  They load the tools that the card uses.
 define([
   "module",
   "cards/gwc_start",
-  // CHANGE THE PATH IN THE LINE BELOW TO MATCH WHAT YOU SET IT TO
+  // CHANGE com.pa.YOURNAME.MODNAME IN THE LINE BELOW TO YOUR IDENTIFIER
   "coui://ui/mods/com.pa.YOURNAME.MODNAME/bank.js",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js",
   "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/unit_groups.js",
 ], function (module, GWCStart, myBank, gwoCard, gwoUnit, gwoGroup) {
+  // Leave this line alone.  It reads the ID of the card from the file name.
   var CARD = { id: module.id.substring(module.id.lastIndexOf("/") + 1) };
 
   // gwoCard.loadout writes the difficult half of a loadout for you.  When the
@@ -27,15 +39,18 @@ define([
   var loadout = gwoCard.loadout(CARD, {
     bank: myBank,
     start: GWCStart,
+    // `apply` is what your loadout gives the player, on top of the standard
+    // start.  You can delete the whole of `apply` if it gives nothing extra.
     apply: function (inventory) {
       // ADD UNITS TO INVENTORY
-      // Delete the two lines below if your loadout unlocks no units.
+      // Replace the two examples in the list with the units that your loadout
+      // gives.  Delete the two lines below if your loadout unlocks no units.
       var units = [gwoUnit.dox, gwoGroup.botsBasicMobile];
       inventory.addUnits(units);
 
       // MODIFY UNITS
       // An example of the list contents.  It gives the Dox 50% more health, and
-      // it gives their weapon more range:
+      // it gives their weapon 20 more range:
       //   var mods = [
       //     { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 },
       //     { file: gwoUnit.doxWeapon, path: "max_range", op: "add", value: 20 },
@@ -44,9 +59,8 @@ define([
       // If the value that you write is the NAME OF ANOTHER FILE - a weapon, a
       // build arm, or something that spawns on death - it needs a second entry
       // directly after it, with op: "tag" and no value.  Without that entry the
-      // other cards of the player do not apply to what you added, and nothing
-      // warns you.  This example gives the Dox a second weapon, borrowed from the
-      // Ant:
+      // player's other cards do not apply to what you added, and nothing warns
+      // you.  This example gives the Dox a second weapon, borrowed from the Ant:
       //   var mods = [
       //     {
       //       file: gwoUnit.dox,
@@ -65,9 +79,12 @@ define([
       var mods = [];
       inventory.addMods(mods);
 
-      // MODIFY SUB COMMANDER BEHAVIOUR
-      // An example of the list contents.  It lets basic bot factories build
-      // something that only advanced bot factories could build before:
+      // MODIFY WHAT YOUR SUB COMMANDERS BUILD
+      // Most loadouts do not need this.  An example of the list contents.  It
+      // lets basic bot factories build something that only advanced bot
+      // factories could build before.  "MyUnit" must be replaced with a real
+      // to_build name from the game's AI files - see "Change what your Sub
+      // Commanders build" in the README:
       //   var aiMods = [
       //     {
       //       type: "factory",
@@ -86,20 +103,26 @@ define([
     },
     // REMOVE UNITS FROM INVENTORY
     // These are the units to take back if the player moves to a different
-    // loadout.  Delete the line below if your loadout unlocks no units.
+    // loadout.  List the same units as "ADD UNITS TO INVENTORY" above.
+    // Delete the line below if your loadout unlocks no units.
     dulls: [gwoUnit.dox, gwoGroup.botsBasicMobile],
   });
 
   return {
     visible: _.constant(false),
     // ADD A CARD NAME
+    // Keep the "!LOC:" at the start.  It lets the text be translated.
     summarize: _.constant("!LOC:CARD NAME HERE"),
+    // Leave the icon as it is.  It shows the medal for the hardest war that the
+    // player has won with this loadout, or a red commander before the first
+    // win.
     icon: function () {
       return gwoCard.loadoutIcon(CARD.id);
     },
     // ADD A CARD DESCRIPTION
     describe: _.constant("!LOC:YOUR DESCRIPTION HERE."),
     // ADD TEXT TO DISPLAY WHEN THE CARD IS LOCKED
+    // For example the loadout name, or a hint about how to earn it.
     hint: gwoCard.lockedHint("!LOC:TEXT TO SHOW WHEN CARD IS LOCKED"),
     deal: gwoCard.startCard,
     buff: loadout.buff,
