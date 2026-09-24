@@ -55,7 +55,7 @@ watching. Look each one up.
 | AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`         |
 | AI `builders` roles and platoon template names          | keys of `<PA>/pa/ai/unit_maps/ai_unit_map.json` and `<GWO>` → `pa/ai_penchant/unit_maps/ai_unit_map.json`                                                                 |
 | Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above               |
-| What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available |
+| What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available |
 | Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                    |
 | The game's existing wording for a stock term            | `<PA>/ui/main/_i18n/locales/<lang>/*.json`                                                                                                                                |
 | Worked examples of translation files                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/translations/<lang>.json`                                                                                                   |
@@ -154,7 +154,7 @@ war plays.
 ## `inventory.addMods` — changing unit stats
 
 The README documents the shape. This is the behaviour that is not obvious from it. Line
-references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`.
+references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js`.
 
 - **`multiply` does not create.** If the stat is missing or is not a number it warns and
   leaves it alone (`:139-149`). `multiplyOrCreate` sets it to `value` when it is absent
@@ -179,7 +179,7 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
   `gwoCard.paths.{navigation,damage,energyWeapon}` are for.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
-  `Warning: File not found in mod Object` (`<GWO>` `shared/specs.js:289`) and skips that
+  `Warning: File not found in mod Object` (`<GWO>` `gw_play/specs.js:295`) and skips that
   entry. **Expect to see this warning in normal play** — GWO deals a card touching several
   units to players owning only some of them, and dropping the rest is the intended
   behaviour. It only indicates a bug when the file _should_ have been reachable:
@@ -196,7 +196,7 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/shared/specs.js`
 GW gives each army private copies of its specs, keyed `<path>.json<tag>`
 (`.player`, `.ai0`, …), and applies that army's mods to those copies. GW generates the
 copies **before** mods run (`<GWO>` `gw_play/referee_game_files.js`, then
-`shared/spec_cache.js:tagSpec`), so a path a mod writes arrives untagged. Untagged paths
+`gw_play/spec_cache.js:tagSpec`), so a path a mod writes arrives untagged. Untagged paths
 still resolve — to the stock file — so the weapon fires and the unit spawns, and the
 player's entire hand misses it. The game logs nothing. This has shipped broken in GWO
 itself more than once.
