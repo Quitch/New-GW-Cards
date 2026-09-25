@@ -1637,6 +1637,10 @@ changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the matching Le
 Bugs, and Exiles units, and the matching add-on units. GWO finds them for you. Write a
 race card only when you want to change one particular unit of a race or an add-on.
 
+Section 17's Big Bill, Pineapple, Floater, and Horntail are the exception: no card for
+stock units reaches them. To change them, name them, such as
+`gwoUnit.section17.bigBill`.
+
 This works for changes to values such as health, speed, cost, or damage. A change to
 what a unit is stays on the stock unit: its `unit_types`, `buildable_types`, `tools`,
 `base_spec`, `command_caps`, `model`, `display_name`, `description`, `si_name`,
