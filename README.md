@@ -1476,6 +1476,11 @@ and must take them back is an ordinary tech card, written from `tech_card_id.js`
 
 The example `unit_upgrade_card_id.js` is already written this way.
 
+**Don't put `_upgrade_` in the card's ID** if players of other races must get it. GWO
+offers a card with `_upgrade_` in its ID only to MLA players, unless the card names race
+units. See
+[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on).
+
 ### Loadouts and `gwoCard.loadout`
 
 A loadout has more to do than a tech card. It must give the player the game's standard
@@ -1629,6 +1634,11 @@ changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the matching Le
 Bugs, and Exiles units, and the matching add-on units. GWO finds them for you. Write a
 race card only when you want to change one particular unit of a race or an add-on.
 
+> **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
+> the card names race or add-on units. An upgrade card is tuned to one MLA unit, so GWO
+> does not pass it on to the other races. If a card that changes stock units must reach
+> every race, leave `_upgrade_` out of its ID.
+
 #### 1. Name the unit
 
 A race or add-on unit has a GWO unit ID in two parts: the name of its table, then the
@@ -1674,9 +1684,10 @@ can field one of the units in the entry. A Legion card is not offered to an MLA,
 Exiles player. You need nothing else: no new list, and no new dependency in
 `modinfo.json`.
 
-The same entry also works for a card whose ID contains `_upgrade_`. GWO does not usually
-offer its own upgrade cards to a race player, but a card that names race units is written
-for that race, so GWO offers it.
+The same entry also works for a card whose ID contains `_upgrade_`, such as
+`mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
+units (see the warning above). When it names race units, it is written for that race, so
+GWO offers it to that race.
 
 #### 3. Check for the unit in `deal`
 
