@@ -560,10 +560,12 @@ model.gwoCards.push("mym_damage_bots", "mym_faster_air");
 #### `model.gwoCardsToUnits` — tech-card tooltips (in `tech_cards.js`)
 
 This list connects a tech card to the units that it changes, so that the card's tooltip
-can name them. When the entry names the units of another race or an add-on, it also
-decides which players the game offers the card to (see
-[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on)). Add one
-entry for each card. The entry holds the card's ID and the units
+can name them. It also decides which races the game offers the card to. A player of
+another race, such as Legion, is offered it only when their race has a unit of the same
+kind as a unit in the entry, or fields a race or add-on unit that the entry names (see
+[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on)). A weapon or
+ammo in the entry doesn't count, which is one more reason to name units. Add one entry for
+each card. The entry holds the card's ID and the units
 that it changes, as unit paths or as GWO unit or group IDs. Always name the unit itself,
 not its ammo or its weapon, even when the card changes only the weapon. For a card that
 changes the commander, name `gwoUnit.commander`.
@@ -1693,9 +1695,12 @@ same kind.
 > [checker](#checking-your-work) does not find it. In a card file, the error stops that
 > card. In `tech_cards.js`, it stops the whole `model.gwoCardsToUnits` list, so every
 > card in your mod loses its tooltip, and GWO no longer knows which race a card is for. A
-> misspelled key, such as `gwoUnit.legion.shnak`, gives no error. In a card file, the card
-> changes nothing. In `model.gwoCardsToUnits`, GWO no longer knows that the card is for
-> that race: MLA players may be offered it, and players of the race may not.
+> misspelled key, such as `gwoUnit.legion.shnak`, gives no error when the card loads. In a
+> card file, a change to it does nothing (the battle's log shows "File not found"), and a
+> `requires` or `deal` check on it is never true, so the game never offers the card. The
+> test panel still gives it to you, so test in a war too. In `model.gwoCardsToUnits`, GWO
+> no longer knows that the card is for that race: MLA players may be offered it, and
+> players of the race may not.
 
 #### 2. List the unit in `model.gwoCardsToUnits`
 
