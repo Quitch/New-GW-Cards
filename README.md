@@ -50,9 +50,11 @@ Galactic War has two kinds of cards:
 This template gives you a complete mod folder with working examples of both kinds. You
 copy the folder, rename it, and fill in the blanks.
 
-> **Note:** Galactic War does not support server mods, so you can use and change only the
-> units that come with the game, including the TITANS units. You cannot add a new custom
-> unit to a Galactic War card, and you cannot use a unit from another mod.
+> **Note:** A card can use and change the units that come with the game, including the
+> TITANS units. It can also change the units of the races and add-ons that GWO supports,
+> such as Legion, and of the races that other mods add to GWO. See
+> [Cards for another race or an add-on](#cards-for-another-race-or-an-add-on). A card
+> cannot add a new custom unit to Galactic War.
 
 ## Requirements
 
@@ -468,6 +470,17 @@ each item as you complete it.
 still holds the placeholder `YOUR_PREFIX_start_`. It does no harm. You can leave it, or
 delete the whole block.
 
+**If your card is for another race or an add-on, also:**
+
+- [ ] Named the race or add-on units with `gwoUnit.<table>.<key>`, or with raw paths for a
+      race or add-on from another mod.
+- [ ] Listed those units in the card's `model.gwoCardsToUnits` entry. This is what stops
+      the game from offering the card to other races.
+- [ ] In `deal`, used `gwoCard.fieldedUnits(inventory)` in place of `inventory.units()`,
+      or set `requires` to the race unit in `gwoCard.upgradeCard`.
+- [ ] Tested the card in a war as that race, and in a war as a different race (see
+      [Testing a race card](#8-testing-a-race-card)).
+
 **If your card is a loadout, also:**
 
 - [ ] Added the card's ID to `model.gwoStartingCards` (unlocked) or
@@ -520,6 +533,11 @@ Many parts of a card name a unit. There are two ways to do it.
   `/pa/units/land/assault_bot/assault_bot.json`. The TITANS units are stored under
   `pa_ex1` in the install folder, but the game treats them as if they were under `/pa/`.
   Always write `/pa/` for them, never `/pa_ex1/`.
+- A **race or add-on unit ID** names a unit of another race, or of an add-on, in two
+  parts: `gwoUnit.legion.shank` is the Legion Shank. The six tables are `legion`, `bugs`,
+  `exiles`, `secondWave`, `section17`, and `osmech`. GWO makes their keys from the race
+  mod's files, so a key can change when the race mod is updated. See
+  [Cards for another race or an add-on](#cards-for-another-race-or-an-add-on).
 
 > **Use a GWO ID whenever one exists.** GWO keeps its IDs up to date, and they prevent
 > path mistakes such as the `/pa_ex1/` trap above. Use a raw path only when there is no
@@ -842,6 +860,9 @@ at, which it calls `system` (the star that the player is at), `context` (the gal
   unit(s) X.
 - `gwoCard.missingAllUnits(inventory.units(), X)`: true if the player is missing **all**
   of unit(s) X.
+- `gwoCard.fieldedUnits(inventory)`: use it in place of `inventory.units()` to include the
+  race or add-on units that the player fields. See
+  [Cards for another race or an add-on](#cards-for-another-race-or-an-add-on).
 - `context.totalSize`: the size of the galaxy (how many stars it has).
 - `system.distance()`: how far the current star is from the start.
 
@@ -1204,6 +1225,10 @@ The names in `path`, such as `max_health`, come from the unit's own file in the 
    that the unit takes its other values from. Open that file and look there. A unit's
    weapon and ammo are separate files, named in its `tools` list and in the weapon's
    `ammo_id`.
+
+A race or add-on unit's file is in the race's server mod, not in the install folder. See
+[Finding the value that you want to change](#7-finding-the-value-that-you-want-to-change)
+under the race cards.
 
 ##### Whenever your value is a file name, `tag` it
 
@@ -1590,6 +1615,178 @@ players receive. To turn it on, change the line in `modinfo.json` to:
 
 Because the `version` must match too, every player in the war must update the mod
 together each time that you release a new version.
+
+### Cards for another race or an add-on
+
+GWO lets a player fight a war as a race from another mod: Legion, Bugs, or Exiles. It
+also supports add-ons, which are mods that add more units to the races: Second Wave,
+Section 17, and Osmech. A player needs
+[GW Server Mods](https://github.com/Quitch/GW-Server-Mods) and the race's or add-on's
+server mod for these.
+
+**You don't need a separate card for each race to change ordinary units.** A card that
+changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the matching Legion,
+Bugs, and Exiles units, and the matching add-on units. GWO finds them for you. Write a
+race card only when you want to change one particular unit of a race or an add-on.
+
+#### 1. Name the unit
+
+A race or add-on unit has a GWO unit ID in two parts: the name of its table, then the
+unit's key. For example, `gwoUnit.legion.shank` is the Legion Shank. The six tables are:
+
+| Table                | Units of                                                                                                                    |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `gwoUnit.legion`     | [Legion](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/race/legion.js)            |
+| `gwoUnit.bugs`       | [Bugs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/race/bugs.js)                |
+| `gwoUnit.exiles`     | [Exiles](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/race/exiles.js)            |
+| `gwoUnit.secondWave` | [Second Wave](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/addon/second_wave.js) |
+| `gwoUnit.section17`  | [Section 17](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/addon/section17.js)    |
+| `gwoUnit.osmech`     | [Osmech](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/addon/osmech.js)           |
+
+Each link opens a file. Find its `units` block. Each line in it reads `key: "path"`. You
+write the table name, a dot, and the key. For example, the line
+`shank: "/pa/units/land/l_tank_shank/l_tank_shank.json"` in the Legion file means that you
+write `gwoUnit.legion.shank`.
+
+> **Warning:** GWO makes these keys from the race mod's own files. A key can change when
+> the race mod is updated, so check your card after each update. A misspelled table name,
+> such as `gwoUnit.legoin.shank`, stops the card with an error, and the
+> [checker](#checking-your-work) does not find it. A misspelled key, such as
+> `gwoUnit.legion.shnak`, gives no error, and the card changes nothing.
+
+#### 2. List the unit in `model.gwoCardsToUnits`
+
+This is the step that makes the card a race card. Add the race or add-on units to the
+card's entry in `tech_cards.js`:
+
+```js
+model.gwoCardsToUnits.push({
+  id: "mym_upgrade_shank",
+  units: [gwoUnit.legion.shank],
+});
+```
+
+When an entry names a race or add-on unit, GWO offers the card **only** to a player who
+can field one of the units in the entry. A Legion card is not offered to an MLA, Bugs, or
+Exiles player. You need nothing else: no new list, and no new dependency in
+`modinfo.json`.
+
+The same entry also works for a card whose ID contains `_upgrade_`. GWO does not usually
+offer its own upgrade cards to a race player, but a card that names race units is written
+for that race, so GWO offers it.
+
+#### 3. Check for the unit in `deal`
+
+`inventory.units()` names only the ordinary units, even for a Legion player. The player's
+race units are added when the battle starts. So in `deal`, use
+`gwoCard.fieldedUnits(inventory)` in place of `inventory.units()`. It gives the units that
+the player has, plus the race or add-on units that those units bring:
+
+```js
+deal: function (system, context, inventory) {
+  var chance = 0;
+  if (gwoCard.hasUnit(gwoCard.fieldedUnits(inventory), gwoUnit.legion.shank)) {
+    chance = 60;
+  }
+  return { chance: chance };
+},
+```
+
+With [`gwoCard.upgradeCard`](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard),
+set `requires` to the race unit. Nothing else changes. This is a complete card:
+
+```js
+define([
+  "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js",
+  "coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js",
+], function (gwoCard, gwoUnit) {
+  return gwoCard.upgradeCard({
+    name: "!LOC:Shank Armor",
+    description: "!LOC:Increases the health of the Legion Shank.",
+    icon: "coui://ui/main/game/galactic_war/gw_play/img/tech/gwc_vehicle.png",
+    audio: "/VO/Computer/gw/board_tech_available_armor",
+    requires: gwoUnit.legion.shank,
+    buff: function (inventory) {
+      inventory.addMods(
+        gwoCard.mods(gwoUnit.legion.shank, "multiply", { max_health: 1.5 })
+      );
+    },
+  });
+});
+```
+
+#### 4. Change the unit in `buff`
+
+`inventory.addMods` and `inventory.addUnits` work with race units exactly as they work
+with the game's own units. Write the race unit's ID in `file`, or give it to `gwoCard.mods`,
+as in the example above.
+
+#### 5. A race or add-on from another mod
+
+GWO's `gwoUnit` tables hold only the races and add-ons that GWO itself supports. Another
+mod can add a race or an add-on to GWO. For its units, write the raw unit path. The card
+works the same way if that mod gives GWO a list of its units.
+
+#### 6. Your own groups
+
+You can make your own list of units, and use its name everywhere that a card takes units.
+Write it once at the top of the card, above `return`:
+
+```js
+var legionTanks = [gwoUnit.legion.shank, gwoUnit.legion.scorpion];
+```
+
+Then use it in `deal` and in `buff`:
+
+```js
+gwoCard.hasUnit(gwoCard.fieldedUnits(inventory), legionTanks);
+inventory.addMods(
+  gwoCard.flatMapMods(legionTanks, "multiply", { max_health: 1.25 })
+);
+inventory.addUnits(legionTanks);
+```
+
+`tech_cards.js` cannot see a list inside a card file, so write the same list again there,
+above `model.gwoCardsToUnits`. A list can sit inside a longer list:
+
+```js
+units: [legionTanks, gwoUnit.legion.earthshaker],
+```
+
+Two rules for groups:
+
+- **A group can mix races.** A card that names Legion and Bugs tanks is offered to Legion
+  players and to Bugs players. Each player gets the change on the units of their own race.
+- **Don't change a stock unit and its race version in the same card.** A change to
+  `gwoUnit.ant` already reaches the Legion unit of the same kind. A second change to that
+  Legion unit applies the change twice. Name the stock unit **or** the race unit, not
+  both.
+
+#### 7. Finding the value that you want to change
+
+A race unit's file is not in the PA install folder. It is in the race's **server mod**.
+The mod is a zip file in `download` in the PA data folder, or a folder in
+`server_mods` in the PA data folder. The zip file names are:
+
+- Legion: `com.pa.legion-expansion-server.zip`
+- Bugs: `com.pa.ferretmaster.bugs.zip`
+- Exiles: `com.pa.nik.exiles.zip`
+- Second Wave: `pa.mla.unit.addon.zip`
+- Section 17: `com.pa.daedelus.experimentals.zip`
+- Osmech: `com.pa.loloares.thorosmen.zip`
+
+Open the zip and find the unit's path from its `gwoUnit` table. Then follow
+[Finding the value that you want to change](#finding-the-value-that-you-want-to-change)
+from step 2. A `base_spec` can point to a file in the same zip or in the PA install
+folder.
+
+#### 8. Testing a race card
+
+1. Enable GW Server Mods and the race's or add-on's server mod, as well as your own mod.
+2. Start a new Galactic War, and choose the race in the **Race** picker on the war setup
+   screen.
+3. Follow [Testing tech cards](#testing-tech-cards) from step 2.
+4. Start a war as a different race, and check that the game does not offer your card.
 
 ## Advanced features
 
