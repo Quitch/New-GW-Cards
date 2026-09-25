@@ -1687,6 +1687,10 @@ can field one of the units in the entry. A Legion card is not offered to an MLA,
 Exiles player. You need nothing else: no new list, and no new dependency in
 `modinfo.json`.
 
+List **only** race or add-on units in a race card's entry. If the entry also names a stock
+unit, such as `gwoUnit.commander`, the game offers the card to every player who has that
+kind of unit, whatever their race.
+
 The same entry also works for a card whose ID contains `_upgrade_`, such as
 `mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
 units (see the warning above). When it names race units, it is written for that race, so
@@ -1742,7 +1746,10 @@ as in the example above.
 
 GWO's `gwoUnit` tables hold only the races and add-ons that GWO itself supports. Another
 mod can add a race or an add-on to GWO. For its units, write the raw unit path. The card
-works the same way if that mod gives GWO a list of its units.
+works the same way if that mod gives GWO a list of its units, as a `units` table in the
+race or add-on that it registers. Without that table, GWO treats the paths as stock units:
+the card is offered to MLA players and never to that race, and a card with `_upgrade_` in
+its ID is offered to MLA players only. Check the other mod's files, or ask its author.
 
 #### 6. Your own groups
 
@@ -1760,27 +1767,20 @@ gwoCard.hasUnit(gwoCard.fieldedUnits(inventory), legionTanks);
 inventory.addMods(
   gwoCard.flatMapMods(legionTanks, "multiply", { max_health: 1.25 })
 );
+inventory.addUnits(legionTanks);
 ```
 
 `tech_cards.js` cannot see a list inside a card file, so write the same list again there,
 above `model.gwoCardsToUnits`.
 
-In `model.gwoCardsToUnits` and in the `deal` checks (`gwoCard.hasUnit` and the others,
-and `requires`), a list can sit inside a longer list:
+A list can sit inside a longer list, wherever a card takes a list of units:
 
 ```js
 units: [legionTanks, gwoUnit.legion.earthshaker],
 ```
 
-In `buff`, join the lists with `concat` instead. `inventory.addMods`, `inventory.addUnits`,
-and `gwoCard.flatMapMods` do not read a list inside a list:
-
-```js
-var armoured = legionTanks.concat([gwoUnit.legion.earthshaker]);
-inventory.addMods(
-  gwoCard.flatMapMods(armoured, "multiply", { max_health: 1.25 })
-);
-```
+The one exception is a place that takes one file: the `file` of a change, and the first
+value that you give `gwoCard.mods`. For a list, use `gwoCard.flatMapMods`.
 
 Rules for groups:
 
@@ -1817,7 +1817,8 @@ folder.
 
 1. Enable GW Server Mods and the race's or add-on's server mod, as well as your own mod.
 2. Start a new Galactic War, and choose the race in the **Race** picker on the war setup
-   screen.
+   screen. For an add-on unit, choose the race that the unit belongs to. The add-ons are
+   not in the picker, and Second Wave has MLA, Legion, and Bugs units.
 3. Follow [Testing tech cards](#testing-tech-cards) from step 2.
 
 The test panel gives you the card whatever your race, so it cannot show which races the
