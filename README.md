@@ -560,7 +560,10 @@ model.gwoCards.push("mym_damage_bots", "mym_faster_air");
 #### `model.gwoCardsToUnits` — tech-card tooltips (in `tech_cards.js`)
 
 This list connects a tech card to the units that it changes, so that the card's tooltip
-can name them. Add one entry for each card. The entry holds the card's ID and the units
+can name them. When the entry names the units of another race or an add-on, it also
+decides which players the game offers the card to (see
+[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on)). Add one
+entry for each card. The entry holds the card's ID and the units
 that it changes, as unit paths or as GWO unit or group IDs. Always name the unit itself,
 not its ammo or its weapon, even when the card changes only the weapon. For a card that
 changes the commander, name `gwoUnit.commander`.
@@ -1477,8 +1480,8 @@ and must take them back is an ordinary tech card, written from `tech_card_id.js`
 The example `unit_upgrade_card_id.js` is already written this way.
 
 **Don't put `_upgrade_` in the card's ID** if players of other races must get it. GWO
-offers a card with `_upgrade_` in its ID only to MLA players, unless the card names race
-units. See
+offers a card with `_upgrade_` in its ID only to MLA players, unless the card's
+`model.gwoCardsToUnits` entry names race units. See
 [Cards for another race or an add-on](#cards-for-another-race-or-an-add-on).
 
 ### Loadouts and `gwoCard.loadout`
@@ -1635,7 +1638,7 @@ Bugs, and Exiles units, and the matching add-on units. GWO finds them for you. W
 race card only when you want to change one particular unit of a race or an add-on.
 
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
-> the card names race or add-on units. An upgrade card is tuned to one MLA unit, so GWO
+> the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is tuned to one MLA unit, so GWO
 > does not pass it on to the other races. If a card that changes stock units must reach
 > every race, leave `_upgrade_` out of its ID.
 
@@ -1664,8 +1667,8 @@ write `gwoUnit.legion.shank`.
 > [checker](#checking-your-work) does not find it. In a card file, the error stops that
 > card. In `tech_cards.js`, it stops the whole `model.gwoCardsToUnits` list, so every
 > card in your mod loses its tooltip, and GWO no longer knows which race a card is for. A
-> misspelled key, such as `gwoUnit.legion.shnak`, gives no error, and the card changes
-> nothing.
+> misspelled key, such as `gwoUnit.legion.shnak`, gives no error. In a card file, the card
+> changes nothing. In `model.gwoCardsToUnits`, the game never offers the card to anyone.
 
 #### 2. List the unit in `model.gwoCardsToUnits`
 

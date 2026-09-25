@@ -10,8 +10,8 @@
 //    "gwaio_".  If a card has the same name as one of the game's or GWO's, the
 //    game silently ignores one of the two files, and which one depends on
 //    which mod loads last.  Leave "_upgrade_" out of the ID: GWO offers such a
-//    card to MLA players only, unless it names Legion, Bugs, Exiles, or add-on
-//    units.
+//    card to MLA players only, unless its model.gwoCardsToUnits entry in
+//    tech_cards.js names Legion, Bugs, Exiles, or add-on units.
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to tech_cards.js, in model.gwoCards and in
 //    model.gwoCardsToUnits.  The game never deals a card that is not in
