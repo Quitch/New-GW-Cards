@@ -1661,6 +1661,14 @@ write the table name, a dot, and the key. For example, the line
 `shank: "/pa/units/land/l_tank_shank/l_tank_shank.json"` in the Legion file means that you
 write `gwoUnit.legion.shank`.
 
+Always write a key after the table name. `gwoUnit.legion` on its own is the whole table,
+not a unit or a list of units, and the game ignores it.
+
+Some lines name a file from the base game that the race unit shares, such as a weapon or
+its ammo. Their path has no race name in it. Those keys are not in `gwoUnit`: use the
+file's own GWO unit ID, such as `gwoUnit.gilEBeamAmmo`, and know that a change to it also
+changes the base-game unit that uses it.
+
 > **Warning:** GWO makes these keys from the race mod's own files. A key can change when
 > the race mod is updated, so check your card after each update. A misspelled table name,
 > such as `gwoUnit.legoin.shank`, causes an error, and the
@@ -1785,11 +1793,8 @@ value that you give `gwoCard.mods`. For a list, use `gwoCard.flatMapMods`.
 Rules for groups:
 
 - **A group can mix races.** A card that names Legion and Bugs tanks is offered to Legion
-  players and to Bugs players. `inventory.addMods` changes only the units of each
-  player's own race.
-- **Give `inventory.addUnits` the units of one race only.** It gives every unit in the
-  list to every player who gets the card, whatever their race. A Bugs player who is given
-  Legion units gets errors in the battle.
+  players and to Bugs players. `inventory.addMods` and `inventory.addUnits` reach only the
+  units of each player's own race.
 - **Don't change a stock unit and its race version in the same card.** A change to
   `gwoUnit.ant` already reaches the Legion unit of the same kind. A second change to that
   Legion unit applies the change twice. Name the stock unit **or** the race unit, not
