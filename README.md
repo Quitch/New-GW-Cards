@@ -1664,10 +1664,11 @@ write `gwoUnit.legion.shank`.
 Always write a key after the table name. `gwoUnit.legion` on its own is the whole table,
 not a unit or a list of units, and the game ignores it.
 
-Some lines name a file from the base game that the race unit shares, such as a weapon or
-its ammo. Their path has no race name in it. Those keys are not in `gwoUnit`: use the
-file's own GWO unit ID, such as `gwoUnit.gilEBeamAmmo`, and know that a change to it also
-changes the base-game unit that uses it.
+A race unit can share a file with the base game, such as a weapon or its ammo. That file
+has no race key. Use its GWO unit ID if it has one, such as `gwoUnit.gilEBeamAmmo`, or
+else its path. A change to it is a change to a base-game file. It also changes the
+base-game unit that uses the file, and, in a war as another race, that race's units of the
+same kind.
 
 > **Warning:** GWO makes these keys from the race mod's own files. A key can change when
 > the race mod is updated, so check your card after each update. A misspelled table name,
