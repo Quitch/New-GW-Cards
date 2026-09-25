@@ -1732,8 +1732,8 @@ works the same way if that mod gives GWO a list of its units.
 
 #### 6. Your own groups
 
-You can make your own list of units, and use its name everywhere that a card takes units.
-Write it once at the top of the card, above `return`:
+You can make your own list of units, and use its name in place of a list of units. Write
+it once at the top of the card, above `return`:
 
 ```js
 var legionTanks = [gwoUnit.legion.shank, gwoUnit.legion.scorpion];
@@ -1749,13 +1749,26 @@ inventory.addMods(
 ```
 
 `tech_cards.js` cannot see a list inside a card file, so write the same list again there,
-above `model.gwoCardsToUnits`. A list can sit inside a longer list:
+above `model.gwoCardsToUnits`.
+
+In `model.gwoCardsToUnits` and in the `deal` checks (`gwoCard.hasUnit` and the others,
+and `requires`), a list can sit inside a longer list:
 
 ```js
 units: [legionTanks, gwoUnit.legion.earthshaker],
 ```
 
-Two rules for groups:
+In `buff`, join the lists with `concat` instead. `inventory.addMods`, `inventory.addUnits`,
+and `gwoCard.flatMapMods` do not read a list inside a list:
+
+```js
+var armoured = legionTanks.concat([gwoUnit.legion.earthshaker]);
+inventory.addMods(
+  gwoCard.flatMapMods(armoured, "multiply", { max_health: 1.25 })
+);
+```
+
+Rules for groups:
 
 - **A group can mix races.** A card that names Legion and Bugs tanks is offered to Legion
   players and to Bugs players. `inventory.addMods` changes only the units of each
