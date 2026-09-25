@@ -1637,6 +1637,13 @@ changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the matching Le
 Bugs, and Exiles units, and the matching add-on units. GWO finds them for you. Write a
 race card only when you want to change one particular unit of a race or an add-on.
 
+This works for changes to values such as health, speed, cost, or damage. A change to
+what a unit is stays on the stock unit: its `unit_types`, `buildable_types`, `tools`,
+`base_spec`, `command_caps`, `model`, `display_name`, `description`, `si_name`,
+`transportable`, `transporter`, or `attachable`. Once any card makes such a change to a
+unit, no other change to that unit reaches the race units either. Keep `_upgrade_` in the
+ID of a card like that (see the warning below).
+
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
 > the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is tuned to one MLA unit, so GWO
 > does not pass it on to the other races. If a card that changes stock units must reach
