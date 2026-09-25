@@ -474,8 +474,8 @@ delete the whole block.
 
 - [ ] Named the race or add-on units with `gwoUnit.<table>.<key>`, or with raw paths for a
       race or add-on from another mod.
-- [ ] Listed those units in the card's `model.gwoCardsToUnits` entry. This is what stops
-      the game from offering the card to other races.
+- [ ] Listed those units in the card's `model.gwoCardsToUnits` entry. For a tech card,
+      this is what stops the game from offering the card to other races.
 - [ ] In `deal`, used `gwoCard.fieldedUnits(inventory)` in place of `inventory.units()`,
       or set `requires` to the race unit in `gwoCard.upgradeCard`.
 - [ ] Tested the card in a war as that race (see
@@ -1713,6 +1713,10 @@ When an entry names a race or add-on unit, GWO offers the card **only** to a pla
 can field one of the units in the entry. A Legion card is not offered to an MLA, Bugs, or
 Exiles player. You need nothing else: no new list, and no new dependency in
 `modinfo.json`.
+
+This is for tech cards, which the game deals. Players pick loadouts themselves, so an entry
+does not limit who can pick a loadout. A loadout that gives only Legion units gives
+players of other races nothing.
 
 List **only** race or add-on units in a race card's entry. If the entry also names a stock
 unit, such as `gwoUnit.commander`, the game offers the card to every player who has that
