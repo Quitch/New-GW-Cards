@@ -1676,7 +1676,8 @@ changes the base-game unit that uses it.
 > card. In `tech_cards.js`, it stops the whole `model.gwoCardsToUnits` list, so every
 > card in your mod loses its tooltip, and GWO no longer knows which race a card is for. A
 > misspelled key, such as `gwoUnit.legion.shnak`, gives no error. In a card file, the card
-> changes nothing. In `model.gwoCardsToUnits`, the game never offers the card to anyone.
+> changes nothing. In `model.gwoCardsToUnits`, GWO no longer knows that the card is for
+> that race: MLA players may be offered it, and players of the race may not.
 
 #### 2. List the unit in `model.gwoCardsToUnits`
 
@@ -1755,9 +1756,10 @@ as in the example above.
 GWO's `gwoUnit` tables hold only the races and add-ons that GWO itself supports. Another
 mod can add a race or an add-on to GWO. For its units, write the raw unit path. The card
 works the same way if that mod gives GWO a list of its units, as a `units` table in the
-race or add-on that it registers. Without that table, GWO treats the paths as stock units:
-the card is offered to MLA players and never to that race, and a card with `_upgrade_` in
-its ID is offered to MLA players only. Check the other mod's files, or ask its author.
+race or add-on that it registers. Without that table, GWO treats the paths as stock units,
+and the card is not tied to that race: players of other races may be offered it, and a
+card with `_upgrade_` in its ID is offered to MLA players only. Check the other mod's
+files, or ask its author.
 
 #### 6. Your own groups
 
