@@ -563,9 +563,10 @@ This list connects a tech card to the units that it changes, so that the card's 
 can name them. It also decides which races the game offers the card to. A player of
 another race, such as Legion, is offered it only when their race has a unit of the same
 kind as a unit in the entry, or fields a race or add-on unit that the entry names (see
-[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on)). A weapon or
-ammo in the entry doesn't count, which is one more reason to name units. Add one entry for
-each card. The entry holds the card's ID and the units
+[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on)). For such a
+player, a base-game weapon or ammo in the entry doesn't count, which is one more reason to
+name units. An MLA player is offered any card whose entry names something from the base
+game. Add one entry for each card. The entry holds the card's ID and the units
 that it changes, as unit paths or as GWO unit or group IDs. Always name the unit itself,
 not its ammo or its weapon, even when the card changes only the weapon. For a card that
 changes the commander, name `gwoUnit.commander`.
@@ -1723,9 +1724,10 @@ This is for tech cards, which the game deals. Players pick loadouts themselves, 
 does not limit who can pick a loadout. A loadout that gives only Legion units gives
 players of other races nothing.
 
-List **only** race or add-on units in a race card's entry. If the entry also names a stock
-unit, such as `gwoUnit.commander`, the game offers the card to every player who has that
-kind of unit, whatever their race.
+List **only** race or add-on units in a race card's entry. If the entry also names
+anything from the base game, such as `gwoUnit.commander` or a shared weapon such as
+`gwoUnit.gilEBeam`, the game can offer the card to players of other races too: MLA players
+always, and other races when they have that kind of unit.
 
 The same entry also works for a card whose ID contains `_upgrade_`, such as
 `mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
