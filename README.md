@@ -1842,7 +1842,9 @@ folder.
 
 #### 8. Testing a race card
 
-1. Enable GW Server Mods and the race's or add-on's server mod, as well as your own mod.
+1. Enable GW Server Mods, your own mod, and the server mod of the race or add-on. For an
+   add-on unit that belongs to Legion or Bugs, enable that race's server mod as well: a
+   race is in the **Race** picker only while its own server mod is on.
 2. Start a new Galactic War, and choose the race in the **Race** picker on the war setup
    screen. For an add-on unit, choose the race that the unit belongs to. The add-ons are
    not in the picker, and Second Wave has MLA, Legion, and Bugs units.
