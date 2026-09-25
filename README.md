@@ -1665,8 +1665,11 @@ Always write a key after the table name. `gwoUnit.legion` on its own is the whol
 not a unit or a list of units, and the game ignores it.
 
 A race unit can share a file with the base game, such as a weapon or its ammo. That file
-has no race key. Use its GWO unit ID if it has one, such as `gwoUnit.gilEBeamAmmo`, or
-else its path. A change to it is a change to a base-game file. It also changes the
+has no race key. Some race files still show a line for it, with a base-game path such as
+`havocBeamWeapon: "/pa/units/land/bot_sniper/bot_sniper_beam_tool_weapon.json"`, but that
+key is not in `gwoUnit`: `gwoUnit.legion.havocBeamWeapon` names nothing, and the card
+changes nothing. Use the file's own GWO unit ID if it has one, such as `gwoUnit.gilEBeam`,
+or else its path. A change to it is a change to a base-game file. It also changes the
 base-game unit that uses the file, and, in a war as another race, that race's units of the
 same kind.
 
@@ -1757,10 +1760,9 @@ as in the example above.
 GWO's `gwoUnit` tables hold only the races and add-ons that GWO itself supports. Another
 mod can add a race or an add-on to GWO. For its units, write the raw unit path. The card
 works the same way if that mod gives GWO a list of its units, as a `units` table in the
-race or add-on that it registers. Without that table, GWO treats the paths as stock units,
-and the card is not tied to that race: players of other races may be offered it, and a
-card with `_upgrade_` in its ID is offered to MLA players only. Check the other mod's
-files, or ask its author.
+race or add-on that it registers. Without that table, GWO treats the paths as base-game
+units: MLA players may be offered the card, and once GWO has read that race's units, its
+players are not. Check the other mod's files, or ask its author.
 
 #### 6. Your own groups
 
