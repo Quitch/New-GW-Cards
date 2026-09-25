@@ -1650,9 +1650,12 @@ write `gwoUnit.legion.shank`.
 
 > **Warning:** GWO makes these keys from the race mod's own files. A key can change when
 > the race mod is updated, so check your card after each update. A misspelled table name,
-> such as `gwoUnit.legoin.shank`, stops the card with an error, and the
-> [checker](#checking-your-work) does not find it. A misspelled key, such as
-> `gwoUnit.legion.shnak`, gives no error, and the card changes nothing.
+> such as `gwoUnit.legoin.shank`, causes an error, and the
+> [checker](#checking-your-work) does not find it. In a card file, the error stops that
+> card. In `tech_cards.js`, it stops the whole `model.gwoCardsToUnits` list, so every
+> card in your mod loses its tooltip, and GWO no longer knows which race a card is for. A
+> misspelled key, such as `gwoUnit.legion.shnak`, gives no error, and the card changes
+> nothing.
 
 #### 2. List the unit in `model.gwoCardsToUnits`
 
@@ -1743,7 +1746,6 @@ gwoCard.hasUnit(gwoCard.fieldedUnits(inventory), legionTanks);
 inventory.addMods(
   gwoCard.flatMapMods(legionTanks, "multiply", { max_health: 1.25 })
 );
-inventory.addUnits(legionTanks);
 ```
 
 `tech_cards.js` cannot see a list inside a card file, so write the same list again there,
@@ -1756,7 +1758,11 @@ units: [legionTanks, gwoUnit.legion.earthshaker],
 Two rules for groups:
 
 - **A group can mix races.** A card that names Legion and Bugs tanks is offered to Legion
-  players and to Bugs players. Each player gets the change on the units of their own race.
+  players and to Bugs players. `inventory.addMods` changes only the units of each
+  player's own race.
+- **Give `inventory.addUnits` the units of one race only.** It gives every unit in the
+  list to every player who gets the card, whatever their race. A Bugs player who is given
+  Legion units gets errors in the battle.
 - **Don't change a stock unit and its race version in the same card.** A change to
   `gwoUnit.ant` already reaches the Legion unit of the same kind. A second change to that
   Legion unit applies the change twice. Name the stock unit **or** the race unit, not
