@@ -478,7 +478,7 @@ delete the whole block.
       the game from offering the card to other races.
 - [ ] In `deal`, used `gwoCard.fieldedUnits(inventory)` in place of `inventory.units()`,
       or set `requires` to the race unit in `gwoCard.upgradeCard`.
-- [ ] Tested the card in a war as that race, and in a war as a different race (see
+- [ ] Tested the card in a war as that race (see
       [Testing a race card](#8-testing-a-race-card)).
 
 **If your card is a loadout, also:**
@@ -1816,7 +1816,11 @@ folder.
 2. Start a new Galactic War, and choose the race in the **Race** picker on the war setup
    screen.
 3. Follow [Testing tech cards](#testing-tech-cards) from step 2.
-4. Start a war as a different race, and check that the game does not offer your card.
+
+The test panel gives you the card whatever your race, so it cannot show which races the
+game offers the card to. Only the units in the card's `model.gwoCardsToUnits` entry decide
+that. Check that the entry names the race or add-on units, and that each name is spelled
+correctly.
 
 ## Advanced features
 
