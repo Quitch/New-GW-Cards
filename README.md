@@ -1633,12 +1633,15 @@ Section 17, and Osmech. A player needs
 server mod for these.
 
 **You don't need a separate card for each race to change ordinary units.** A card that
-changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the matching Legion,
-Bugs, and Exiles units, and the matching add-on units. GWO finds them for you. Write a
-race card only when you want to change one particular unit of a race or an add-on.
+changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the Legion, Bugs, and
+Exiles units of the same kind, and the add-on units of that kind. For example, a card for
+the Dox changes every basic Legion combat bot. GWO finds them for you. Write a race card
+only when you want to change one particular unit of a race or an add-on.
 
-Section 17's Big Bill, Pineapple, Floater, and Horntail are the exception: no card for
-stock units reaches them. To change them, name them, such as
+A unit of a kind that the base game has no unit for is the exception: no card for stock
+units reaches it. Such units include Section 17's Big Bill, Pineapple, Floater, Horntail,
+Poseidon, and gantries, the add-ons' fabrication towers and advanced storages, and the
+Bugs research unlocks. To change one of them, name it, such as
 `gwoUnit.section17.bigBill`.
 
 This works for changes to values such as health, speed, cost, or damage. A change to
@@ -1778,7 +1781,8 @@ players are not. Check the other mod's files, or ask its author.
 #### 6. Your own groups
 
 You can make your own list of units, and use its name in place of a list of units. Write
-it once at the top of the card, above `return`:
+it once in the card, inside the `function (...) {` that `define` opens, just above
+`return`. `gwoUnit` exists only inside that function:
 
 ```js
 var legionTanks = [gwoUnit.legion.shank, gwoUnit.legion.scorpion];
@@ -1795,7 +1799,9 @@ inventory.addUnits(legionTanks);
 ```
 
 `tech_cards.js` cannot see a list inside a card file, so write the same list again there,
-above `model.gwoCardsToUnits`.
+inside the `function (gwoUnit) {` that `requireGW` opens, above
+`model.gwoCardsToUnits.push`. Outside that function the line stops the whole file, and
+the game deals none of your cards.
 
 A list can sit inside a longer list, wherever a card takes a list of units:
 
