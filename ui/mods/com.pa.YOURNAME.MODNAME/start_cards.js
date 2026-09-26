@@ -89,6 +89,18 @@
     //   model.gwoStarCardsWhichBreakAllies = [];
     // }
     // model.gwoStarCardsWhichBreakAllies.push("YOUR_UNLOCKED_LOADOUT_ID_1");
+
+    // OPTIONAL: loadouts that a co-op AI player cannot use.
+    // If a co-op AI player cannot use the effect of your loadout, for example
+    // an ability that works only when a player gives an order, list its ID
+    // here.  An AI player then never starts with it.  Galactic War Overhaul
+    // never creates this list itself, so you must create it before you add to
+    // it.  See "Feature reference" in the README.  Remove the comment marks
+    // (//) from the lines below and edit them if you need this list.
+    // if (!model.gwoLoadoutsAiCannotUse) {
+    //   model.gwoLoadoutsAiCannotUse = [];
+    // }
+    // model.gwoLoadoutsAiCannotUse.push("YOUR_UNLOCKED_LOADOUT_ID_1");
   } catch (e) {
     console.error(e);
     // You can change "New GW Cards" to the name of your mod, so that errors in

@@ -675,6 +675,23 @@ if (!model.gwoStarCardsWhichBreakAllies) {
 model.gwoStarCardsWhichBreakAllies.push("mym_start_myloadout");
 ```
 
+#### `model.gwoLoadoutsAiCannotUse` — loadouts that a co-op AI player cannot use (in `start_cards.js`)
+
+Optional. From the GWO release that adds co-op AI players, an AI player in a co-op war
+can start with one of your loadouts. List your loadout's ID here if an AI player cannot
+use its effect, for example an ability that works only when a player gives an order. GWO
+lists its own Warp Commander, because an AI player never orders a mass teleport. An AI
+player never starts with a loadout on this list.
+
+GWO does **not** create this list for you. Create it before you add to it, as shown.
+
+```js
+if (!model.gwoLoadoutsAiCannotUse) {
+  model.gwoLoadoutsAiCannotUse = [];
+}
+model.gwoLoadoutsAiCannotUse.push("mym_start_myloadout");
+```
+
 #### `model.gwoSpecs` — extra unit files to change (in `specs.js`)
 
 Optional. Galactic War gives each player a private copy of only the files that their own
@@ -1946,9 +1963,13 @@ player has their own hand, so a card that must react to the whole team has to lo
 Two helpers do that:
 
 - `gwoCard.anyPlayerHasCard(inventory, "some_card_id")`: true when the player _or_ any
-  connected co-op player holds that card.
-- `gwoCard.getAllConnectedPlayerCards(inventory)`: every card held by the player and
-  their connected co-op players, as one list. Each entry has an `id`.
+  other co-op player in the game holds that card.
+- `gwoCard.getAllConnectedPlayerCards(inventory)`: every card held by the player and the
+  other co-op players in the game, as one list. Each entry has an `id`.
+
+"The other co-op players" means the connected ones, and, from the GWO release that adds
+co-op AI players, the host's AI players too, in a war where every player has their own
+tech. See [How co-op AI players choose your card](#how-co-op-ai-players-choose-your-card).
 
 ```js
 deal: function (system, context, inventory) {
@@ -1963,6 +1984,45 @@ Outside a co-op game they answer for the one player, so you can use them anywher
 uses them for things that the whole war shares, such as whether Tsunami Tech floods the
 planets that everyone fights on. No GWO card needs them, so use `inventory.hasCard` first,
 and use these two only when your card's effect really covers the whole team.
+
+### How co-op AI players choose your card
+
+From the GWO release that adds co-op AI players, the host of a co-op war can put AI
+players into the empty slots. In a war where every player has their own tech, each AI
+player picks its own cards, and your cards are among them.
+
+An AI player judges a card by trying it. GWO copies the AI player's inventory, runs your
+card's `buff` on the copy, and then every card's `dull`, and looks at what changed: the
+units it unlocked, the unit stats it changed, what its Sub Commanders build, and the Sub
+Commanders and card slots it added. It never reads your card's name or ID, so your card
+is judged on what it does.
+
+**So your `buff` runs even when nobody takes the card.** It must:
+
+- **give the same result every time.** For the same inventory, it must make the same
+  changes. If your card makes a random choice, make it in `deal`, as
+  [Randomness in `deal`](#randomness-in-deal) shows, and read the result in `buff`.
+- **be quick.** The AI player tries every card in its hand while the war waits. If that
+  takes too long, GWO gives up, and the AI player takes the first card in the hand that
+  fits, unjudged. An AI player that keeps running out of time stops taking cards for the
+  rest of the session.
+- **change only the `inventory` that it receives.** The copy is thrown away afterwards.
+  Anything else that `buff` changes, such as the war, the page, or saved settings,
+  changes for real, although nobody took the card.
+- **never stop with an error.** A card whose `buff` fails is judged as a card that does
+  nothing.
+
+**A card that changes something other than units** is judged by its chance instead: an AI
+player values it more the more often your `deal` offers it. That works only while the card
+is not listed in `model.gwoCardsToUnits`. An AI player expects a card listed there to
+change the units that it names, so it scores such a card that changes nothing it can see
+as worth nothing, and never takes it. List that kind of card in
+[`model.gwoCardsWithoutTooltip`](#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
+instead, as this guide already asks.
+
+**A loadout that an AI player cannot use** belongs in
+[`model.gwoLoadoutsAiCannotUse`](#modelgwoloadoutsaicannotuse--loadouts-that-a-co-op-ai-player-cannot-use-in-start_cardsjs),
+so that an AI player never starts with it.
 
 ### `keep`, `discard` and `releaseContext` — rare parts
 

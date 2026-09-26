@@ -153,6 +153,30 @@ two `push` calls took the same war from a permanent hang to `gw_play` in seconds
 Placeholder IDs in `model.gwoCards` are not equivalent — those 404 non-fatally and the
 war plays.
 
+## Co-op AI players run `buff` on a copy
+
+From the GWO release that adds co-op AI players, a host can seat AI players in a co-op
+war, and under per-player tech each one picks its own cards. It judges a card by applying
+it to a scratch copy of its inventory - the real `GWInventory.applyCards` with every bank
+held shut, one apply at a time, each against a 5-second timeout - and scoring what
+changed: units unlocked, unit stats modded, AI mods, and Sub Commanders and card slots
+added. It never reads the card's ID. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
+authority. What that means for a card, all of it silent when wrong:
+
+- **`buff` runs speculatively**, for cards nobody takes. It must be deterministic for a
+  given inventory (random choices belong in `deal`'s `params`), touch only the
+  `inventory` it is passed, and never throw. A side effect anywhere else happens for real.
+  `applyCards` catches a throw, so a throwing card just looks like it does nothing.
+- **It must be fast.** A hand's decision gets 20 seconds; past that the AI takes the
+  hand's first card that fits, unjudged, and after two timed-out decisions it declines
+  every deal for the rest of the session.
+- **List a card in `model.gwoCardsToUnits` only when it changes units.** A card with no
+  effect the AI can see is valued by its own `deal` chance - unless it is in
+  `gwoCardsToUnits`, which tells the AI to expect a unit effect, so it scores zero and is
+  never taken. Feature cards go in `model.gwoCardsWithoutTooltip`.
+- **`gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards` count the AI
+  players' cards** under per-player tech, as they count connected viewers'.
+
 ## `inventory.addMods` — changing unit stats
 
 The README documents the shape. This is the behaviour that is not obvious from it. Line
