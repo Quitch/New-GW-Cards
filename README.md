@@ -316,8 +316,9 @@ Every GWO tech card has these same nine parts. Each one does one job:
 - `deal`: how often the game offers the card. `gwoCard.conditionalDeal` gives a chance of
   `60` when the player has the Dox, and `0` (never) when they don't.
 - `buff`: what the card does. Here it multiplies the Dox's `max_health` by `1.5`.
-- `dull`: the cleanup after every card, which usually takes units away again. This card
-  gives no units, so its `dull` is empty, but it must still be there.
+- `dull`: the units that the card forbids. The player cannot have them, even when another
+  card gives them. Most cards, like this one, forbid none, so their `dull` is empty, but it
+  must still be there.
 
 A card like this one, which improves one unit that the player already has, can also be
 written much more briefly with
@@ -373,8 +374,8 @@ Pick the one that matches what your card does:
 
 `unit_upgrade_card_id.js` is the shortest, because
 [`gwoCard.upgradeCard`](#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard)
-writes most of the card for you. It cannot take units away again, so a card that must do
-that starts from `tech_card_id.js`.
+writes most of the card for you. Its `dull` is empty, so it cannot forbid units. A card
+that must forbid a unit starts from `tech_card_id.js`.
 
 Every part of each example is already there, with a placeholder value and a comment
 beside it. To make more than one card of the same kind, copy the example file first and
@@ -765,7 +766,7 @@ and [loadouts](#loadouts-and-gwocardloadout) below.
 | `visible`    | all        | Whether the player can see the card on the board and discard it. Tech cards are usually visible. Loadouts are not. |
 | `deal`       | all        | How often the game offers the card. See below.                                                                     |
 | `buff`       | all        | What the card does. See below.                                                                                     |
-| `dull`       | all        | Cleanup. It runs after every card's `buff`, and it usually removes units.                                          |
+| `dull`       | all        | The units that the card forbids. Usually empty. See below.                                                         |
 | `audio`      | tech cards | The voice line that plays when the player finds the card.                                                          |
 | `getContext` | tech cards | Gives the `deal` part information about the galaxy. Always `gwoCard.getContext`.                                   |
 | `hint`       | loadouts   | The text shown while the loadout is still locked.                                                                  |
@@ -1477,8 +1478,8 @@ chance, and returns `0` until the player has the unit named in `requires`.
   mean.
 - `slot: false`: optional. Don't give the player an extra card slot.
 
-**It cannot take units away again**, because its `dull` is empty. A card that gives units
-and must take them back is an ordinary tech card, written from `tech_card_id.js`.
+**It cannot forbid units**, because its `dull` is empty. A card that must forbid a unit is
+an ordinary tech card, written from `tech_card_id.js`.
 
 The example `unit_upgrade_card_id.js` is already written this way.
 
@@ -1505,7 +1506,7 @@ var loadout = gwoCard.loadout(CARD, {
   apply: function (inventory) {
     inventory.addUnits([gwoUnit.dox, gwoGroup.botsBasicMobile]);
   },
-  dulls: [gwoUnit.dox, gwoGroup.botsBasicMobile],
+  dulls: [gwoUnit.inferno],
 });
 ```
 
@@ -1515,9 +1516,11 @@ var loadout = gwoCard.loadout(CARD, {
 - `apply`: what your loadout gives the player. Write it exactly as you would write a tech
   card's [`buff`](#buff--what-the-card-does). Leave it out if your loadout adds nothing to
   the standard start.
-- `dulls`: the units to take back if the player switches to a different loadout. Give a
-  list, or a function that receives the inventory and returns a list. Leave it out if your
-  loadout unlocks no units.
+- `dulls`: the units that your loadout forbids for the whole war. The player never has
+  them, even when the standard start or a later card gives them. The example above forbids
+  the Inferno. Give a list, or a function that receives the inventory and returns a list.
+  Never list a unit that `apply` gives, or the player never gets it. Leave `dulls` out if
+  your loadout forbids no units, as most loadouts do.
 
 Then use what it gives you as the card's `buff` and `dull`:
 
@@ -1529,23 +1532,30 @@ dull: loadout.dull,
 The example `start_card_id.js` is already written this way, so you fill in only the four
 parts above.
 
-### `dull` — cleanup after all cards
+### `dull` — units the card forbids
 
-`dull` runs after every card's `buff` has finished. It mainly removes units, and it
-usually lists the same units that the card's `buff` added. It cannot undo a stat change or
-an AI change.
+`dull` removes the units that the card forbids, so that the player cannot have them. Most
+cards forbid no units, so their `dull` is empty, but it must still be there.
 
-**Tech cards** remove units directly:
+Each time the game works out the player's units, it runs the `buff` of every card first,
+and then the `dull` of every card. So a unit that a `dull` removes is gone whichever card
+gave it, this card included, and every copy of it goes. **Never list a unit that the
+card's own `buff` gives.** The player then never gets it, and nothing warns you. `dull`
+cannot undo a stat change or an AI change.
+
+**Tech cards** remove units directly. This one stops the player from having the Inferno:
 
 ```js
 dull: function (inventory) {
-  inventory.removeUnits([gwoUnit.dox, gwoGroup.botsBasicMobile]);
+  inventory.removeUnits([gwoUnit.inferno]);
 },
 ```
 
 **Loadouts** don't write their own `dull`. They use the one that `gwoCard.loadout` gives
-them, and list the units to remove as its `dulls`, as above. Removing a loadout's units at
-the right moment is difficult, and the helper does it for you.
+them, and list the units that they forbid as its `dulls`, as above. A loadout forbids those
+units for the whole war, even when the standard start or a later card gives them.
+Removing a loadout's units at the right moment is difficult, and the helper does it for
+you.
 
 ### The bank and `LS_KEY` — remembering unlocked loadouts
 

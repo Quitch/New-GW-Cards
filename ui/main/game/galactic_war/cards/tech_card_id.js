@@ -147,11 +147,22 @@ define([
       inventory.addAIMods(aiMods);
     },
     dull: function (inventory) {
-      // REMOVE UNITS FROM INVENTORY
-      // This runs after every card, to take units away again.  It usually
-      // lists the same units as "ADD UNITS TO INVENTORY" above.
-      // Delete the two lines below if your card unlocks no units.
-      var units = ["UNIT_PATH", gwoUnit.dox, gwoGroup.botsBasicMobile];
+      // FORBID UNITS
+      // Most cards leave this list empty.  It is for the units that your card
+      // forbids: the player cannot have them, even when another card gives
+      // them.
+      //
+      // Each time the game works out the player's units, it runs the "buff" of
+      // every card first, and then the "dull" of every card.  So a unit in
+      // this list is gone whichever card gave it, this card included.  Never
+      // list a unit that "ADD UNITS TO INVENTORY" above gives, or the player
+      // never gets it.  This cannot undo a stat change or an AI change.
+      //
+      // An example of the list contents.  It stops the player from having the
+      // Inferno:
+      //   var units = [gwoUnit.inferno];
+      // Leave the list empty if your card forbids no units.
+      var units = [];
       inventory.removeUnits(units);
     },
   };

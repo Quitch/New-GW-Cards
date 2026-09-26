@@ -173,8 +173,10 @@ follow it:
   card"), and the header comment in `start_cards.js`. Keep those three consistent. Do not
   correct the problem by emptying the supplied lists. The example IDs show an author the
   shape, and the warning is the correction.
-- `dull(inventory)` reverses `buff`, and the game applies it after every `buff`. Use it to
-  remove units. A start card writes neither `buff` nor `dull`.
+- `dull(inventory)` runs after the `buff` of every card, each time the game works out the
+  player's units, and removes the units that the card forbids. It must never list the
+  units that `buff` adds, or the player never gets them. A start card writes neither
+  `buff` nor `dull`.
   `gwoCard.loadout(CARD, {bank, start, apply, dulls})` returns both, and the template
   gives them directly to the card.
 

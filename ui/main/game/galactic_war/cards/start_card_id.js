@@ -101,11 +101,18 @@ define([
       var aiMods = [];
       inventory.addAIMods(aiMods);
     },
-    // REMOVE UNITS FROM INVENTORY
-    // These are the units to take back if the player moves to a different
-    // loadout.  List the same units as "ADD UNITS TO INVENTORY" above.
-    // Delete the line below if your loadout unlocks no units.
-    dulls: [gwoUnit.dox, gwoGroup.botsBasicMobile],
+    // FORBID UNITS
+    // Most loadouts leave this list empty.  It is for the units that your
+    // loadout forbids for the whole war: the player never has them, even when
+    // the standard start or a later card gives them.  Never list a unit that
+    // "ADD UNITS TO INVENTORY" above gives, or the player never gets it.  This
+    // cannot undo a stat change or an AI change.
+    //
+    // An example of the list contents.  It stops the player from having the
+    // Inferno:
+    //   dulls: [gwoUnit.inferno],
+    // Leave the list empty if your loadout forbids no units.
+    dulls: [],
   });
 
   return {

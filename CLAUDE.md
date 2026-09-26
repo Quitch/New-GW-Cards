@@ -121,7 +121,7 @@ the first two, and both factories live in its `shared/cards.js`:
 `upgradeCard` **is** the card: it supplies `visible`, the extra card slot, `getContext`, a
 `withSlot` description and an `upgradeDeal` chance gated on `requires`, leaving `name`,
 `description`, `icon`, `audio`, `requires` and `buff` (plus optional `unless`, `chance`,
-`slot: false`). Its `dull` is empty, so it cannot remove units — a card that must is an
+`slot: false`). Its `dull` is empty, so it cannot forbid units — a card that must is an
 object literal. `loadout(CARD, {bank, start, apply, dulls})` returns the `{buff, dull}`
 pair a start card needs and is the only shape to write one in: the
 buffCount/lookupCard/maxCards/addStartCard sequence it replaces is easy to get subtly
@@ -190,8 +190,10 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js
 - **Follow a value that is a file name with `op: "tag"`** on the same `file` and
   `path`. See the section below — this is the failure that is hardest to spot.
 - **`clone` and `eval` are advanced — avoid them**, as the README says.
-- **`dull` removes units only.** It cannot undo a stat change or an AI change; only what
-  `buff` never added stays un-added.
+- **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
+  only the units the card forbids. Listing a unit the card itself grants means the player
+  never gets it, silently. A loadout's `dulls` forbid their units for the whole war.
+  `dull` cannot undo a stat change or an AI change.
 
 ### Writing a file name into a spec — `op: "tag"`
 
