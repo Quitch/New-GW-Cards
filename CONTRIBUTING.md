@@ -93,7 +93,9 @@ There are two separate trees:
     `model.gwoNewStartCards` (locked), `model.gwoStartingCards` (unlocked) and
     `model.gwoLoadoutBanks` (the location of the `bank.js` of this mod). It can also use
     `model.gwoStarCardsWhichBreakAllies`, for loadouts that an allied commander cannot
-    work with. GWO never creates that array, so the loader must create it if it is absent.
+    work with, and `model.gwoLoadoutsAiCannotUse`, for loadouts that a co-op AI player
+    cannot use. GWO never creates those arrays, so the loader must create each one if it
+    is absent.
   - `tech_cards.js` (`gw_play`, `gw_coop_per_player_loadout`) → `model.gwoCards` (the
     deck) and `model.gwoCardsToUnits` (the unit associations for the tooltip). It can also
     use `model.gwoCardsWithoutTooltip`, for tech cards that must show no affected-units

@@ -650,6 +650,23 @@ if (!model.gwoStarCardsWhichBreakAllies) {
 model.gwoStarCardsWhichBreakAllies.push("mym_start_myloadout");
 ```
 
+#### `model.gwoLoadoutsAiCannotUse` — loadouts that a co-op AI player cannot use (in `start_cards.js`)
+
+Optional. From the GWO release that adds co-op AI players, an AI player in a co-op war
+can start with one of your loadouts. List your loadout's ID here if an AI player cannot
+use its effect, for example an ability that works only when a player gives an order. GWO
+lists its own Warp Commander, because an AI player never orders a mass teleport. An AI
+player never starts with a loadout on this list.
+
+GWO does **not** create this list for you. Create it before you add to it, as shown.
+
+```js
+if (!model.gwoLoadoutsAiCannotUse) {
+  model.gwoLoadoutsAiCannotUse = [];
+}
+model.gwoLoadoutsAiCannotUse.push("mym_start_myloadout");
+```
+
 #### `model.gwoSpecs` — extra unit files to change (in `specs.js`)
 
 Optional. Galactic War gives each player a private copy of only the files that their own
@@ -1717,6 +1734,10 @@ change the units that it names, so it scores such a card that changes nothing it
 as worth nothing, and never takes it. List that kind of card in
 [`model.gwoCardsWithoutTooltip`](#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
 instead, as this guide already asks.
+
+**A loadout that an AI player cannot use** belongs in
+[`model.gwoLoadoutsAiCannotUse`](#modelgwoloadoutsaicannotuse--loadouts-that-a-co-op-ai-player-cannot-use-in-start_cardsjs),
+so that an AI player never starts with it.
 
 ### `keep`, `discard` and `releaseContext` — rare parts
 
