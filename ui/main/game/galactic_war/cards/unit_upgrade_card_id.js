@@ -31,8 +31,9 @@ define([
   // visible on the board, it gives the player room for one more card, and it
   // works out how often to offer itself.
   //
-  // It cannot take units away again.  If your card gives units and must take them
-  // back, use tech_card_id.js instead.
+  // It cannot forbid units, which means stop the player from having a unit even
+  // when another card gives it.  If your card must forbid units, use
+  // tech_card_id.js instead.
   return gwoCard.upgradeCard({
     // ADD A CARD NAME
     // Keep the "!LOC:" at the start.  It lets the text be translated.
