@@ -1695,10 +1695,10 @@ A race unit that has no job, or whose job no stock unit of its kind does, is sha
 other stock units of its kind: to those with no job of their own, or, when there are none,
 to those whose job the race has no unit for. So a card for the Ant, which has no job,
 changes the Legion Shank, which has none either, and the Legion Stoke, an amphibious tank,
-since no stock basic tank is amphibious. Bugs has no anti-air bot, and every stock basic bot has a job, so for a Bugs player
-a card for the Stinger changes the Ripper, the Stealth Ripper, and the Runner. Any other
-stock unit reaches no race unit: for a Legion player, a card for the Skitter changes no
-Legion unit. Titans, fabricators, factories, and buildings are matched by kind alone.
+since no stock basic tank is amphibious. Bugs has no anti-air bot, and every stock basic
+bot has a job, so for a Bugs player a card for the Stinger changes the Ripper, the Stealth
+Ripper, and the Runner. Any other stock unit reaches no race unit: for a Legion player, a
+card for the Skitter changes no Legion unit. Titans, fabricators, factories, and buildings are matched by kind alone.
 [GWO's documentation](https://github.com/Quitch/GW-AI-Overhaul/blob/master/docs/races.md#jobs)
 gives the full rule.
 
