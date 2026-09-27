@@ -1691,10 +1691,11 @@ Patriot, Legion's anti-air bot. A card for the Dox changes the Legion Peacekeepe
 Investigator. A group card, such as `gwoGroup.botsBasicMobile`, changes every basic Legion
 combat bot.
 
-A race unit whose job no stock unit of its kind does is shared out to other stock units of
-its kind: to those with no job of their own, or, when there are none, to those whose job
-the race has no unit for. So a card for the Ant, which has no job, changes the Legion
-Shank. Bugs has no anti-air bot, and every stock basic bot has a job, so for a Bugs player
+A race unit that has no job, or whose job no stock unit of its kind does, is shared out to
+other stock units of its kind: to those with no job of their own, or, when there are none,
+to those whose job the race has no unit for. So a card for the Ant, which has no job,
+changes the Legion Shank, which has none either, and the Legion Stoke, an amphibious tank,
+since no stock basic tank is amphibious. Bugs has no anti-air bot, and every stock basic bot has a job, so for a Bugs player
 a card for the Stinger changes the Ripper, the Stealth Ripper, and the Runner. Any other
 stock unit reaches no race unit: for a Legion player, a card for the Skitter changes no
 Legion unit. Titans, fabricators, factories, and buildings are matched by kind alone.
