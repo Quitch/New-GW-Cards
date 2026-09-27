@@ -562,8 +562,8 @@ model.gwoCards.push("mym_damage_bots", "mym_faster_air");
 
 This list connects a tech card to the units that it changes, so that the card's tooltip
 can name them. It also decides which races the game offers the card to. A player of
-another race, such as Legion, is offered it only when their race has a unit that does the
-same job as a unit in the entry, or fields a race or add-on unit that the entry names (see
+another race, such as Legion, is offered it only when a unit in the entry reaches one of
+their race's units, or their race fields a race or add-on unit that the entry names (see
 [Cards for another race or an add-on](#cards-for-another-race-or-an-add-on)). For such a
 player, a base-game weapon or ammo in the entry doesn't count, which is one more reason to
 name units. An MLA player is offered any card whose entry names something from the base
@@ -582,7 +582,7 @@ model.gwoCardsToUnits.push({
 To choose the races yourself, add `races` to the entry. GWO then offers the card only to
 players of the races in the list, whatever the card's ID. The race IDs are `mla`,
 `legion`, `bugs`, and `exiles`, and the ID of a race from another mod. A race in the
-list still needs a unit that does the same job as a unit in the entry.
+list still needs a unit that a unit in the entry reaches.
 
 ```js
 model.gwoCardsToUnits.push({
@@ -1680,19 +1680,24 @@ server mod for these.
 
 **You don't need a separate card for each race to change ordinary units.** A card that
 changes `gwoUnit.dox` or `gwoGroup.botsBasicMobile` also changes the Legion, Bugs, and
-Exiles units that do the same job, and the add-on units that do it. GWO finds them for
-you. Write a race card only when you want to change one particular unit of a race or an
+Exiles units that those stock units reach, and the add-on units they reach. GWO finds them
+for you. Write a race card only when you want to change one particular unit of a race or an
 add-on.
 
-GWO sorts combat units by what they do, from the unit's own types: anti-air, artillery,
-scout, and so on. For example, a card for the Stinger, an anti-air bot, changes the
-Legion Patriot, Legion's anti-air bot. A card for the Dox changes the Legion Peacekeeper
-and Investigator. A group card, such as `gwoGroup.botsBasicMobile`, changes every basic
-Legion combat bot. A race unit whose job no stock unit of its kind does is reached by
-other stock units of its kind: a card for the Ant changes the Legion Shank. A stock unit
-can also reach no race unit at all: for a Legion player, a card for the Skitter changes no
-Legion unit, because Legion has no basic scout tank. Titans, fabricators, factories, and
-buildings are sorted by kind alone.
+GWO matches combat units by kind and by what they do, from the unit's own types:
+anti-air, artillery, scout, and so on. A stock unit reaches the race units of its kind that
+do its job. For example, a card for the Stinger, an anti-air bot, changes the Legion
+Patriot, Legion's anti-air bot. A card for the Dox changes the Legion Peacekeeper and
+Investigator. A group card, such as `gwoGroup.botsBasicMobile`, changes every basic Legion
+combat bot.
+
+A race unit whose job no stock unit of its kind does is shared out to other stock units of
+its kind: to those with no job of their own, or, when there are none, to those whose job
+the race has no unit for. So a card for the Ant, which has no job, changes the Legion
+Shank. Bugs has no anti-air bot, and every stock basic bot has a job, so for a Bugs player
+a card for the Stinger changes the Ripper, the Stealth Ripper, and the Runner. Any other
+stock unit reaches no race unit: for a Legion player, a card for the Skitter changes no
+Legion unit. Titans, fabricators, factories, and buildings are matched by kind alone.
 [GWO's documentation](https://github.com/Quitch/GW-AI-Overhaul/blob/master/docs/races.md#jobs)
 gives the full rule.
 
@@ -1730,8 +1735,8 @@ inventory.addMods(
 ```
 
 The health change stays on the Dox. The cost change, which is not marked, still reaches
-the Legion, Bugs, and Exiles bots that do the Dox's job, and the add-on bots that do it. A player whose
-race has no Dox gets nothing from the marked change. For an MLA player with no add-ons,
+the Legion, Bugs, and Exiles bots that the Dox reaches, and the add-on bots it reaches. A
+player whose race has no Dox gets nothing from the marked change. For an MLA player with no add-ons,
 the mark changes nothing.
 
 #### 1. Name the unit
@@ -1762,8 +1767,8 @@ has no race key. Some race files still show a line for it, with a base-game path
 key is not in `gwoUnit`: `gwoUnit.legion.havocBeamWeapon` names nothing, and the card
 changes nothing. Use the file's own GWO unit ID if it has one, such as `gwoUnit.gilEBeam`,
 or else its path. A change to it is a change to a base-game file. It also changes the
-base-game unit that uses the file, and, in a war as another race, that race's units that
-do the same job.
+base-game unit that uses the file, and, in a war as another race, the race units that
+the base-game unit reaches.
 
 > **Warning:** GWO makes these keys from the race mod's own files. A key can change when
 > the race mod is updated, so check your card after each update. A misspelled table name,
