@@ -11,7 +11,8 @@
 //    game silently ignores one of the two files, and which one depends on
 //    which mod loads last.  GWO offers a card with "_upgrade_" in its ID to
 //    MLA players only, unless its model.gwoCardsToUnits entry in
-//    tech_cards.js names Legion, Bugs, Exiles, or add-on units.  Leave
+//    tech_cards.js names Legion, Bugs, Exiles, or add-on units, or lists the
+//    races to offer it to, for example races: ["mla", "legion"].  Leave
 //    "_upgrade_" out only when players of other races should get the card too,
 //    and the card changes only values such as health or damage.
 // 2. Change the parts marked in CAPITALS below.

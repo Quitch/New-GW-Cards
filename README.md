@@ -579,6 +579,19 @@ model.gwoCardsToUnits.push({
 });
 ```
 
+To choose the races yourself, add `races` to the entry. GWO then offers the card only to
+players of the races in the list, whatever the card's ID. The race IDs are `mla`,
+`legion`, `bugs`, and `exiles`, and the ID of a race from another mod. A race in the
+list still needs a unit of the same kind as a unit in the entry.
+
+```js
+model.gwoCardsToUnits.push({
+  id: "mym_dox_health",
+  units: [gwoUnit.dox],
+  races: ["mla"],
+});
+```
+
 #### `model.gwoCardsWithoutTooltip` — tech cards with no unit tooltip (in `tech_cards.js`)
 
 List a tech card here when it does **not** change units, for example a card that only
@@ -1503,7 +1516,10 @@ The example `unit_upgrade_card_id.js` is already written this way.
 **Don't put `_upgrade_` in the card's ID** if players of other races must get it. GWO
 offers a card with `_upgrade_` in its ID only to MLA players, unless the card's
 `model.gwoCardsToUnits` entry names race units. See
-[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on).
+[Cards for another race or an add-on](#cards-for-another-race-or-an-add-on). To choose
+the races yourself, give the entry a `races` list (see
+[`model.gwoCardsToUnits`](#modelgwocardstounits--tech-card-tooltips-in-tech_cardsjs)).
+GWO then ignores `_upgrade_` in the ID.
 
 ### Loadouts and `gwoCard.loadout`
 
@@ -1679,12 +1695,32 @@ what a unit is stays on the stock unit: its `unit_types`, `buildable_types`, `to
 `base_spec`, `command_caps`, `model`, `display_name`, `description`, `si_name`,
 `transportable`, `transporter`, or `attachable`. Once any card makes such a change to a
 unit, no other change to that unit reaches the race units either. Keep `_upgrade_` in the
-ID of a card like that (see the warning below).
+ID of a card like that, or give its entry `races: ["mla"]` (see the warning below).
 
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
 > the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is tuned to one MLA unit, so GWO
 > does not pass it on to the other races. If a card that changes stock units must reach
-> every race, leave `_upgrade_` out of its ID.
+> every race, leave `_upgrade_` out of its ID. A `races` list in the entry replaces this
+> rule: GWO offers the card to the races in the list.
+
+#### Keep a change on the stock unit — `stockOnly`
+
+Sometimes one change must stay on the stock unit. For example, a card gives the Dox +50%
+health, but the Legion bots must not get it. Add `stockOnly: true` to that change, or
+give the changes to `gwoCard.stockOnly`:
+
+```js
+inventory.addMods(
+  gwoCard
+    .stockOnly(gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 }))
+    .concat(gwoCard.mods(gwoUnit.dox, "multiply", { build_metal_cost: 0.8 }))
+);
+```
+
+The health change stays on the Dox. The cost change, which is not marked, still reaches
+the Legion, Bugs, and Exiles bots of the same kind, and the add-on bots. A player whose
+race has no Dox gets nothing from the marked change. For an MLA player with no add-ons,
+the mark changes nothing.
 
 #### 1. Name the unit
 
@@ -1759,7 +1795,8 @@ always, and other races when they have that kind of unit.
 The same entry also works for a card whose ID contains `_upgrade_`, such as
 `mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
 units (see the warning above). When it names race units, it is written for that race, so
-GWO offers it to that race.
+GWO offers it to that race. An entry with a `races` list is offered to the races in the
+list and to no others, whatever units it names.
 
 #### 3. Check for the unit in `deal`
 
@@ -1855,10 +1892,12 @@ Rules for groups:
 - **A group can mix races.** A card that names Legion and Bugs tanks is offered to Legion
   players and to Bugs players. `inventory.addMods` and `inventory.addUnits` reach only the
   units of each player's own race.
-- **Don't change a stock unit and its race version in the same card.** A change to
-  `gwoUnit.ant` already reaches the Legion unit of the same kind. A second change to that
-  Legion unit applies the change twice. Name the stock unit **or** the race unit, not
-  both.
+- **Don't change a stock unit and its race version the same way in one card.** A change
+  to `gwoUnit.ant` already reaches the Legion unit of the same kind. A second change to
+  that Legion unit applies the change twice. Name the stock unit **or** the race unit, not
+  both. To give each of them a change of its own, mark the stock unit's change
+  `stockOnly` (see
+  [Keep a change on the stock unit](#keep-a-change-on-the-stock-unit--stockonly)).
 
 #### 7. Finding the value that you want to change
 
