@@ -544,6 +544,15 @@ Many parts of a card name a unit. There are two ways to do it.
 > path mistakes such as the `/pa_ex1/` trap above. Use a raw path only when there is no
 > GWO ID for the unit.
 
+**The fabricator groups.** From the GWO release that adds `gwoGroup.fabbersCombat`,
+`gwoGroup.fabbersBasic` and `gwoGroup.fabbersAdvanced` hold only the fabricators whose
+job is building. The combat fabricators have groups of their own: the Stitch and the
+Barnacle are in `gwoGroup.fabbersCombatBasic`, the Mend and the Angel are in
+`gwoGroup.fabbersCombatAdvanced`, and `gwoGroup.fabbersCombat` holds all four.
+`gwoGroup.fabbers` still holds every fabricator. For a card that changes the basic
+fabricators and the combat ones too, name both groups:
+`[gwoGroup.fabbersBasic, gwoGroup.fabbersCombatBasic]`.
+
 ### The lists that tell GWO about your cards
 
 GWO keeps several lists, and you add your cards to them. The name of each list starts
@@ -727,7 +736,9 @@ model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
 Optional. Some cards ask, through
 [`gwoCard.hasT2Access`](#cards-that-react-to-the-players-other-cards), whether the player
 has reached advanced (T2) tech. If one of your cards gives that access, add its ID here so
-that those cards can see it.
+that those cards can see it. From the GWO release that adds `gwoCard.hasAdvancedFabber`,
+GWO's Advanced Defense Technology, Titan Tech, and Planetary Radar Tech are offered to a
+player who holds an advanced fabricator or any card on this list.
 
 ```js
 if (!model.gwoCardsGrantingAdvancedTech) {
@@ -1039,8 +1050,12 @@ deal: function (system, context, inventory) {
 
 `gwoCard.hasT2Access(inventory)` is true once the player holds any card listed in
 [`model.gwoCardsGrantingAdvancedTech`](#modelgwocardsgrantingadvancedtech--cards-that-unlock-advanced-tech-in-tech_cardsjs),
-which means that they can build advanced (T2) units. Use it for a card that is useless
-before then:
+which means that they can build advanced (T2) units. From the GWO release that adds it,
+`gwoCard.hasAdvancedFabber(inventory)` is true when the player holds an advanced
+fabricator from `gwoGroup.fabbersAdvanced`. A Cluster player's Colonel does not count,
+because Cluster makes it a Sub Commander that builds only what a commander builds. A
+player can reach advanced structures either way, so a card that is useless before then
+asks both:
 
 ```js
 deal: function (system, context, inventory) {
@@ -1048,7 +1063,9 @@ deal: function (system, context, inventory) {
     gwoCard.missingUnit(
       inventory.units(),
       gwoGroup.structuresDefencesAdvanced
-    ) && gwoCard.hasT2Access(inventory),
+    ) &&
+      (gwoCard.hasAdvancedFabber(inventory) ||
+        gwoCard.hasT2Access(inventory)),
     100
   );
 },
