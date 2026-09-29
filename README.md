@@ -1050,12 +1050,12 @@ deal: function (system, context, inventory) {
 
 `gwoCard.hasT2Access(inventory)` is true once the player holds any card listed in
 [`model.gwoCardsGrantingAdvancedTech`](#modelgwocardsgrantingadvancedtech--cards-that-unlock-advanced-tech-in-tech_cardsjs),
-which means that they can build advanced (T2) units. From the GWO release that adds it,
-`gwoCard.hasAdvancedFabber(inventory)` is true when the player holds an advanced
-fabricator from `gwoGroup.fabbersAdvanced`. A Cluster player's Colonel does not count,
-because Cluster makes it a Sub Commander that builds only what a commander builds. A
-player can reach advanced structures either way, so a card that is useless before then
-asks both:
+which means that they can build advanced (T2) units.
+`gwoCard.hasAdvancedFabber(inventory)`, from the GWO release that adds it, is true when
+the player holds an advanced fabricator from `gwoGroup.fabbersAdvanced`. A Cluster
+player's Colonel does not count, because Cluster makes it a Sub Commander that builds only
+what a commander builds. A player can reach advanced structures either way, so a card that
+is useless before then asks both:
 
 ```js
 deal: function (system, context, inventory) {
