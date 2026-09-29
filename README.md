@@ -737,8 +737,8 @@ Optional. Some cards ask, through
 [`gwoCard.hasT2Access`](#cards-that-react-to-the-players-other-cards), whether the player
 has reached advanced (T2) tech. If one of your cards gives that access, add its ID here so
 that those cards can see it. From the GWO release that adds `gwoCard.hasAdvancedFabber`,
-GWO's Advanced Defense Technology, Titan Tech, and Planetary Radar Tech are offered to a
-player who holds an advanced fabricator or any card on this list.
+GWO's Advanced Defense Technology, Titan Tech, and Planetary Radar Tech take an advanced
+fabricator or any card on this list as that access.
 
 ```js
 if (!model.gwoCardsGrantingAdvancedTech) {
