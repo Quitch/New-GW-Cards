@@ -194,7 +194,10 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js
   means "delete every occurrence of it" (`:238-246`).
 - **Path walking** (`:278-399`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
-  creates missing intermediate levels for you. If an intermediate segment is a
+  creates missing intermediate levels for you, for every op but `multiply` and `tag`.
+  Those two stop at a missing level and write nothing, so a radius `multiply` over
+  `gwoCard.observerPaths` never gives a unit an empty observer item it lacked. If an
+  intermediate segment is a
   **string**, GWO treats it as another spec file and follows it — which means your change
   lands in that shared file and affects **every unit that references it**. GWO never
   follows the final segment (that is what `op: "tag"` exists for).
