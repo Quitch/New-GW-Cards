@@ -244,9 +244,9 @@ console of the Coherent UI Debugger.
 `README.md` lists the two errors and warnings that PA prints in normal operation: an
 `Uncaught TypeError: undefined is not a function`, and a deprecation warning about
 synchronous XHR. Each can appear once for each scene. `README.md` also lists GWO's
-`Warning: File not found in mod Object`, which is expected whenever a card changes a unit
-that the player does not own. The list exists so that a reader does not take these
-messages for real failures.
+`Warning: File not found in mod`, followed by the change that GWO skipped, which is
+expected whenever a card changes a unit that the player does not own. The list exists so
+that a reader does not take these messages for real failures.
 
 `README.md` documents separate manual procedures for the two card types. For start cards,
 check the loadout screen and the localStorage key that `LS_KEY` sets in `bank.js`. For

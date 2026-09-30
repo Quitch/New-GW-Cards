@@ -2338,13 +2338,15 @@ Learn these two:
   it is fatal: a new war then hangs forever. See the warning under
   [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
-- WARN: _Warning: File not found in mod Object_
+- WARN: _Warning: File not found in mod {"file":"/pa/units/…",…}_
 
   A card tried to change a file that the player has no copy of, so the game skipped that
   change. **This message is normal.** Galactic War copies only the files that the
   player's units need, and it deals a card that changes several units to players who own
   only some of them. It drops the changes for the rest, which is exactly what should
-  happen. Click the `Object` in the debugger to see which `file` it was.
+  happen. The `file` in the message tells you which file it was. GWO v7.4.0 and older
+  print `Object` in place of the text in braces: click it in the debugger to see the
+  `file`.
 
   It is a problem only when the file is one that the card _should_ have been able to
   change: a unit that the card `requires`, a file reached from one of those, or a file
