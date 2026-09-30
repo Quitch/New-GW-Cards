@@ -197,10 +197,10 @@ function in its `ops` table.
   means "delete every occurrence of it".
 - **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
-  creates missing intermediate levels for you, for every op but `multiply` and `tag`.
-  Those two stop at a missing level and write nothing, so a radius `multiply` over
-  `gwoCard.observerPaths` never gives a unit an empty observer item it lacked. If an
-  intermediate segment is a
+  creates missing intermediate levels for you. On GWO v7.4.1 and earlier it does so for
+  every op, so a radius `multiply` over `gwoCard.observerPaths` can give a unit an empty
+  observer item it lacked. **Unreleased:** on GWO `develop` after v7.4.1, `multiply` and
+  `tag` stop at a missing level and write nothing. If an intermediate segment is a
   **string**, GWO treats it as another spec file and follows it — which means your change
   lands in that shared file and affects **every unit that references it**. GWO never
   follows the final segment (that is what `op: "tag"` exists for).
@@ -211,10 +211,11 @@ function in its `ops` table.
   `gwoCard.paths.{navigation,damage,energyWeapon}` are for.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
-  `Warning: File not found in mod Object` (`<GWO>` `gw_play/specs.js`) and skips that
-  entry. **Expect to see this warning in normal play** — GWO deals a card touching several
-  units to players owning only some of them, and dropping the rest is the intended
-  behaviour. It only indicates a bug when the file _should_ have been reachable:
+  `Warning: File not found in mod` followed by the descriptor as JSON (`<GWO>`
+  `gw_play/specs.js`; v7.4.0 and earlier print `Object` in place of the JSON) and skips
+  that entry. **Expect to see this warning in normal play** — GWO deals a card touching
+  several units to players owning only some of them, and dropping the rest is the
+  intended behaviour. It only indicates a bug when the file _should_ have been reachable:
   a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
 - **Follow a value that is a file name with `op: "tag"`** on the same `file` and
