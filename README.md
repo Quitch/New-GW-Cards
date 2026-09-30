@@ -1258,9 +1258,9 @@ There are three more: `wipe`, `clone` and `eval`. See
 [More unit-stat ops](#more-unit-stat-ops--wipe-clone-and-eval).
 
 > **The order in which you write changes does not matter.** Across every card in the
-> player's hand, the game makes every `replace` first, then every `multiplyOrCreate`, then
-> every `multiply`, then every `add`, and all the other ops after those. Never write two
-> changes that only work in a particular order.
+> player's hand, the game makes every `clone` first, then every `replace`, then every
+> `multiplyOrCreate`, then every `multiply`, then every `add`, and all the other ops after
+> those. Never write two changes that only work in a particular order.
 
 ##### Finding the value that you want to change
 
@@ -1457,8 +1457,10 @@ after your card, because a file with the same name as one in GWO or another mod 
 replace it. Remember the `.json` at the end of `value`.
 
 > **Check that the file really is there before you share the mod.** If a `load` names a
-> file that is missing, the battle never starts. The loading screen hangs, and no error
-> message points at the cause.
+> file that is missing, the AI never gets the builds in it. With GWO v7.4.1 or older, the
+> battle never starts: the loading screen hangs, and no error message points at the cause.
+> Newer versions of GWO (not yet released) start the battle without that file's builds, and
+> the log says `AI file of a load mod not read, skipped:` followed by the file's path.
 
 ##### Changing one build entry
 
