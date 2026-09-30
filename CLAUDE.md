@@ -179,20 +179,23 @@ authority. What that means for a card, all of it silent when wrong:
 
 ## `inventory.addMods` — changing unit stats
 
-The README documents the shape. This is the behaviour that is not obvious from it. Line
-references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js`.
+The README documents the shape. This is the behaviour that is not obvious from it. The
+code is in `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js`: each op is a
+function in its `ops` table.
 
-- **`multiply` does not create.** If the stat is missing or is not a number it warns and
-  leaves it alone (`:139-149`). `multiplyOrCreate` sets it to `value` when it is absent
-  (`:259-268`). `add` also creates when absent, and concatenates when the value is a
-  string (`:150-165`).
+- **`multiply` does not create.** If the stat is missing it leaves it alone and logs
+  nothing; if the stat is not a number it warns and leaves it alone. `multiplyOrCreate`
+  sets it to `value` when it is absent. `add` also creates when absent, and concatenates
+  when the value is a string.
 - **Ops do not run in the order you write them.** Across every card in the hand, GWO runs
-  all `replace` first, then `multiplyOrCreate`, then `multiply`, then `add`; everything
-  else follows afterwards (`:7, 20-33`). So another card's `replace` still lands before
-  your `multiply`. Never write two ops that depend on running in sequence.
+  all `clone` first, then `replace`, then `multiplyOrCreate`, then `multiply`, then `add`;
+  everything else follows afterwards (`orderOfOperations`). So another card's `replace`
+  still lands before your `multiply`, and a `clone` copies its source before any card's
+  `replace`, `multiply`, or `add` reaches it. Never write two ops that depend on running
+  in sequence.
 - **`wipe` is a string substitution, not a delete.** `value` is `[from, to]`; a bare value
-  means "delete every occurrence of it" (`:238-246`).
-- **Path walking** (`:278-399`): a dot separates the segments, so a segment cannot itself
+  means "delete every occurrence of it".
+- **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
   creates missing intermediate levels for you, for every op but `multiply` and `tag`.
   Those two stop at a missing level and write nothing, so a radius `multiply` over
@@ -208,7 +211,7 @@ references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js
   `gwoCard.paths.{navigation,damage,energyWeapon}` are for.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
-  `Warning: File not found in mod Object` (`<GWO>` `gw_play/specs.js:295`) and skips that
+  `Warning: File not found in mod Object` (`<GWO>` `gw_play/specs.js`) and skips that
   entry. **Expect to see this warning in normal play** — GWO deals a card touching several
   units to players owning only some of them, and dropping the rest is the intended
   behaviour. It only indicates a bug when the file _should_ have been reachable:
@@ -255,7 +258,8 @@ Worked examples in `<GWO>`: `cards/gwaio_upgrade_firefly.js` (replace then tag),
 
 ## `inventory.addAIMods` — changing what the AI builds
 
-Line references are into `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/referee_ai.js`.
+The code is in `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/referee_ai.js`: every op
+but `load` is a function in its `aiModOps` table, and `applyAiMods` applies them.
 
 **Fields each op needs.** All need `type`. Missing any of these makes the descriptor do
 nothing:
@@ -271,13 +275,13 @@ nothing:
 
 `squad` works only with `type: "template"`; the other seven (`append`, `prepend`,
 `replace`, `unset`, `remove`, `new`, `silence`) work only with `fabber`, `factory`, and
-`platoon`. `unset` deletes `idToMod` from the matched entry (`:146-161`) and honours
-`refId`/`refValue`/`matchAll` like `replace`.
+`platoon`. `unset` deletes `idToMod` from the matched entry and honours `refId`/
+`refValue`/`matchAll` like `replace`.
 
 Getting that pairing wrong quietly does nothing, in both directions: a build op finds no
-`build_list` in a template file, and `squad` finds no `platoon_templates` in a build list
-(`:208-213`). `applyAiMods` also wraps every op in `try`/`catch` (`:225-237`), so an op
-that throws logs an error and is skipped; it does not take the AI setup down.
+`build_list` in a template file, and `squad` finds no `platoon_templates` in a build list.
+`applyAiMods` also wraps every op in `try`/`catch`, so an op that throws logs an error and
+is skipped; it does not take the AI setup down.
 
 **What the files look like.** `fabber`/`factory`/`platoon` files are
 `{ "build_list": [ … ] }`, where each entry has `to_build`, `priority`, `builders`,
@@ -298,14 +302,14 @@ cannot create one); `remove` whose `value` is not an exact copy of a whole test 
 `squad` naming a template that does not exist; `silence` with a `value` that is not
 `{builders: [...], except: [...]}`.
 
-**`op: "silence"`** (`:194-206`). `value` is `{ builders: [...], except: [...] }`, both
-string arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
+**`op: "silence"`**. `value` is `{ builders: [...], except: [...] }`, both string
+arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
 `builders` are **all** in `value.builders`, unless its `to_build` is in `value.except`. An
 entry with any builder outside the list, or with no `builders`, is untouched. It ignores
 `toBuild`, `idToMod`, `refId`, `refValue`, and `matchAll`, and it reads `treeOnly`. Use it
 when a card changes what a builder can build and the AI must stop ordering everything else
-from that builder. **Unreleased:** it landed on GWO `develop` after v7.3.1; on v7.3.1 and
-earlier the descriptor logs "Invalid AI mod operation" and does nothing.
+from that builder. It needs GWO v7.3.2 or later; on v7.3.1 and earlier the descriptor logs
+"Invalid AI mod operation" and does nothing.
 
 **`op: "load"`.** It reads `/pa/ai_tech/<folder>/<value>` from your own mod, where the
 folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds/`,
@@ -313,13 +317,16 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 `pa/ai_tech/factory_builds/my_card.json` shipped alongside your `ui` folder.
 
 - `value` must include the `.json`.
-- **If that file is missing the battle never starts.** Nothing errors; loading just hangs.
-  Confirm the file exists on disk before shipping a `load`.
+- **If that file is missing, its builds are lost.** On GWO v7.4.1 and earlier the battle
+  never starts: nothing errors, and loading just hangs. **Unreleased:** on GWO `develop`
+  after v7.4.1, the referee logs `AI file of a load mod not read, skipped:` with the path,
+  and the battle starts without that file's builds. Confirm the file exists on disk
+  before shipping a `load`.
 - Name it after your card ID. A name another mod also uses replaces that mod's file.
 - GWO walks a loaded file like any other build file, so every descriptor of that `type`
   lands on it — your card's own, and those of every other card in the hand.
 - `treeOnly: true` on a build-list descriptor keeps it off every file under `/pa/ai_tech/`
-  (`aiModsInScopeOfFile`, `:366-392`). A card that zeroes stock entries — by `replace` on
+  (`aiModsInScopeOfFile`). A card that zeroes stock entries — by `replace` on
   `priority`, or by `silence` — and re-supplies them from its `load` file **needs** it, or
   it silently zeroes its own replacements and the AI builds nothing. `load` and `squad` do
   not read it.
