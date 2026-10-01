@@ -215,8 +215,8 @@ function in its `ops` table.
   for scaling every slot alike. A selector never creates an item: no match, a missing
   level, or a level that is not an array writes nothing and logs nothing, for every op.
   A selector without both keys, in that order, logs `Invalid selector in mod` and the
-  descriptor is skipped. GWO resolves it when the descriptor applies, so it sees another
-  card's whole-array `replace`.
+  descriptor is skipped. GWO resolves it when the descriptor applies, so it sees what
+  earlier op buckets did: a selector `multiply` sees another card's whole-array `replace`.
 - **`file` is one path string.** Never an array. To change several units, build one
   descriptor per file — `gwoCard.mods(file, op, {path: value, …})` writes the entries for
   one file and `gwoCard.flatMapMods(files, op, …)` does the same over a list or a group.
