@@ -204,6 +204,19 @@ function in its `ops` table.
   **string**, GWO treats it as another spec file and follows it — which means your change
   lands in that shared file and affects **every unit that references it**. GWO never
   follows the final segment (that is what `op: "tag"` exists for).
+- **Observer items by layer and channel.** **Unreleased:** on GWO `develop` after v7.4.1,
+  a segment `[layer=<layer>,channel=<channel>]` selects every array item whose `layer` and
+  `channel` equal those values, and the change applies to each.
+  `gwoCard.observerPath(layer, channel, field)` builds
+  `recon.observer.items.[layer=…,channel=…].<field>`. Units order their observer items
+  differently, and GWO re-aims a stock unit's mod at race and add-on stand-ins with the
+  path unchanged, so an index into `recon.observer.items` hits the wrong slot on those
+  units. Use the selector for one item; `gwoCard.observerPaths(count, field)` remains
+  for scaling every slot alike. A selector never creates an item: no match, a missing
+  level, or a level that is not an array writes nothing and logs nothing, for every op.
+  A selector without both keys, in that order, logs `Invalid selector in mod` and the
+  descriptor is skipped. GWO resolves it when the descriptor applies, so it sees what
+  earlier op buckets did: a selector `multiply` sees another card's whole-array `replace`.
 - **`file` is one path string.** Never an array. To change several units, build one
   descriptor per file — `gwoCard.mods(file, op, {path: value, …})` writes the entries for
   one file and `gwoCard.flatMapMods(files, op, …)` does the same over a list or a group.

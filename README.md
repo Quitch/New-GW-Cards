@@ -1230,6 +1230,9 @@ labels:
   name, such as `max_health`. A value deeper in the file uses dots, such as
   `events.fired.effect_spec`. If a step along the way is the name of another file rather
   than a value, the game follows it into that file and carries on from there.
+  To pick one item from a list of vision, radar and jammer ranges by what it is rather
+  than where it sits, write `[layer=…,channel=…]` as a step (see
+  [Vision, radar and jammer ranges](#vision-radar-and-jammer-ranges--gwocardobserverpath)).
 - `op`: the kind of change. See below.
 - `value`: the amount or value to use.
 
@@ -1385,6 +1388,36 @@ inventory.addMods(
 
 A list of paths that you write yourself works in the same way, and so does
 `gwoCard.flatMapMods`.
+
+##### Vision, radar and jammer ranges — `gwoCard.observerPath`
+
+**Unreleased:** on GWO `develop` after v7.4.1.
+
+A unit's sight, radar and jammer ranges are a list of items in its file, under
+`recon.observer.items`. Each item has a `layer` (such as `surface_and_air` or
+`underwater`), a `channel` (such as `sight`, `radar` or `radar_jammer`) and a `radius`.
+The order of the items is different from unit to unit. The stock Radar Jamming Station
+keeps its jammer third in the list, but Legion's jamming station keeps underwater sight
+there. If you name an item by its number in the list, a race or add-on unit that stands
+in for the stock unit gets the change on the wrong item.
+
+To change one of these ranges, name the item by its layer and channel with
+`gwoCard.observerPath(layer, channel, "radius")`. Do not use its number in the list.
+Then race and add-on units get the same change:
+
+```js
+inventory.addMods(
+  gwoCard.mods(
+    gwoUnit.radarJammingStation,
+    "multiply",
+    [gwoCard.observerPath("surface_and_air", "radar_jammer", "radius")],
+    2
+  )
+);
+```
+
+A unit that has no item of that layer and channel gets no change. GWO never adds an item
+for you.
 
 #### Change what your Sub Commanders build — `inventory.addAIMods(...)`
 
