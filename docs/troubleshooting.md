@@ -42,8 +42,8 @@ messages are not faults.
 - `deal` returns a chance of `0`. The example card starts at `0`. See
   [`deal`](deal.md).
 - The card needs a unit that the player does not have yet: `requires` in
-  `gwoCard.upgradeCard`, or a check in `deal`. To test it, play until the player has
-  that unit.
+  `gwoCard.upgradeCard`, or a check in `deal`. Play until the player has that unit, or
+  test the check directly.
 - The ID contains `_upgrade_`, and you play as a race other than MLA. See
   [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card).
 - The card's `model.gwoCardsToUnits` entry names units that the player's race does not
