@@ -1,20 +1,15 @@
 // READ THIS BEFORE YOU ENABLE THE MOD
 //
 // Every ID in the two lists below must have a card file of exactly that name in
-// ui/main/game/galactic_war/cards/.  If one of them does not, GALACTIC WAR DOES
-// NOT START.  GWO loads every loadout that you list here while it builds a new
-// war, and it waits for ever for a file that is missing.  The war finishes its
-// generation and the screen then stays as it is, with no error and nothing to
-// click.  A restart of the game is the only way out.
+// ui/main/game/galactic_war/cards/.  If one of them does not, the debugger
+// shows "Start card failed to load:" and the ID, and that loadout cannot be
+// used.
 //
-// The example IDs below have no files, so this happens the first time that you
-// enable the mod.  DELETE THE IDS THAT YOU HAVE NOT REPLACED, even if you write
-// only tech cards.  You can delete all of them - a mod with no loadouts works
-// correctly.  Keep the push( and ); around them, for example:
+// The example IDs below have no files.  DELETE THE IDS THAT YOU HAVE NOT
+// REPLACED, even if you write only tech cards.  You can delete all of them - a
+// mod with no loadouts works correctly.  Keep the push( and ); around them, for
+// example:
 //   model.gwoNewStartCards.push();
-//
-// Tech cards (tech_cards.js) are safer.  The game logs a missing file there,
-// skips that card, and the war continues.
 //
 // Change only the lists and the values marked in CAPITALS.  Leave the other
 // lines as they are: they wrap the file so that a mistake in it cannot break

@@ -76,9 +76,11 @@ define([
         gwoCard.mods(gwoUnit.doxWeapon, "add", { max_range: 20 })
       );
     },
-    // You can add three more parts here.  The "gwoCard.upgradeCard" section of
-    // the README explains all three: `unless` (do not offer this card to a player
-    // who already holds some other card), `chance` (how often the game offers the
-    // card), and `slot: false` (do not give the player an extra card slot).
+    // You can add more parts here.  The "gwoCard.upgradeCard" section of the
+    // README explains each one.  The three most useful are `unless` (do not
+    // offer this card to a player who already holds some other card), `chance`
+    // (how often the game offers the card), and `slot: false` (do not give the
+    // player an extra card slot).  With `slot: false`, also give your own
+    // `describe`, or the description still says that the card adds a slot.
   });
 });

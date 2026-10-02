@@ -59,8 +59,9 @@ copy the folder, rename it, and fill in the blanks.
 ## Requirements
 
 - **Planetary Annihilation: TITANS.**
-- **Galactic War Overhaul.** Install it in the game: open **Community Mods** from the main
-  menu, find _Galactic War Overhaul_ in the AVAILABLE list, and install it.
+- **Galactic War Overhaul v7.5.0 or later.** Install it in the game: open **Community
+  Mods** from the main menu, find _Galactic War Overhaul_ in the AVAILABLE list, and
+  install it. Community Mods keeps it up to date.
 - **A text editor.** Any plain-text editor works, but
   [Visual Studio Code](https://code.visualstudio.com/) (free) is much better. It colours
   the text, and with the checker described below it underlines your mistakes as you type.
@@ -136,8 +137,8 @@ The guide refers to two folders on your computer.
    `ui/mods/<your identifier>/start_cards.js` and delete the four example loadout lines,
    the ones that contain `YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`,
    `YOUR_UNLOCKED_LOADOUT_ID_1`, and `YOUR_UNLOCKED_LOADOUT_ID_N`. Those IDs have no card
-   files. **If they stay, Galactic War never starts**: the screen freezes after the war is
-   generated, with no error message. You add your own loadout IDs back later, when you
+   files. If they stay, the debugger shows `Start card failed to load` for each of them,
+   and those loadouts cannot be used. You add your own loadout IDs back later, when you
    have written the cards. See the warning under
    [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
@@ -439,7 +440,7 @@ each item as you complete it.
 - [ ] **Deleted from `start_cards.js` every example loadout ID that you don't use**
       (`YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`,
       `YOUR_UNLOCKED_LOADOUT_ID_1`, and `YOUR_UNLOCKED_LOADOUT_ID_N`). Do this even when you
-      make only tech cards. If they stay, Galactic War does not start at all.
+      make only tech cards. Each one that stays shows an error in the debugger.
 - [ ] Renamed the example card file that you use (`tech_card_id.js`,
       `unit_upgrade_card_id.js` or `start_card_id.js`) to a unique name that does not
       start with `gwc_` or `gwaio_`, and noted that name, without `.js`, as the card's ID.
@@ -544,9 +545,8 @@ Many parts of a card name a unit. There are two ways to do it.
 > path mistakes such as the `/pa_ex1/` trap above. Use a raw path only when there is no
 > GWO ID for the unit.
 
-**The fabricator groups.** From the GWO release that adds `gwoGroup.fabbersCombat`,
-`gwoGroup.fabbersBasic` and `gwoGroup.fabbersAdvanced` hold only the fabricators whose
-job is building. The combat fabricators have groups of their own: the Stitch and the
+**The fabricator groups.** `gwoGroup.fabbersBasic` and `gwoGroup.fabbersAdvanced` hold
+only the fabricators whose job is building. The combat fabricators have groups of their own: the Stitch and the
 Barnacle are in `gwoGroup.fabbersCombatBasic`, the Mend and the Angel are in
 `gwoGroup.fabbersCombatAdvanced`, and `gwoGroup.fabbersCombat` holds all four.
 `gwoGroup.fabbers` still holds every fabricator. For a card that changes the basic
@@ -558,12 +558,17 @@ fabricators and the combat ones too, name both groups:
 GWO keeps several lists, and you add your cards to them. The name of each list starts
 with `model.gwo`. The heading of each section below names the file that it goes in.
 
+Your loader can run before GWO makes a list. Always create the list first, as shown.
+
 #### `model.gwoCards` — your tech-card deck (in `tech_cards.js`)
 
 This is the main list of tech cards that the game can deal during a war. Add each tech
 card's ID, which is its file name without `.js`.
 
 ```js
+if (!model.gwoCards) {
+  model.gwoCards = [];
+}
 model.gwoCards.push("mym_damage_bots", "mym_faster_air");
 ```
 
@@ -582,11 +587,19 @@ not its ammo or its weapon, even when the card changes only the weapon. For a ca
 changes the commander, name `gwoUnit.commander`.
 
 ```js
+if (!model.gwoCardsToUnits) {
+  model.gwoCardsToUnits = [];
+}
 model.gwoCardsToUnits.push({
   id: "mym_damage_bots",
   units: ["/pa/units/land/assault_bot/assault_bot.json", gwoUnit.dox],
 });
 ```
+
+A card with no entry, or with an empty `units` list, is offered to players of every race.
+A card in
+[`model.gwoCardsWithoutTooltip`](#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
+is one of those.
 
 To choose the races yourself, add `races` to the entry. GWO then offers the card only to
 players of the races in the list, whatever the card's ID. The race IDs are `mla`,
@@ -621,6 +634,9 @@ the loadout screen, and the game can award them as rewards on Guardian planets. 
 entry for each loadout, with its ID.
 
 ```js
+if (!model.gwoNewStartCards) {
+  model.gwoNewStartCards = [];
+}
 model.gwoNewStartCards.push({ id: "mym_start_myloadout" });
 ```
 
@@ -629,36 +645,31 @@ model.gwoNewStartCards.push({ id: "mym_start_myloadout" });
 These are the loadouts that are available from the start. The shape is the same as above.
 
 ```js
+if (!model.gwoStartingCards) {
+  model.gwoStartingCards = [];
+}
 model.gwoStartingCards.push({ id: "mym_start_myloadout" });
 ```
 
 > **Don't add a loadout to both the locked list and the unlocked list.**
 >
-> **Every ID in these two lists must have a card file with exactly that name. If one does
-> not, Galactic War does not start.** This is the worst mistake in the whole template,
-> because it breaks the game, not only the card. GWO loads every loadout that you list here
-> while it builds a new war. If one of them has no file, GWO waits for a file that never
-> arrives. The war finishes generating, and then the screen stays as it is. There is no
-> error, no message, and nothing to click. Only restarting the game ends it.
+> **Every ID in these two lists must have a card file with exactly that name.** If one
+> does not, the debugger shows `Start card failed to load:` followed by the ID, and that
+> loadout cannot be used. A player who picks it gets an error message in place of a new
+> war.
 >
 > The template arrives with four example IDs in these lists (`YOUR_LOCKED_LOADOUT_ID_1`,
 > `YOUR_LOCKED_LOADOUT_ID_N`, `YOUR_UNLOCKED_LOADOUT_ID_1`, and
-> `YOUR_UNLOCKED_LOADOUT_ID_N`) and with no files for them. **So the mod does this to you
-> the first time that you enable it**, unless you followed step 6 of
-> [Preparing the mod](#preparing-the-mod). Before you enable the mod, open
-> `start_cards.js` and delete every example ID that you have not replaced with a real ID.
-> You can delete all of them. A mod with no loadouts works correctly.
->
-> Tech cards are safer. A missing tech card file logs an error, the game skips that card,
-> and the war continues.
+> `YOUR_UNLOCKED_LOADOUT_ID_N`) and with no files for them, unless you followed step 6 of
+> [Preparing the mod](#preparing-the-mod). Delete every example ID that you have not
+> replaced with a real ID. You can delete all of them. A mod with no loadouts works
+> correctly.
 
 #### `model.gwoLoadoutBanks` — where your bank lives (in `start_cards.js`)
 
 Your own `bank.js` records which of your locked loadouts the player has unlocked. GWO
 cannot find that file without help, so you give it the address. **Without this entry a
 locked loadout can never unlock**, and nothing warns you.
-
-GWO does not create this list for you, so the example creates it first.
 
 ```js
 if (!model.gwoLoadoutBanks) {
@@ -688,8 +699,6 @@ Optional. In GWO the player can fight beside an allied commander. List your load
 here if its effect would break that feature. When the player picks that loadout, GWO
 turns the allied commander off.
 
-GWO does **not** create this list for you. Create it before you add to it, as shown.
-
 ```js
 if (!model.gwoStarCardsWhichBreakAllies) {
   model.gwoStarCardsWhichBreakAllies = [];
@@ -699,13 +708,11 @@ model.gwoStarCardsWhichBreakAllies.push("mym_start_myloadout");
 
 #### `model.gwoLoadoutsAiCannotUse` — loadouts that a co-op AI player cannot use (in `start_cards.js`)
 
-Optional. From the GWO release that adds co-op AI players, an AI player in a co-op war
-can start with one of your loadouts. List your loadout's ID here if an AI player cannot
-use its effect, for example an ability that works only when a player gives an order. GWO
-lists its own Warp Commander, because an AI player never orders a mass teleport. An AI
-player never starts with a loadout on this list.
-
-GWO does **not** create this list for you. Create it before you add to it, as shown.
+Optional. An AI player in a co-op war can start with one of your loadouts. List your
+loadout's ID here if an AI player cannot use its effect, for example an ability that
+works only when a player gives an order. GWO lists its own Warp Commander, because an AI
+player never orders a mass teleport. An AI player never starts with a loadout on this
+list.
 
 ```js
 if (!model.gwoLoadoutsAiCannotUse) {
@@ -728,6 +735,9 @@ two reasons to do this.
   explains that. List the borrowed file here, and its ammo comes with it.
 
 ```js
+if (!model.gwoSpecs) {
+  model.gwoSpecs = [];
+}
 model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
 ```
 
@@ -736,9 +746,9 @@ model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
 Optional. Some cards ask, through
 [`gwoCard.hasT2Access`](#cards-that-react-to-the-players-other-cards), whether the player
 has reached advanced (T2) tech. If one of your cards gives that access, add its ID here so
-that those cards can see it. From the GWO release that adds `gwoCard.hasAdvancedFabber`,
-GWO's Advanced Defense Technology, Titan Tech, and Planetary Radar Tech take an advanced
-fabricator or any card on this list as that access.
+that those cards can see it. GWO's Advanced Defense Technology, Titan Tech, and Planetary
+Radar Tech take an advanced fabricator or any card on this list as that access. Titan
+Tech also takes an orbital factory together with an orbital fabricator.
 
 ```js
 if (!model.gwoCardsGrantingAdvancedTech) {
@@ -758,6 +768,9 @@ deck. Add a deck only when you want players to be able to choose a different set
 cards, for example a smaller themed deck.
 
 ```js
+if (!model.gwoDecks) {
+  model.gwoDecks = [];
+}
 model.gwoDecks.push({
   id: "mym-nomad",
   name: "!LOC:Nomad",
@@ -1051,8 +1064,7 @@ deal: function (system, context, inventory) {
 `gwoCard.hasT2Access(inventory)` is true once the player holds any card listed in
 [`model.gwoCardsGrantingAdvancedTech`](#modelgwocardsgrantingadvancedtech--cards-that-unlock-advanced-tech-in-tech_cardsjs),
 which means that they can build advanced (T2) units.
-`gwoCard.hasAdvancedFabber(inventory)`, from the GWO release that adds it, is true when
-the player holds an advanced fabricator from `gwoGroup.fabbersAdvanced`. A Cluster
+`gwoCard.hasAdvancedFabber(inventory)` is true when the player holds an advanced fabricator from `gwoGroup.fabbersAdvanced`. A Cluster
 player's Colonel does not count, because Cluster makes it a Sub Commander that builds only
 what a commander builds. A player can reach advanced structures either way, so a card that
 is useless before then asks both:
@@ -1095,10 +1107,10 @@ build ships at all.
 
 If your card is worthless without water, not merely weaker, add a third number. It
 replaces the 40% default with a dry-map chance of your own. GWO's Anti-Ship and
-Anti-Hover Ammo Techs go from 70 to 15 in this way:
+Anti-Hover Ammo Techs go from 40 to 15 in this way:
 
 ```js
-gwoCard.navalWeight(inventory, 70, 15);
+gwoCard.navalWeight(inventory, 40, 15);
 ```
 
 ##### Commander cards — `gwoCard.commanderWeight`
@@ -1108,7 +1120,9 @@ changes commander stats improves all of them together. Such a card is worth more
 Sub Commanders the player has, whatever the distance travelled, and
 `gwoCard.commanderWeight` weighs it in that way. Give it the `inventory` and the chance
 that you want when the player fights alone. Each Sub Commander adds one third of that
-chance, up to a maximum of double the chance:
+chance, rounded to a whole number, up to a maximum of double the chance. A Cluster player
+always gets the chance that you gave, because Cluster's Sub Commanders are not
+commanders:
 
 ```js
 deal: function (system, context, inventory) {
@@ -1119,19 +1133,18 @@ deal: function (system, context, inventory) {
 Both values are required: unlike `upgradeDeal`, this helper has no default chance. Use it
 instead of the distance checks above, not together with them.
 
-If your commander card also gives a card slot, `upgradeDeal` cannot weigh it for you,
-because `upgradeDeal` takes a true-or-false answer, not a chance. Write the `deal` in
-full, and add the `allowOverflow` part yourself. `allowOverflow` is what lets the game
-offer a card that pays for its own slot to a player whose hand is full:
+If your commander card also gives a card slot, give the weight to
+[`upgradeDeal`](#upgrade-cards--gwocardupgradedeal) as its chance. Every player has a
+commander, so the first value is `true`:
 
 ```js
 deal: function (system, context, inventory) {
-  return {
-    params: { allowOverflow: true },
-    chance: gwoCard.commanderWeight(inventory, 35),
-  };
+  return gwoCard.upgradeDeal(true, gwoCard.commanderWeight(inventory, 35));
 },
 ```
+
+`upgradeDeal` lets the game offer the card to a player whose hand is full, because the
+card pays for its own slot. The card's `buff` must still add the slot.
 
 ##### Sub Commander cards — `gwoCard.subcommanderWeight`
 
@@ -1153,8 +1166,8 @@ cannot flood the deck. The limit applies from the first Sub Commander, so a chan
 90 is pointless: the helper reduces it to 90.
 
 Both values are required. Use this helper instead of the distance checks, as for
-`commanderWeight`. If your card also gives a card slot, write the `deal` in full with the
-`allowOverflow` part, as shown above.
+`commanderWeight`. If your card also gives a card slot, give the weight to `upgradeDeal`
+with `true` as its first value, as shown above.
 
 To choose between the two helpers, ask who the card changes. Use `commanderWeight` for a
 card that improves every commander that the player fields, including their own. Use
@@ -1257,6 +1270,9 @@ The everyday `op` choices:
 | `merge`            | Folds your labelled values into an existing set of labelled values.  | `{ some_label: 5 }`                  |
 | `tag`              | Required after writing a file name. Takes no `value`. See below.     | none                                 |
 
+When the `value` of `push`, `prepend` or `pull` is itself a list, the game adds or removes
+its entries one by one. It does not add the list as one entry.
+
 There are three more: `wipe`, `clone` and `eval`. See
 [More unit-stat ops](#more-unit-stat-ops--wipe-clone-and-eval).
 
@@ -1320,11 +1336,16 @@ inventory.addMods([
 | Where                                                                      | What it is                                |
 | -------------------------------------------------------------------------- | ----------------------------------------- |
 | `tools.<number>.spec_id`                                                   | a weapon or build arm                     |
-| `ammo_id`                                                                  | what a weapon fires                       |
+| `ammo_id`, or `ammo_id.<number>.id` when `ammo_id` is a list               | what a weapon fires                       |
 | `spawn_unit_on_death`                                                      | a unit left behind when this is destroyed |
 | `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec`              | the explosion on death                    |
 | `base_spec`                                                                | the file this one inherits from           |
 | `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule                          |
+
+`tag` works only on a single file name. `replaceable_units` and `buildable_projectiles`
+are lists, so tag each entry that you wrote by its number, for example
+`buildable_projectiles.0`. `factory.initial_build_spec` counts only when it is a single
+file name.
 
 **Use the correct number.** Tools are numbered from `0`, and you tag the numbering as it
 is **after** your change. Every `replace` runs before any `push`, `prepend` or `tag`, so
@@ -1391,8 +1412,6 @@ A list of paths that you write yourself works in the same way, and so does
 
 ##### Vision, radar and jammer ranges — `gwoCard.observerPath`
 
-**Unreleased:** on GWO `develop` after v7.4.1.
-
 A unit's sight, radar and jammer ranges are a list of items in its file, under
 `recon.observer.items`. Each item has a `layer` (such as `surface_and_air` or
 `underwater`), a `channel` (such as `sight`, `radar` or `radar_jammer`) and a `radius`.
@@ -1422,9 +1441,11 @@ for you.
 #### Change what your Sub Commanders build — `inventory.addAIMods(...)`
 
 This changes the build orders of the AI that fights for the player: their Sub Commanders
-(the allied commanders who join the player's army). On a Guardian star, where the enemy
-mirrors the player's tech, it changes the enemy AI's build orders too. It does not change
-other enemies.
+(the allied commanders who join the player's army), and the allied commander that a star
+can give. In a co-op war, each player's Sub Commanders get that player's changes, and
+each co-op AI player gets its own. On a Guardian star, where the enemy mirrors the
+players' tech, the enemy AI gets the changes of every player. It does not change other
+enemies.
 
 **Most cards don't need this.** Use it when your card gives units that the Sub Commanders
 would otherwise never build, or changes what a factory can build.
@@ -1490,10 +1511,9 @@ after your card, because a file with the same name as one in GWO or another mod 
 replace it. Remember the `.json` at the end of `value`.
 
 > **Check that the file really is there before you share the mod.** If a `load` names a
-> file that is missing, the AI never gets the builds in it. With GWO v7.4.1 or older, the
-> battle never starts: the loading screen hangs, and no error message points at the cause.
-> Newer versions of GWO (not yet released) start the battle without that file's builds, and
-> the log says `AI file of a load mod not read, skipped:` followed by the file's path.
+> file that is missing, the AI never gets the builds in it. The battle starts without
+> them, and the log says `AI file of a load mod not read, skipped:` followed by the file's
+> path.
 
 ##### Changing one build entry
 
@@ -1542,23 +1562,32 @@ return gwoCard.upgradeCard({
 ```
 
 It writes the parts that you would otherwise write yourself. The card is visible on the
-board. It gives the player room for one more card, and adds the usual line that says so
-to the description. It has the standard `getContext`. Its `deal` works out a sensible
-chance, and returns `0` until the player has the unit named in `requires`.
+board. It gives the player room for one more card, and adds the sentence "Adds a new
+slot for another technology." to the end of the description. It has the standard
+`getContext`. Its `deal` works out a sensible chance, and returns `0` until the player
+fields the unit named in `requires`.
 
 - `name`, `description`, `icon`, `audio`: the same as
   [`summarize`, `describe`, `icon`](#summarize-describe-icon--name-description-picture)
   and [`audio`](#audio--the-discovery-voice-line-tech-cards) above, but written as plain
   text, without `_.constant` around them.
 - `requires`: the unit that the card improves. The game never offers the card until the
-  player has it.
+  player has it. A race or add-on unit that the player fields counts too.
 - `buff`: what the card does, exactly as in [`buff`](#buff--what-the-card-does) above.
 - `unless`: optional. The ID of a card that stops the game from offering this one. Use it
   when two of your cards would fight over the same unit.
 - `chance`: optional. How often the game offers the card, when the standard chance is not
   what you want. See [`deal`](#deal--how-often-the-card-appears) for what the numbers
-  mean.
-- `slot: false`: optional. Don't give the player an extra card slot.
+  mean. Give a number, or a function that receives the `inventory` and returns a number,
+  for example `function (inventory) { return gwoCard.commanderWeight(inventory, 35); }`.
+- `slot: false`: optional. Don't give the player an extra card slot. The description
+  still ends with "Adds a new slot for another technology.", so also give your own
+  `describe`, below.
+- `describe`, `available`, `deal`: optional, and rarely needed. Each one replaces the
+  part that the helper writes. `describe` is a whole description, written as
+  `_.constant("!LOC:...")`, with no slot sentence added. `available` is a function that
+  receives the `inventory` and returns `true` when the card can be offered, in place of
+  `requires` and `unless`. `deal` is a whole [`deal`](#deal--how-often-the-card-appears).
 
 **It cannot forbid units**, because its `dull` is empty. A card that must forbid a unit is
 an ordinary tech card, written from `tech_card_id.js`.
@@ -1755,7 +1784,9 @@ falls to the last case: a card for the Avenger, the Astraeus, the Hermes, or the
 changes it. Any other stock unit reaches no race unit: for a Legion player, a card for the
 Skitter changes no Legion unit. A stock unit that no commander can build, such as the
 Squall's drone (`gwoUnit.squall`), takes no part in this and reaches every race unit of
-its kind. Titans, fabricators, factories, and buildings are matched by kind alone.
+its kind. Defences, superweapons, and intel structures (radars and jammers) are matched
+by kind and by job in the same way. Titans, commanders, fabricators, factories, and the
+other buildings are matched by kind alone.
 [GWO's documentation](https://github.com/Quitch/GW-AI-Overhaul/blob/master/docs/races.md#jobs)
 gives the full rule.
 
@@ -1768,15 +1799,17 @@ Bugs research unlocks. To change one of them, name it, such as
 This works for changes to values such as health, speed, cost, or damage. A change to
 what a unit is stays on the stock unit: its `unit_types`, `buildable_types`, `tools`,
 `base_spec`, `command_caps`, `model`, `display_name`, `description`, `si_name`,
-`transportable`, `transporter`, or `attachable`. Once any card makes such a change to a
-unit, no other change to that unit reaches the race units either. Keep `_upgrade_` in the
+`transportable`, `transporter`, or `attachable`. A change marked `exact: true` also stays
+on the stock unit. Once any card makes such a change to a unit, no other change to that
+unit reaches the race units either. Keep `_upgrade_` in the
 ID of a card like that, or give its entry `races: ["mla"]` (see the warning below).
 
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
 > the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is tuned to one MLA unit, so GWO
 > does not pass it on to the other races. If a card that changes stock units must reach
 > every race, leave `_upgrade_` out of its ID. A `races` list in the entry replaces this
-> rule: GWO offers the card to the races in the list.
+> rule: GWO offers the card to the races in the list. IDs that contain
+> `_upgrade_subcommander` or `_upgrade_ubercannon` are exempt from the rule.
 
 #### Keep a change on the stock unit — `stockOnly`
 
@@ -1871,12 +1904,14 @@ The same entry also works for a card whose ID contains `_upgrade_`, such as
 `mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
 units (see the warning above). When it names race units, it is written for that race, so
 GWO offers it to that race. An entry with a `races` list is offered to the races in the
-list and to no others, whatever units it names.
+list and to no others. Each race in the list still needs a unit that a unit in the entry
+reaches.
 
 #### 3. Check for the unit in `deal`
 
-`inventory.units()` names only the ordinary units, even for a Legion player. The player's
-race units are added when the battle starts. So in `deal`, use
+`inventory.units()` holds the ordinary units, even for a Legion player. It holds a race
+or add-on unit only when a card added that unit by name. The player's other race units
+are added when the battle starts. So in `deal`, use
 `gwoCard.fieldedUnits(inventory)` in place of `inventory.units()`. It gives the units that
 the player has, plus the race or add-on units that those units bring:
 
@@ -2081,9 +2116,8 @@ Two helpers do that:
 - `gwoCard.getAllConnectedPlayerCards(inventory)`: every card held by the player and the
   other co-op players in the game, as one list. Each entry has an `id`.
 
-"The other co-op players" means the connected ones, and, from the GWO release that adds
-co-op AI players, the host's AI players too, in a war where every player has their own
-tech. See [How co-op AI players choose your card](#how-co-op-ai-players-choose-your-card).
+"The other co-op players" means the connected ones, and the host's AI players too, in a
+war where every player has their own tech. See [How co-op AI players choose your card](#how-co-op-ai-players-choose-your-card).
 
 ```js
 deal: function (system, context, inventory) {
@@ -2101,8 +2135,7 @@ and use these two only when your card's effect really covers the whole team.
 
 ### How co-op AI players choose your card
 
-From the GWO release that adds co-op AI players, the host of a co-op war can put AI
-players into the empty slots. In a war where every player has their own tech, each AI
+The host of a co-op war can put AI players into the empty slots. In a war where every player has their own tech, each AI
 player picks its own cards, and your cards are among them.
 
 An AI player judges a card by trying it. GWO copies the AI player's inventory, runs your
@@ -2117,9 +2150,10 @@ is judged on what it does.
   changes. If your card makes a random choice, make it in `deal`, as
   [Randomness in `deal`](#randomness-in-deal) shows, and read the result in `buff`.
 - **be quick.** The AI player tries every card in its hand while the war waits. If that
-  takes too long, GWO gives up, and the AI player takes the first card in the hand that
-  fits, unjudged. An AI player that keeps running out of time stops taking cards for the
-  rest of the session.
+  takes too long, or a card fails, GWO gives up, and the AI player takes the first card
+  in the hand that is not a loadout, unjudged. If that card does not fit, it takes
+  nothing. An AI player that keeps running out of time stops taking cards for the rest of
+  the session.
 - **change only the `inventory` that it receives.** The copy is thrown away afterwards.
   Anything else that `buff` changes, such as the war, the page, or saved settings,
   changes for real, although nobody took the card.
@@ -2173,7 +2207,8 @@ releaseContext: function (context) {
 - `wipe`: despite its name, this does not clear the value. It finds and replaces text
   inside a text value. `value` is a pair, `[what to find, what to put in its place]`. A
   single value on its own means "delete every occurrence of this".
-- `clone`: copies whatever is at `path` into the file named by `value`.
+- `clone`: copies whatever is at `path` into the file named by `value`. If nothing is at
+  `path`, it copies nothing, and the Console shows `clone: attribute is missing or null`.
 - `eval`: runs `value` as raw JavaScript. The game gives you the thing at `path` as
   `attribute`, and you can do what you like with it. If you used a `path`, remember to
   return `attribute` at the end.
@@ -2227,7 +2262,7 @@ inventory.addAIMods([
 ```
 
 `treeOnly` keeps the change away from every loaded file, not only the file that your card
-loads. `load` and `squad` don't read it. GWO's Rapid Deployment loadout is a full example:
+loads. `load` doesn't read it. GWO's Rapid Deployment loadout is a full example:
 read `gwaio_start_rapid.js` in GWO's `cards` folder.
 
 `silence`, below, is a second way to stop the AI's own builds, and it reads `treeOnly`
@@ -2263,10 +2298,8 @@ no `builders`.
 `silence` uses only `type`, `op`, `value`, and `treeOnly`. It ignores `toBuild`,
 `idToMod`, `refId`, `refValue`, and `matchAll`. `builders` and `except` must both be lists
 of names, but `except` can be an empty list. A `value` with the wrong shape changes
-nothing and reports nothing.
-
-> **`silence` needs a version of GWO newer than v7.3.1.** Older versions don't know the
-> op, and the change does nothing.
+nothing and reports nothing. A missing `value` shows an error that starts
+`applyAiMods: op threw` in the Console, and the change is skipped.
 
 #### `new`, `remove` and `squad`
 
@@ -2361,14 +2394,14 @@ a problem:
 
 Learn these two:
 
-- ERROR: _Uncaught Error: Script error for: cards/SOME_ID_
+- ERROR: _GWO card failed to load: SOME_ID_, or _Start card failed to load: SOME_ID_
 
   You listed `SOME_ID` somewhere, but there is no `SOME_ID.js` in
   `ui/main/game/galactic_war/cards/`, or the file has a typing mistake that stops it from
   loading. The usual cause is a misspelled ID, an example ID that you forgot to delete, or
-  a typing mistake that the [checker](#checking-your-work) would find. From a **tech
-  card** list this is harmless, because the game skips the card. From a **loadout** list
-  it is fatal: a new war then hangs forever. See the warning under
+  a typing mistake that the [checker](#checking-your-work) would find. The first message
+  is for a tech card: the game skips that card, and the war continues. The second is for
+  a loadout: that loadout cannot be used. See the warning under
   [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 - WARN: _Warning: File not found in mod {"file":"/pa/units/…",…}_
@@ -2377,9 +2410,7 @@ Learn these two:
   change. **This message is normal.** Galactic War copies only the files that the
   player's units need, and it deals a card that changes several units to players who own
   only some of them. It drops the changes for the rest, which is exactly what should
-  happen. The `file` in the message tells you which file it was. GWO v7.4.0 and older
-  print `Object` in place of the text in braces: click it in the debugger to see the
-  `file`.
+  happen. The `file` in the message tells you which file it was.
 
   It is a problem only when the file is one that the card _should_ have been able to
   change: a unit that the card `requires`, a file reached from one of those, or a file
@@ -2395,8 +2426,8 @@ Learn these two:
 2. Click the **X** in the bottom left-hand corner of the war screen. It opens the test
    panel, which appears only with `--devmode`.
 3. Type your card's ID into the panel's text box, and click the **+** to its right. The
-   panel finds only the cards that you registered in `model.gwoCards`, so an unregistered
-   card is not found.
+   panel finds the cards that you registered in `model.gwoCards`, the cards of the deck
+   that the war uses, and GWO's loadouts. A card that is in none of them is not found.
 4. Check that the card appears in your hand, and that no new errors appear in the Console.
 5. Hover over the card, and check that its name, description, picture and tooltip look
    right.

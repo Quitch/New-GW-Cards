@@ -165,16 +165,16 @@ follow it:
   `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js` and `specs.js` all warn
   about it. Keep those warnings consistent with each other, and with GWO's
   `docs/specs.md`.
-- **A loadout ID that is registered with no card file of that name stops war generation
-  completely.** The supplied `start_cards.js` does exactly that with four placeholder IDs.
-  An author who enables the template before they edit it therefore gets a Galactic War
-  that never starts. This was verified in the game on 2026-08-11 against GWO DEV v6.10.1.
-  It is the worst failure mode of the template, because it breaks the game rather than the
-  card. Three places state it: `README.md` (step 6 of "Preparing the mod", the blockquote
-  under `model.gwoStartingCards`, and a checklist item), `CLAUDE.md` ("Registering a
-  card"), and the header comment in `start_cards.js`. Keep those three consistent. Do not
-  correct the problem by emptying the supplied lists. The example IDs show an author the
-  shape, and the warning is the correction.
+- **A loadout ID that is registered with no card file of that name cannot be used.** GWO
+  logs `Start card failed to load: <id>` and war setup carries on. If the player picks
+  that loadout, war creation fails and GWO reseeds or shows its error message. Until GWO
+  v7.4.1 the same mistake stopped war generation completely (verified in the game on
+  2026-08-11 against GWO DEV v6.10.1). The supplied `start_cards.js` registers four
+  placeholder IDs with no files. Three places state the rule: `README.md` (step 6 of
+  "Preparing the mod", the blockquote under `model.gwoStartingCards`, and a checklist
+  item), `CLAUDE.md` ("Registering a card"), and the header comment in `start_cards.js`.
+  Keep those three consistent. Do not correct the problem by emptying the supplied lists.
+  The example IDs show an author the shape, and the warning is the correction.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither

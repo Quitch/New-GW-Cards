@@ -8,7 +8,7 @@
 //
 // Replace every example ID below with the ID of one of your cards: its file
 // name without ".js".  Delete the entries that you do not need.  An example ID
-// that stays logs a harmless "Script error for: cards/YOUR_CARD_ID_1" in the
+// that stays logs a harmless "GWO card failed to load: YOUR_CARD_ID_1" in the
 // debugger, and the war carries on.
 //
 // Change only the lists.  Leave the other lines as they are: they wrap the
