@@ -133,31 +133,6 @@ The guide refers to two folders on your computer.
      [Understanding the pieces](#understanding-the-pieces) explains why.
 5. Inside your mod folder, open `ui/mods/`. Rename the folder there, which is called
    `com.pa.YOURNAME.MODNAME`, to your identifier. The name must match exactly.
-6. **Before you enable the mod for the first time**, open
-   `ui/mods/<your identifier>/start_cards.js` and delete the four example loadout lines,
-   the ones that contain `YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`,
-   `YOUR_UNLOCKED_LOADOUT_ID_1`, and `YOUR_UNLOCKED_LOADOUT_ID_N`. Those IDs have no card
-   files. If they stay, the debugger shows `Start card failed to load` for each of them,
-   and those loadouts cannot be used. You add your own loadout IDs back later, when you
-   have written the cards. See the warning under
-   [`model.gwoStartingCards`](#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
-
-   When you delete them, keep the lines around them. For example, change this:
-
-   ```js
-   model.gwoNewStartCards.push(
-     { id: "YOUR_LOCKED_LOADOUT_ID_1" },
-     { id: "YOUR_LOCKED_LOADOUT_ID_N" }
-   );
-   ```
-
-   to this:
-
-   ```js
-   model.gwoNewStartCards.push();
-   ```
-
-   Do the same for `model.gwoStartingCards.push(...)` further down the file.
 
 > **Keep three things the same:** the `identifier` in `modinfo.json`, the `scenes`
 > addresses in that same file, and the folder name under `ui/mods/`. All three must use the
@@ -437,10 +412,6 @@ each item as you complete it.
 - [ ] In `modinfo.json`, changed the `scenes` addresses so that they contain your
       identifier.
 - [ ] Renamed the folder under `ui/mods/` so that it matches your identifier.
-- [ ] **Deleted from `start_cards.js` every example loadout ID that you don't use**
-      (`YOUR_LOCKED_LOADOUT_ID_1`, `YOUR_LOCKED_LOADOUT_ID_N`,
-      `YOUR_UNLOCKED_LOADOUT_ID_1`, and `YOUR_UNLOCKED_LOADOUT_ID_N`). Do this even when you
-      make only tech cards. Each one that stays shows an error in the debugger.
 - [ ] Renamed the example card file that you use (`tech_card_id.js`,
       `unit_upgrade_card_id.js` or `start_card_id.js`) to a unique name that does not
       start with `gwc_` or `gwaio_`, and noted that name, without `.js`, as the card's ID.
@@ -486,7 +457,8 @@ delete the whole block.
 **If your card is a loadout, also:**
 
 - [ ] Added the card's ID to `model.gwoStartingCards` (unlocked) or
-      `model.gwoNewStartCards` (locked) in `start_cards.js`.
+      `model.gwoNewStartCards` (locked) in `start_cards.js`, and checked that every ID in
+      those lists has a card file of exactly that name.
 - [ ] Set a unique `LS_KEY` in `bank.js`.
 - [ ] Changed the `bank.js` address at the top of the loadout card so that it contains
       your identifier.
@@ -658,12 +630,8 @@ model.gwoStartingCards.push({ id: "mym_start_myloadout" });
 > loadout cannot be used. A player who picks it gets an error message in place of a new
 > war.
 >
-> The template arrives with four example IDs in these lists (`YOUR_LOCKED_LOADOUT_ID_1`,
-> `YOUR_LOCKED_LOADOUT_ID_N`, `YOUR_UNLOCKED_LOADOUT_ID_1`, and
-> `YOUR_UNLOCKED_LOADOUT_ID_N`) and with no files for them, unless you followed step 6 of
-> [Preparing the mod](#preparing-the-mod). Delete every example ID that you have not
-> replaced with a real ID. You can delete all of them. A mod with no loadouts works
-> correctly.
+> The template's lists start empty, with example IDs in the comments above them. A mod
+> with no loadouts works correctly.
 
 #### `model.gwoLoadoutBanks` — where your bank lives (in `start_cards.js`)
 

@@ -148,8 +148,9 @@ ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs; a missing file hi
 errback, which logs `Start card failed to load: <id>` and lets setup carry on
 (`gw_start/setup.js`). If the player picks that loadout, war creation fails with `No matching start card ID found` and GWO reseeds or shows
 its generation-error message (`gw_start/war_generation.js`). The shipped
-`start_cards.js` registers four placeholder IDs and ships no files for them, so **clear
-the lists of any example ID**, including when the job is only tech cards. A missing file
+`start_cards.js` registers no loadouts: its example IDs are in comments above two empty
+`push()` calls. When you add an ID there, write its card file in the same change. A
+missing file
 for an ID in `model.gwoCards` logs `GWO card failed to load: <id>` and the war plays
 without that card.
 

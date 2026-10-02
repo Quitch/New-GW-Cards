@@ -169,12 +169,17 @@ follow it:
   logs `Start card failed to load: <id>` and war setup carries on. If the player picks
   that loadout, war creation fails and GWO reseeds or shows its error message. Until GWO
   v7.4.1 the same mistake stopped war generation completely (verified in the game on
-  2026-08-11 against GWO DEV v6.10.1). The supplied `start_cards.js` registers four
-  placeholder IDs with no files. Three places state the rule: `README.md` (step 6 of
-  "Preparing the mod", the blockquote under `model.gwoStartingCards`, and a checklist
-  item), `CLAUDE.md` ("Registering a card"), and the header comment in `start_cards.js`.
-  Keep those three consistent. Do not correct the problem by emptying the supplied lists.
-  The example IDs show an author the shape, and the warning is the correction.
+  2026-08-11 against GWO DEV v6.10.1). The supplied `start_cards.js` therefore registers
+  no loadouts. Its two `push()` calls are empty, and the example IDs are in comments above
+  them. This reverses the earlier rule that kept live placeholder IDs in the lists and
+  told the author to delete them: they cost every new author four console errors and a
+  cleanup step. Keep the lists empty, and keep the example inside a comment, not inside
+  the call. An author who removes the comment marks from only some entries inside the
+  call leaves a trailing comma, which Chrome 40 cannot parse. These places state the
+  rule, and must stay consistent: `README.md` (the blockquote under
+  `model.gwoStartingCards`, the loadout checklist item, and the "failed to load" entry in
+  the testing section), `CLAUDE.md` ("Registering a card"), and the header comment in
+  `start_cards.js`.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither
