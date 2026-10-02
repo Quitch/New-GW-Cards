@@ -3,7 +3,7 @@
 **Who needs this page:** any mod whose card does not work as expected.
 
 Most mistakes in a card mod fail without a message. Find your symptom below, and check
-each cause in turn. Each cause links to the details.
+each cause in turn. Most causes link to the details.
 
 Before you start, run the [checker](setup.md#installing-the-checker-recommended). Keep
 the debugger's Console open, as [Checking and testing your mod](testing.md#setting-up)
