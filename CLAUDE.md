@@ -6,11 +6,12 @@ file sits in it, so it applies both in the template repo and in the copy the aut
 renames into their `client_mods`. `CONTRIBUTING.md` governs the other job — changing the
 template itself — and does not travel with the copy.
 
-`README.md`, which does travel, is the author-facing guide, written in plain English for
-someone who does not code. It is the reference for what every part of a card does, and
-you should follow it. This file adds what the README deliberately leaves out: where to
-find the real values on the user's own machine, and the runtime behaviour that fails
-**silently** when you get it wrong.
+`README.md` and the pages in `docs/`, which do travel, are the author-facing guide,
+written in plain English for someone who does not code. `README.md` is the landing page
+and contents; `docs/` holds one page per topic. Together they are the reference for what
+every part of a card does, and you should follow them. This file adds what the guide
+deliberately leaves out: where to find the real values on the user's own machine, and
+the runtime behaviour that fails **silently** when you get it wrong.
 
 The user may know nothing about coding. Explain what you changed in plain language, keep
 the heavy comment style the template uses, and never leave a placeholder behind.
@@ -93,8 +94,9 @@ If the user has no mod folder yet, create one before writing any card:
    plays the host's war with the host's cards, so its own copy of the flag decides
    nothing. The host's flagged mods are published as the war's required client mods, and a
    viewer missing one, holding a flagged mod the host lacks, or running a different
-   `version` of one, is refused at connect. It has no effect in a solo war. README's
-   "Sharing your mod in a co-op war" section is the author-facing explanation.
+   `version` of one, is refused at connect. It has no effect in a solo war.
+   `docs/releasing.md`, "Sharing your mod in a co-op war", is the author-facing
+   explanation.
 
 The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
 must agree. If they disagree the game loads nothing and reports nothing. A mod that ships
@@ -107,7 +109,9 @@ fill its placeholders in.
 ## Registering a card
 
 GWO never deals a card that is not registered. The card's ID is its file name without
-`.js`. See the README's "Feature reference" for the full list of `model.gwo*` arrays.
+`.js`. The `model.gwo*` arrays are documented on the guide page that uses each one:
+`docs/tech-cards.md`, `docs/loadouts.md`, `docs/changing-units.md` (`gwoSpecs`),
+`docs/deal.md` (`gwoCardsGrantingAdvancedTech`), and `docs/decks.md`.
 
 Write the card in the shape its family calls for. GWO's `docs/tech-cards.md` prescribes
 the first two, and both factories live in its `shared/cards.js`:
@@ -181,7 +185,8 @@ authority. What that means for a card, all of it silent when wrong:
 
 ## `inventory.addMods` — changing unit stats
 
-The README documents the shape. This is the behaviour that is not obvious from it. The
+`docs/changing-units.md` documents the shape. This is the behaviour that is not obvious
+from it. The
 code is in `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js`: each op is a
 function in its `ops` table.
 
@@ -233,7 +238,7 @@ function in its `ops` table.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
 - **Follow a value that is a file name with `op: "tag"`** on the same `file` and
   `path`. See the section below — this is the failure that is hardest to spot.
-- **`clone` and `eval` are advanced — avoid them**, as the README says.
+- **`clone` and `eval` are advanced — avoid them**, as `docs/changing-units.md` says.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
   never gets it, silently. A loadout's `dulls` forbid their units for the whole war.
@@ -352,7 +357,7 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 
 Only when the user asks for translations. The template ships none of it — no
 `translations.js`, no `translations/` folder, no `modinfo.json` wiring — and the mod
-works in English without it. The README's "Translating your mod" is the author-facing
+works in English without it. `docs/translating.md` is the author-facing
 procedure; the framework is the Mod Translations mod (`com.pa.quitch.modtranslations`),
 whose README ("For mod authors") and `docs/design.md` are the authority. Every step below
 fails silently: the text just stays English.
@@ -428,7 +433,7 @@ visible cause.
 
 ## When something here disagrees with the game
 
-GWO is the authority, not this file and not the README. Its `docs/tech-cards.md` holds
+GWO is the authority, not this file and not the guide. Its `docs/tech-cards.md` holds
 the card contract, the `model.gwo*` list, and the loadout bank rules; its
 `test/modder_api.test.js` pins the surface you write a card against — the helper names
 in `shared/cards.js`, the unit and group keys, `deal`'s arguments. If a card behaves
@@ -437,14 +442,14 @@ actually guarantees today.
 
 ## Checking the work
 
-There is no test suite — validation is in-game, and the README's "Testing your mod"
-section is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
+There is no test suite — validation is in-game, and `docs/testing.md` is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
 Coherent UI Debugger console, deal the card from the `X` panel, then build the units in a
 GW battle — a skirmish or sandbox game uses stock specs, so it cannot show a card's
 effect). The panel's give-card box finds IDs in `model.gwoCards`, which `gw_play` rebuilds
 as the registered cards plus every GWO loadout plus the war's deck
-(`shared/deal.js:setupGwoCards`). The README also
-lists the two messages PA prints normally, so you do not mistake them for a fault.
+(`shared/deal.js:setupGwoCards`). The same page also lists the two messages PA prints
+normally, so you do not mistake them for a fault. `docs/troubleshooting.md` maps each
+silent failure to its cause.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance

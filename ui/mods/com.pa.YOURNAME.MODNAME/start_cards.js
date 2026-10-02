@@ -22,7 +22,7 @@
     // An ID matches the card filename without the file extension, for example
     // "mym_start_bots".  A loadout ID must contain "_start_", and it must NOT
     // start with "gwc_start" - that prefix belongs to the loadouts that come
-    // with the game.  See "Creating a card" in the README.
+    // with the game.  See "Loadout IDs" in docs/loadouts.md.
     // A loadout belongs in THIS list or in the unlocked list below, never in
     // both.
     // Write your IDs inside the brackets of push( ), with a comma between them
@@ -41,7 +41,7 @@
     // An ID matches the card filename without the file extension, for example
     // "mym_start_bots".  A loadout ID must contain "_start_", and it must NOT
     // start with "gwc_start" - that prefix belongs to the loadouts that come
-    // with the game.  See "Creating a card" in the README.
+    // with the game.  See "Loadout IDs" in docs/loadouts.md.
     // Use different loadouts from the locked ones above.  Never put the same ID
     // in both lists.
     // Write your IDs in the same way as above, for example:
@@ -78,8 +78,9 @@
     // If the effect of your loadout would break the allied-commander feature,
     // list its ID here.  Galactic War Overhaul then disables the ally when the
     // player picks the loadout.  Galactic War Overhaul never creates this list
-    // itself, so you must create it before you add to it.  See "Feature reference" in the README.  Remove the comment marks
-    // (//) from the lines below and edit them if you need this list.
+    // itself, so you must create it before you add to it.  See
+    // docs/loadouts.md.  Remove the comment marks (//) from the lines below
+    // and edit them if you need this list.
     // if (!model.gwoStarCardsWhichBreakAllies) {
     //   model.gwoStarCardsWhichBreakAllies = [];
     // }
@@ -90,8 +91,8 @@
     // an ability that works only when a player gives an order, list its ID
     // here.  An AI player then never starts with it.  Galactic War Overhaul
     // never creates this list itself, so you must create it before you add to
-    // it.  See "Feature reference" in the README.  Remove the comment marks
-    // (//) from the lines below and edit them if you need this list.
+    // it.  See docs/loadouts.md.  Remove the comment marks (//) from the lines
+    // below and edit them if you need this list.
     // if (!model.gwoLoadoutsAiCannotUse) {
     //   model.gwoLoadoutsAiCannotUse = [];
     // }

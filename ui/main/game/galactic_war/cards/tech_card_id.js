@@ -1,8 +1,9 @@
 // AN EXAMPLE TECH CARD
 //
-// The README explains every part of a card in plain English, with worked
-// examples.  Keep it open beside this file.  Read "How to read the card files"
-// in the README first if you have never edited a file like this before.
+// The guide explains every part of a card in plain English, with worked
+// examples.  It starts at README.md, and docs/tech-cards.md covers this card.
+// Keep it open beside this file.  Read docs/reading-card-files.md first if
+// you have never edited a file like this before.
 //
 // 1. Rename this file.  The file name without ".js" is the ID of the card, for
 //    example "mym_damage_bots.js" has the ID "mym_damage_bots".  Start it with a
@@ -71,12 +72,12 @@ define([
     // card.  60 is a normal chance, and a bigger number means more often.
     //
     // The chance can also depend on what the player has, or on how far they
-    // have travelled.  The README section "deal" shows how, with ready-made
-    // checks such as gwoCard.conditionalDeal and gwoCard.upgradeDeal.
+    // have travelled.  docs/deal.md shows how, with ready-made checks such
+    // as gwoCard.conditionalDeal and gwoCard.upgradeDeal.
     //
     // You need the fourth value, rng, only if your card makes a random
-    // choice.  See "Randomness in `deal`" in the README.  The chance itself
-    // must never be random.
+    // choice.  See "Randomness in `deal`" in docs/advanced.md.  The chance
+    // itself must never be random.
     // The next line stops the checker warning that the four values are not
     // used yet.  Leave it.
     // eslint-disable-next-line no-unused-vars
@@ -117,8 +118,8 @@ define([
       //   ];
       // The Dox already has one tool, so the tool that you pushed is number 1.
       // Tools count from 0.  You must also list a borrowed file in specs.js, or
-      // the tag points at nothing.  The README section "Whenever your value is a
-      // file name, tag it" explains both halves.
+      // the tag points at nothing.  "Whenever your value is a file name, tag it"
+      // in docs/changing-units.md explains both halves.
       //
       // Delete the two lines below if your card changes no unit stats.
       var mods = [];
@@ -128,8 +129,7 @@ define([
       // Most cards do not need this.  An example of the list contents.  It lets
       // basic bot factories build something that only advanced bot factories
       // could build before.  "MyUnit" must be replaced with a real to_build
-      // name from the game's AI files - see "Change what your Sub Commanders
-      // build" in the README:
+      // name from the game's AI files - see docs/ai-build-orders.md:
       //   var aiMods = [
       //     {
       //       type: "factory",

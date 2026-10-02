@@ -60,9 +60,9 @@
         // A card that changes something other than units, for example a card
         // that only turns on a feature, belongs here INSTEAD of in
         // model.gwoCardsToUnits above.  If you do not list it here, GWO warns
-        // that the card has no tooltip data.  See "Feature reference" in the
-        // README.  Remove the comment marks (//) from the lines below and edit
-        // them if you need this list.
+        // that the card has no tooltip data.  See docs/tech-cards.md.  Remove the
+        // comment marks (//) from the lines below and edit them if you need
+        // this list.
         // if (!model.gwoCardsWithoutTooltip) {
         //   model.gwoCardsWithoutTooltip = [];
         // }
