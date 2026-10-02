@@ -1,7 +1,7 @@
 # Advanced features
 
-**Who needs this page:** almost no card. These features solve particular problems in `deal`
-and in co-op wars, and most cards never need them.
+**Who needs this page:** few mods. These features solve particular problems in `deal` and in
+co-op wars. Most cards never need them.
 
 ## Setting your own distances — `gwoCard.farForSize`
 
@@ -109,9 +109,9 @@ is judged on what it does.
   changes. If your card makes a random choice, make it in `deal`, as
   [Randomness in `deal`](#randomness-in-deal) shows, and read the result in `buff`.
 - **be quick.** The AI player tries every card in its hand while the war waits. If that
-  takes too long, or a card fails, GWO gives up, and the AI player takes the first card
-  in the hand that is not a loadout, unjudged. If that card does not fit, it takes
-  nothing. An AI player that keeps running out of time stops taking cards for the rest of
+  takes too long, or a card fails, GWO stops the judgement. The AI player then takes the
+  first card in the hand that is not a loadout, unjudged. If that card does not fit, the
+  AI player takes nothing. An AI player that keeps running out of time stops taking cards for the rest of
   the session.
 - **change only the `inventory` that it receives.** The copy is thrown away afterwards.
   Anything else that `buff` changes, such as the war, the page, or saved settings,

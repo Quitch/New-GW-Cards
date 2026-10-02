@@ -1,6 +1,6 @@
 # `deal` — how often the card appears
 
-**Who needs this page:** every tech card that is not made with `gwoCard.upgradeCard`.
+**Who needs this page:** every mod with a tech card that does not use `gwoCard.upgradeCard`.
 
 `deal` gives back ("returns") a **chance** number. A larger number makes the game offer
 the card more often, and `0` means never. As a rough guide, from GWO's own cards: below 30

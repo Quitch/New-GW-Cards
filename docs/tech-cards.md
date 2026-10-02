@@ -1,7 +1,6 @@
 # Tech cards
 
-**Who needs this page:** every mod that adds tech cards. Look things up here as you
-need them.
+**Who needs this page:** every mod that adds tech cards. Use it as a reference.
 
 ## Which example do I start from?
 
@@ -45,8 +44,8 @@ different style, so they are harder to start from.
 
    **Never start a name with `gwc_` or `gwaio_`.** The game's own cards use `gwc_`, and
    GWO's cards use `gwaio_`. When a card file has the same name as one of theirs, the game
-   silently ignores one of the two files, and which one depends on the `priority` of each
-   mod. GWO's copy of a `gwc_` or `gwaio_` card normally wins, so your card is never dealt
+   silently ignores one of the two files. The `priority` of each mod decides which one.
+   GWO's copy of a `gwc_` or `gwaio_` card normally wins, so your card is never dealt
    and nothing tells you why. `gwc_damage_bots.js`, for example, already exists in PA and
    in GWO.
 
@@ -207,9 +206,9 @@ return gwoCard.upgradeCard({
 ```
 
 It writes the parts that you would otherwise write yourself. The card is visible on the
-board. It gives the player room for one more card, and adds the sentence "Adds a new
-slot for another technology." to the end of the description. It has the standard
-`getContext`. Its `deal` works out a sensible chance, and returns `0` until the player
+board. It gives the player one more card slot, and adds the sentence "Adds a new slot
+for another technology." to the end of the description. It has the standard
+`getContext`. Its `deal` calculates a sensible chance, and returns `0` until the player
 fields the unit named in `requires`.
 
 - `name`, `description`, `icon`, `audio`: the same as
@@ -226,12 +225,12 @@ fields the unit named in `requires`.
   mean. Give a number, or a function that receives the `inventory` and returns a number,
   for example `function (inventory) { return gwoCard.commanderWeight(inventory, 35); }`.
 - `slot: false`: optional. Don't give the player an extra card slot. The description
-  still ends with "Adds a new slot for another technology.", so also give your own
-  `describe`, below.
+  still ends with "Adds a new slot for another technology." To remove that sentence,
+  also give your own `describe` (see below).
 - `describe`, `available`, `deal`: optional, and rarely needed. Each one replaces the
   part that the helper writes. `describe` is a whole description, written as
   `_.constant("!LOC:...")`, with no slot sentence added. `available` is a function that
-  receives the `inventory` and returns `true` when the card can be offered, in place of
+  receives the `inventory` and returns `true` when GWO can offer the card. It replaces
   `requires` and `unless`. `deal` is a whole [`deal`](deal.md).
 
 **It cannot forbid units**, because its `dull` is empty. A card that must forbid a unit is

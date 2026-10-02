@@ -1,12 +1,14 @@
 # Troubleshooting
 
-**Who needs this page:** anyone whose card does not work as expected.
+**Who needs this page:** any mod whose card does not work as expected.
 
-Most mistakes in a card mod fail without a message. Find the symptom below, check each
-cause in turn, and follow the link for the details. First run the
-[checker](setup.md#installing-the-checker-recommended), and keep the debugger's Console
-open, as [Checking and testing your mod](testing.md#setting-up) describes. That section
-also lists the messages that PA prints in normal play, so that you don't chase them.
+Most mistakes in a card mod fail without a message. Find your symptom below, and check
+each cause in turn. Each cause links to the details.
+
+Before you start, run the [checker](setup.md#installing-the-checker-recommended). Keep
+the debugger's Console open, as [Checking and testing your mod](testing.md#setting-up)
+describes. That section also lists the messages that PA prints in normal play. Those
+messages are not faults.
 
 ## Nothing from the mod appears at all
 
@@ -31,8 +33,8 @@ also lists the messages that PA prints in normal play, so that you don't chase t
   without `.js`, letter for letter.
 - The card file has a typing mistake. The Console shows `GWO card failed to load:` and
   the ID. The [checker](setup.md#installing-the-checker-recommended) finds most of these.
-- The ID starts with `gwc_` or `gwaio_`, so the game uses GWO's file of that name instead
-  of yours. See
+- The ID starts with `gwc_` or `gwaio_`. The game then normally uses GWO's file of that
+  name, not yours. See
   [Naming and registering your card](tech-cards.md#naming-and-registering-your-card).
 
 ## The test panel gives me the card, but a war never offers it
@@ -40,8 +42,8 @@ also lists the messages that PA prints in normal play, so that you don't chase t
 - `deal` returns a chance of `0`. The example card starts at `0`. See
   [`deal`](deal.md).
 - The card needs a unit that the player does not have yet: `requires` in
-  `gwoCard.upgradeCard`, or a check in `deal`. Play until the player has that unit, or
-  test the check.
+  `gwoCard.upgradeCard`, or a check in `deal`. To test it, play until the player has
+  that unit.
 - The ID contains `_upgrade_`, and you play as a race other than MLA. See
   [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card).
 - The card's `model.gwoCardsToUnits` entry names units that the player's race does not
@@ -57,8 +59,8 @@ also lists the messages that PA prints in normal play, so that you don't chase t
 
 - The card is in neither `model.gwoCardsToUnits` nor `model.gwoCardsWithoutTooltip`. See
   [`model.gwoCardsToUnits`](tech-cards.md#modelgwocardstounits--tech-card-tooltips-in-tech_cardsjs).
-- Every card lost its tooltip at once: a race table name in `tech_cards.js` is
-  misspelled, which stops the whole list. See
+- Every card lost its tooltip at the same time. A race table name in `tech_cards.js` is
+  misspelled, and the error stops the whole list. See
   [Name the unit](race-cards.md#1-name-the-unit).
 
 ## The card is in my hand, but the units do not change

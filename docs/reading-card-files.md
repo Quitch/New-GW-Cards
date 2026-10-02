@@ -1,6 +1,6 @@
 # How to read the card files
 
-**Who needs this page:** everyone who has not edited a JavaScript file before.
+**Who needs this page:** every author who has not edited a JavaScript file before.
 
 The files that you edit are small JavaScript programs, but you don't need to learn
 JavaScript to edit them. You need to recognise a few marks. This is the whole list.

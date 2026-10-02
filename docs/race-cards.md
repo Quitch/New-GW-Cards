@@ -1,8 +1,8 @@
 # Cards for another race or an add-on
 
-**Who needs this page:** only cards that change one particular unit of another race or of an
-add-on. A card for the game's own units reaches the other races already, as the next
-section explains.
+**Who needs this page:** only mods whose cards change one particular unit of another race or
+of an add-on. A card for the game's own units already reaches the other races. The next
+section explains how.
 
 GWO lets a player fight a war as a race from another mod: Legion, Bugs, or Exiles. It
 also supports add-ons, which are mods that add more units to the races: Second Wave,
@@ -52,8 +52,8 @@ what a unit is stays on the stock unit: its `unit_types`, `buildable_types`, `to
 `base_spec`, `command_caps`, `model`, `display_name`, `description`, `si_name`,
 `transportable`, `transporter`, or `attachable`. A change marked `exact: true` also stays
 on the stock unit. Once any card makes such a change to a unit, no other change to that
-unit reaches the race units either. Keep `_upgrade_` in the
-ID of a card like that, or give its entry `races: ["mla"]` (see the warning below).
+unit reaches the race units either. Keep `_upgrade_` in the ID of a card like that, or
+give its entry `races: ["mla"]` (see the warning below).
 
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
 > the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is

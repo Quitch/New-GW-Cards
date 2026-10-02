@@ -1,6 +1,6 @@
 # Setting up your mod
 
-**Who needs this page:** every mod. Do it once, before your first card.
+**Who needs this page:** every mod. Follow it once, before your first card.
 
 ## Two folders that you need to find
 

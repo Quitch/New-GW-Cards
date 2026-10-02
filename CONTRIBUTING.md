@@ -77,12 +77,17 @@ this file). PA reads only `modinfo.json` and the files that its `scenes` block n
 
 The author guide is `README.md` plus the pages in `docs/`. `README.md` is the landing
 page and holds the only contents list. Each page in `docs/` covers one topic, opens with a
-line that says who needs it, and ends with a navigation footer. The pages fall in three
-tiers: the basics path (`setup.md`, `reading-card-files.md`, `first-card.md`,
-`testing.md`), which a new author reads in order; the reference pages for making cards;
-and the advanced pages. Keep the basics pages free of advanced concepts, such as `tag`,
-races, AI ops, decks, and translations, except as a link. Document a new feature on the
-reference or advanced page where it belongs, never on the basics path, and add any new
+line that says who needs it, and ends with a navigation footer. The pages are in three
+tiers:
+
+1. The basics path (`setup.md`, `reading-card-files.md`, `first-card.md`, and
+   `testing.md`). A new author reads these pages in order.
+2. The reference pages for making cards.
+3. The advanced pages.
+
+Keep the basics pages free of advanced concepts, such as `tag`, races, AI ops, decks,
+and translations. A link to one of them is permitted. Document a new feature on the
+reference or advanced page where it belongs, never on the basics path. Add each new
 page to the contents in `README.md`.
 
 There are two separate trees in `ui/`:
@@ -181,12 +186,12 @@ follow it:
   v7.4.1 the same mistake stopped war generation completely (verified in the game on
   2026-08-11 against GWO DEV v6.10.1). The supplied `start_cards.js` therefore registers
   no loadouts. Its two `push()` calls are empty, and the example IDs are in comments above
-  them. This reverses the earlier rule that kept live placeholder IDs in the lists and
-  told the author to delete them: they cost every new author four console errors and a
-  cleanup step. Keep the lists empty, and keep the example inside a comment, not inside
+  them. This reverses the earlier rule, which kept live placeholder IDs in the lists and
+  told the author to delete them. Those IDs cost every new author four console errors
+  and a cleanup step. Keep the lists empty. Keep the example inside a comment, not inside
   the call. An author who removes the comment marks from only some entries inside the
   call leaves a trailing comma, which Chrome 40 cannot parse. These places state the
-  rule, and must stay consistent: `docs/loadouts.md` (the blockquote under
+  rule. Keep them consistent: `docs/loadouts.md` (the blockquote under
   `model.gwoStartingCards`), `docs/checklist.md` (the loadout item),
   `docs/testing.md` (the "failed to load" entry), `docs/troubleshooting.md`,
   `CLAUDE.md` ("Registering a card"), and the header comment in `start_cards.js`.

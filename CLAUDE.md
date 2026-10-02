@@ -125,10 +125,15 @@ the first two, and both factories live in its `shared/cards.js`:
 `upgradeCard` **is** the card: it supplies `visible`, the extra card slot, `getContext`, a
 `withSlot` description and an `upgradeDeal` chance gated on `requires` (checked against
 `gwoCard.fieldedUnits`, so a race unit works), leaving `name`, `description`, `icon`,
-`audio`, `requires` and `buff`. Optional: `unless`; `chance` as a number or a function of
-the inventory; `slot: false`, which skips the slot but not the `withSlot` sentence, so
-pass your own `describe` with it (GWO's `gwaio_upgrade_subcommander_tactics.js` does); and
-`describe`, `available` and `deal`, which replace those parts. Its `dull` is empty, so it cannot forbid units — a card that must is an
+`audio`, `requires` and `buff`. The optional fields are:
+
+- `unless`.
+- `chance`, as a number or as a function of the inventory.
+- `slot: false`, which skips the slot but not the `withSlot` sentence. Pass your own
+  `describe` with it, as GWO's `gwaio_upgrade_subcommander_tactics.js` does.
+- `describe`, `available` and `deal`, which replace those parts.
+
+Its `dull` is empty, so it cannot forbid units. A card that must forbid units is an
 object literal. `loadout(CARD, {bank, start, apply, dulls})` returns the `{buff, dull}`
 pair a start card needs and is the only shape to write one in: the
 buffCount/lookupCard/maxCards/addStartCard sequence it replaces is easy to get subtly
@@ -148,9 +153,10 @@ wrong and fails quietly. The template's three example cards are one of each shap
   one unit borrows from another — see "Writing a file name into a spec" below.
 
 **Every registered loadout ID needs a card file of that name.** `gw_start` resolves each
-ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs; a missing file hits GWO's
-errback, which logs `Start card failed to load: <id>` and lets setup carry on
-(`gw_start/setup.js`). If the player picks that loadout, war creation fails with `No matching start card ID found` and GWO reseeds or shows
+ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs. A missing file reaches
+GWO's errback, which logs `Start card failed to load: <id>`. Setup then continues
+(`gw_start/setup.js`). If the player picks that loadout, war creation fails with
+`No matching start card ID found`, and GWO reseeds or shows
 its generation-error message (`gw_start/war_generation.js`). The shipped
 `start_cards.js` registers no loadouts: its example IDs are in comments above two empty
 `push()` calls. When you add an ID there, write its card file in the same change. A
@@ -349,7 +355,7 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
   (`aiModsInScopeOfFile`). A card that zeroes stock entries — by `replace` on
   `priority`, or by `silence` — and re-supplies them from its `load` file **needs** it, or
   it silently zeroes its own replacements and the AI builds nothing. `load` does not read
-  it; `squad` does.
+  it. `squad` reads it.
   Worked example: `<GWO>` `cards/gwaio_start_rapid.js`; reference: GWO's
   `docs/ai-pipeline.md`.
 

@@ -1,6 +1,6 @@
 # Minimum required changes
 
-**Who needs this page:** every mod. Go through it before you release.
+**Who needs this page:** every mod. Use it before you release your mod.
 
 You don't have to use every feature. This is the shortest path to a working mod. Tick off
 each item as you complete it.

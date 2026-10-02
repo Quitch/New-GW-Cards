@@ -1,13 +1,16 @@
 # Change what your Sub Commanders build — `inventory.addAIMods(...)`
 
-**Who needs this page:** only cards that change what the AI builds.
+**Who needs this page:** only mods whose cards change what the AI builds.
 
-This changes the build orders of the AI that fights for the player: their Sub Commanders
-(the allied commanders who join the player's army), and the allied commander that a star
-can give. In a co-op war, each player's Sub Commanders get that player's changes, and
-each co-op AI player gets its own. On a Guardian star, where the enemy mirrors the
-players' tech, the enemy AI gets the changes of every player. It does not change other
-enemies.
+This changes the build orders of the AI that fights for the player:
+
+- the player's Sub Commanders, which are the allied commanders who join the player's
+  army.
+- the allied commander that a star can give.
+
+In a co-op war, each player's Sub Commanders get that player's changes. Each co-op AI
+player gets its own changes. On a Guardian star, where the enemy mirrors the players'
+tech, the enemy AI gets the changes of every player. It does not change other enemies.
 
 **Most cards don't need this.** Use it when your card gives units that the Sub Commanders
 would otherwise never build, or changes what a factory can build.

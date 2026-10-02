@@ -9,12 +9,16 @@ example `start_card_id.js`.
 
 A loadout ID follows the rules for any card ID in
 [Naming and registering your card](tech-cards.md#naming-and-registering-your-card): a
-prefix of your own, and never `gwc_` or `gwaio_` at the start. It has two more rules, and
-a mistake in either one reports nothing. The ID must contain `_start_`, because that is
-how the game recognises a loadout at all. And the ID must **not** start with `gwc_start`,
-because that prefix belongs to the game's own loadouts. Write your prefix, then `_start_`,
-then a name, as the existing mods do: `gwaio_start_ceo`, `nem_start_nuke`. Write
-`mym_start_engineer`, not `gwc_start_engineer`.
+prefix of your own, and never `gwc_` or `gwaio_` at the start. A loadout ID has two more
+rules. A mistake in either one reports nothing.
+
+- The ID must contain `_start_`. That is how the game recognises a loadout.
+- The ID must **not** start with `gwc_start`. That prefix belongs to the game's own
+  loadouts.
+
+Write your prefix, then `_start_`, then a name, as the existing mods do:
+`gwaio_start_ceo`, `nem_start_nuke`. Write `mym_start_engineer`, not
+`gwc_start_engineer`.
 
 A mistake here is hard to spot. An ID without `_start_` still appears on the loadout
 screen, and the player can still pick it, so the mod looks fine. The damage is inside

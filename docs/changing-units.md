@@ -1,6 +1,6 @@
 # Changing units
 
-**Who needs this page:** only cards that unlock units or change unit stats.
+**Who needs this page:** only mods whose cards unlock units or change unit stats.
 
 ## Naming units: GWO IDs and unit paths
 
@@ -161,7 +161,7 @@ inventory.addMods([
 | `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule                          |
 
 `tag` works only on a single file name. `replaceable_units` and `buildable_projectiles`
-are lists, so tag each entry that you wrote by its number, for example
+are lists, so tag each entry that you wrote. Name the entry by its number, for example
 `buildable_projectiles.0`. `factory.initial_build_spec` counts only when it is a single
 file name.
 

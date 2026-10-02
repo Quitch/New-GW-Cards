@@ -32,16 +32,16 @@ copy the folder, rename it, and fill in the blanks.
 ## What you need
 
 - **Planetary Annihilation: TITANS.**
-- **Galactic War Overhaul v7.5.0 or later.** Install it in the game: open **Community
-  Mods** from the main menu, find _Galactic War Overhaul_ in the AVAILABLE list, and
-  install it. Community Mods keeps it up to date.
+- **Galactic War Overhaul v7.5.0 or later.** To install it, open **Community Mods** from
+  the main menu. Find _Galactic War Overhaul_ in the AVAILABLE list, and install it.
+  Community Mods updates it for you.
 - **A text editor.** Any plain-text editor works, but
   [Visual Studio Code](https://code.visualstudio.com/) (free) is much better. It colours
   the text, and with the [checker](docs/setup.md#installing-the-checker-recommended) it
   underlines your mistakes as you type. This guide assumes Visual Studio Code wherever it
   names a menu.
 
-The pages below tell you when you need anything else: the checker needs Node.js, and
+The pages below tell you when you need other tools. The checker needs Node.js, and
 testing needs the free Coherent UI Debugger.
 
 ## Start here
@@ -65,7 +65,7 @@ The four pages in [Start here](#start-here).
 
 ### Making cards
 
-Look things up on these pages when you need them.
+Use these pages as a reference.
 
 - [Tech cards](docs/tech-cards.md): which example to start from, naming, the parts of a
   card, the `gwoCard.upgradeCard` shortcut, and registering a card.
@@ -75,8 +75,7 @@ Look things up on these pages when you need them.
   their stats.
 - [Loadouts](docs/loadouts.md): loadout IDs, the locked and unlocked lists, and the bank
   that remembers unlocks.
-- [Minimum required changes](docs/checklist.md): a checklist to go through before you
-  release.
+- [Minimum required changes](docs/checklist.md): a checklist to use before you release.
 - [Troubleshooting](docs/troubleshooting.md): what to check when something does not
   work.
 - [Releasing your mod](docs/releasing.md): publishing, and co-op wars.
@@ -96,5 +95,5 @@ Most mods never need these pages.
 ## Getting help
 
 If something does not work, start with [Troubleshooting](docs/troubleshooting.md). Most
-mistakes in a card mod fail without a message, and that page lists the usual causes for
-each symptom.
+mistakes in a card mod fail without a message. That page lists the usual causes of each
+symptom.

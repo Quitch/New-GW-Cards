@@ -1,6 +1,6 @@
 # Checking and testing your mod
 
-**Who needs this page:** every mod. Come back to it after every change.
+**Who needs this page:** every mod. Use it again after every change.
 
 ## Checking your work
 

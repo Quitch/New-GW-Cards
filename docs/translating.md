@@ -1,7 +1,8 @@
 # Translating your mod
 
 **Who needs this page:** only mods that ship translations. Your mod works in English without
-them. Do this only if you want players to read your cards in their own language.
+them. Translate your mod only if you want players to read your cards in their own
+language.
 
 The game cannot load translations from a mod by itself. The
 [Mod Translations](https://github.com/Quitch/Mod-Translations) mod adds that ability, and

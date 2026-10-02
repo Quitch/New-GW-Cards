@@ -1,6 +1,6 @@
 # `model.gwoDecks` — your own deck in the Techs picker (in `decks.js`)
 
-**Who needs this page:** only mods that offer a deck of their own. Most mods don't.
+**Who needs this page:** only mods that offer a deck of their own. Most mods do not.
 
 The Techs picker in the war setup normally offers two decks: **Basic** (the base
 game's tech cards) and **Galactic War Overhaul** (the full GWO deck). A deck that you add
