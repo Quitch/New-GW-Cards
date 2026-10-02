@@ -109,10 +109,10 @@ is judged on what it does.
   changes. If your card makes a random choice, make it in `deal`, as
   [Randomness in `deal`](#randomness-in-deal) shows, and read the result in `buff`.
 - **be quick.** The AI player tries every card in its hand while the war waits. If that
-  takes too long, or the judgement itself fails, GWO stops it. The AI player then takes the
-  first card in the hand that is not a loadout, unjudged. If that card does not fit, the
-  AI player takes nothing. An AI player that keeps running out of time stops taking cards for the rest of
-  the session.
+  takes too long, or the judgement itself fails, GWO stops it. The AI player then takes
+  the first card in the hand that is not a loadout, unjudged. If that card does not fit,
+  the AI player takes nothing. An AI player that keeps running out of time stops taking
+  cards for the rest of the session.
 - **change only the `inventory` that it receives.** The copy is thrown away afterwards.
   Anything else that `buff` changes, such as the war, the page, or saved settings,
   changes for real, although nobody took the card.
