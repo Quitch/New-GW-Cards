@@ -10,8 +10,8 @@ Read `CLAUDE.md` when the user writes a card. Keep the two files consistent when
 changes its card contract or its op behaviour.
 
 The repo root is also the mod root, so the release ZIP _is_ the folder that the author
-copies into `client_mods`. `CLAUDE.md`, `README.md`, the lint tools and `.prettierrc` are
-all in that ZIP. The audience takes the ZIP instead of cloning the repo, and the checker
+copies into `client_mods`. `CLAUDE.md`, `README.md`, `docs/`, the lint tools and
+`.prettierrc` are all in that ZIP. The audience takes the ZIP instead of cloning the repo, and the checker
 works only because it sits beside `ui/`. This file is the one document that
 `.gitattributes` still marks `export-ignore`, because it is about a change to the
 template, not about writing a card.
@@ -45,8 +45,8 @@ They are **not** faults to correct in this repo:
 
 - `com.pa.YOURNAME.MODNAME` — the mod identifier. It appears in `modinfo.json`, in the
   `ui/mods/com.pa.YOURNAME.MODNAME/` directory name, and in the `coui://` scene URLs. The
-  author must change all three together and keep them the same. See the `README.md` step
-  "Preparing the mod".
+  author must change all three together and keep them the same. See "Preparing the mod"
+  in `docs/setup.md`.
 - `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, and the empty `forum` and `icon` values in
   `modinfo.json`.
 - `your_mod_id` — the `LS_KEY` in `bank.js`. It is the localStorage key for unlocked
@@ -72,10 +72,25 @@ whole job.
 The repo root **is** the mod root. `modinfo.json` and `ui/` sit at the top level, and the
 author copies the whole folder. The copy therefore carries `CLAUDE.md`, the authoring
 guide named above, and the lint tools with it. PA cannot see the other files in the root
-(`package.json`, `eslint.config.mjs`, `.prettierrc`, `README.md`, `LICENSE` and this
-file). PA reads only `modinfo.json` and the files that its `scenes` block names.
+(`package.json`, `eslint.config.mjs`, `.prettierrc`, `README.md`, `docs/`, `LICENSE` and
+this file). PA reads only `modinfo.json` and the files that its `scenes` block names.
 
-There are two separate trees:
+The author guide is `README.md` plus the pages in `docs/`. `README.md` is the landing
+page and holds the only contents list. Each page in `docs/` covers one topic, opens with a
+line that says who needs it, and ends with a navigation footer. The pages are in three
+tiers:
+
+1. The basics path (`setup.md`, `reading-card-files.md`, `first-card.md`, and
+   `testing.md`). A new author reads these pages in order.
+2. The reference pages for making cards.
+3. The advanced pages.
+
+Keep the basics pages free of advanced concepts, such as `tag`, races, AI ops, decks,
+and translations. A link to one of them is permitted. Document a new feature on the
+reference or advanced page where it belongs, never on the basics path. Add each new
+page to the contents in `README.md`.
+
+There are two separate trees in `ui/`:
 
 - `ui/main/game/galactic_war/cards/*.js` — the **card definitions**. This path shadows the
   card directory of the base game. `tech_card_id.js` is the tech-card template. The game
@@ -122,9 +137,9 @@ dependency on Mod Translations (`com.pa.quitch.modtranslations`). This was the d
 on issue #8, on 2026-09-17: the documents give the author the steps, and a mod that ships
 no translations carries nothing extra. Do not add the scaffold.
 
-Three places describe the steps: the `README.md` section "Translating your mod", the
-`CLAUDE.md` section "Shipping translations", and the "If you ship translations, also:"
-block of the `README.md` checklist. Keep those three consistent with each other. The
+Three places describe the steps: `docs/translating.md`, the `CLAUDE.md` section
+"Shipping translations", and the "If you ship translations, also:" block of
+`docs/checklist.md`. Keep those three consistent with each other. The
 README of Mod Translations is the authority on how the framework behaves, so keep them
 consistent with it too: the `priority` of 50, the `global_mod_list` rule, the key format
 and the format of the `[ModTranslations]` log line. A `translations.js` is the one loader
@@ -161,20 +176,25 @@ follow it:
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod with `op: "tag"`, on the
   same `file` and the same `path`. The file must also be reachable, or listed in
-  `model.gwoSpecs`. This is a silent failure. `README.md`, `CLAUDE.md` and the comments in
-  `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js` and `specs.js` all warn
-  about it. Keep those warnings consistent with each other, and with GWO's
+  `model.gwoSpecs`. This is a silent failure. `docs/changing-units.md`, `CLAUDE.md` and
+  the comments in `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js` and
+  `specs.js` all warn about it. Keep those warnings consistent with each other, and with GWO's
   `docs/specs.md`.
-- **A loadout ID that is registered with no card file of that name stops war generation
-  completely.** The supplied `start_cards.js` does exactly that with four placeholder IDs.
-  An author who enables the template before they edit it therefore gets a Galactic War
-  that never starts. This was verified in the game on 2026-08-11 against GWO DEV v6.10.1.
-  It is the worst failure mode of the template, because it breaks the game rather than the
-  card. Three places state it: `README.md` (step 6 of "Preparing the mod", the blockquote
-  under `model.gwoStartingCards`, and a checklist item), `CLAUDE.md` ("Registering a
-  card"), and the header comment in `start_cards.js`. Keep those three consistent. Do not
-  correct the problem by emptying the supplied lists. The example IDs show an author the
-  shape, and the warning is the correction.
+- **A loadout ID that is registered with no card file of that name cannot be used.** GWO
+  logs `Start card failed to load: <id>` and war setup carries on. If the player picks
+  that loadout, war creation fails and GWO reseeds or shows its error message. Until GWO
+  v7.4.1 the same mistake stopped war generation completely (verified in the game on
+  2026-08-11 against GWO DEV v6.10.1). The supplied `start_cards.js` therefore registers
+  no loadouts. Its two `push()` calls are empty, and the example IDs are in comments above
+  them. This reverses the earlier rule, which kept live placeholder IDs in the lists and
+  told the author to delete them. Those IDs cost every new author four console errors
+  and a cleanup step. Keep the lists empty. Keep the example inside a comment, not inside
+  the call. An author who removes the comment marks from only some entries inside the
+  call leaves a trailing comma, which Chrome 40 cannot parse. These places state the
+  rule. Keep them consistent: `docs/loadouts.md` (the blockquote under
+  `model.gwoStartingCards`), `docs/checklist.md` (the loadout item),
+  `docs/testing.md` (the "failed to load" entry), `docs/troubleshooting.md`,
+  `CLAUDE.md` ("Registering a card"), and the header comment in `start_cards.js`.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither
@@ -237,18 +257,18 @@ template and the game disagree.
 
 ## Testing (manual, in-game)
 
-There is no automated test suite. Follow the "Testing your mod" section of `README.md`.
+There is no automated test suite. Follow `docs/testing.md`.
 Start PA with `--devmode` and `--coherent_port=9999`, enable the mod, and watch the
 console of the Coherent UI Debugger.
 
-`README.md` lists the two errors and warnings that PA prints in normal operation: an
+`docs/testing.md` lists the two errors and warnings that PA prints in normal operation: an
 `Uncaught TypeError: undefined is not a function`, and a deprecation warning about
-synchronous XHR. Each can appear once for each scene. `README.md` also lists GWO's
+synchronous XHR. Each can appear once for each scene. It also lists GWO's
 `Warning: File not found in mod`, followed by the change that GWO skipped, which is
 expected whenever a card changes a unit that the player does not own. The list exists so
 that a reader does not take these messages for real failures.
 
-`README.md` documents separate manual procedures for the two card types. For start cards,
+`docs/testing.md` documents separate manual procedures for the two card types. For start cards,
 check the loadout screen and the localStorage key that `LS_KEY` sets in `bank.js`. For
 tech cards, deal the card through the `X` panel, then build the changed units in a GW
 battle. A skirmish or sandbox game uses the stock specs, so it cannot show a card's

@@ -1,20 +1,11 @@
-// READ THIS BEFORE YOU ENABLE THE MOD
+// YOUR LOADOUTS
 //
-// Every ID in the two lists below must have a card file of exactly that name in
-// ui/main/game/galactic_war/cards/.  If one of them does not, GALACTIC WAR DOES
-// NOT START.  GWO loads every loadout that you list here while it builds a new
-// war, and it waits for ever for a file that is missing.  The war finishes its
-// generation and the screen then stays as it is, with no error and nothing to
-// click.  A restart of the game is the only way out.
+// The two lists below start empty.  A mod with no loadouts works correctly, so
+// leave them empty if you write only tech cards.
 //
-// The example IDs below have no files, so this happens the first time that you
-// enable the mod.  DELETE THE IDS THAT YOU HAVE NOT REPLACED, even if you write
-// only tech cards.  You can delete all of them - a mod with no loadouts works
-// correctly.  Keep the push( and ); around them, for example:
-//   model.gwoNewStartCards.push();
-//
-// Tech cards (tech_cards.js) are safer.  The game logs a missing file there,
-// skips that card, and the war continues.
+// Every ID that you add here must have a card file of exactly that name in
+// ui/main/game/galactic_war/cards/, or that loadout cannot be used.  The
+// debugger then shows "Start card failed to load:" and the ID.
 //
 // Change only the lists and the values marked in CAPITALS.  Leave the other
 // lines as they are: they wrap the file so that a mistake in it cannot break
@@ -31,13 +22,16 @@
     // An ID matches the card filename without the file extension, for example
     // "mym_start_bots".  A loadout ID must contain "_start_", and it must NOT
     // start with "gwc_start" - that prefix belongs to the loadouts that come
-    // with the game.  See "Creating a card" in the README.
+    // with the game.  See "Loadout IDs" in docs/loadouts.md.
     // A loadout belongs in THIS list or in the unlocked list below, never in
     // both.
-    model.gwoNewStartCards.push(
-      { id: "YOUR_LOCKED_LOADOUT_ID_1" },
-      { id: "YOUR_LOCKED_LOADOUT_ID_N" }
-    );
+    // Write your IDs inside the brackets of push( ), with a comma between them
+    // and no comma after the last one, for example:
+    //   model.gwoNewStartCards.push(
+    //     { id: "YOUR_LOCKED_LOADOUT_ID_1" },
+    //     { id: "YOUR_LOCKED_LOADOUT_ID_N" }
+    //   );
+    model.gwoNewStartCards.push();
 
     // UNLOCKED LOADOUTS
     // These are available from the start.
@@ -47,13 +41,15 @@
     // An ID matches the card filename without the file extension, for example
     // "mym_start_bots".  A loadout ID must contain "_start_", and it must NOT
     // start with "gwc_start" - that prefix belongs to the loadouts that come
-    // with the game.  See "Creating a card" in the README.
+    // with the game.  See "Loadout IDs" in docs/loadouts.md.
     // Use different loadouts from the locked ones above.  Never put the same ID
     // in both lists.
-    model.gwoStartingCards.push(
-      { id: "YOUR_UNLOCKED_LOADOUT_ID_1" },
-      { id: "YOUR_UNLOCKED_LOADOUT_ID_N" }
-    );
+    // Write your IDs in the same way as above, for example:
+    //   model.gwoStartingCards.push(
+    //     { id: "YOUR_UNLOCKED_LOADOUT_ID_1" },
+    //     { id: "YOUR_UNLOCKED_LOADOUT_ID_N" }
+    //   );
+    model.gwoStartingCards.push();
 
     // TELL GALACTIC WAR OVERHAUL WHERE YOUR BANK IS
     // A mod with only tech cards can leave this block as it is, or delete it.
@@ -82,9 +78,9 @@
     // If the effect of your loadout would break the allied-commander feature,
     // list its ID here.  Galactic War Overhaul then disables the ally when the
     // player picks the loadout.  Galactic War Overhaul never creates this list
-    // itself, unlike the lists above, so you must create it before you add to
-    // it.  See "Feature reference" in the README.  Remove the comment marks
-    // (//) from the lines below and edit them if you need this list.
+    // itself, so you must create it before you add to it.  See
+    // docs/loadouts.md.  Remove the comment marks (//) from the lines below
+    // and edit them if you need this list.
     // if (!model.gwoStarCardsWhichBreakAllies) {
     //   model.gwoStarCardsWhichBreakAllies = [];
     // }
@@ -95,8 +91,8 @@
     // an ability that works only when a player gives an order, list its ID
     // here.  An AI player then never starts with it.  Galactic War Overhaul
     // never creates this list itself, so you must create it before you add to
-    // it.  See "Feature reference" in the README.  Remove the comment marks
-    // (//) from the lines below and edit them if you need this list.
+    // it.  See docs/loadouts.md.  Remove the comment marks (//) from the lines
+    // below and edit them if you need this list.
     // if (!model.gwoLoadoutsAiCannotUse) {
     //   model.gwoLoadoutsAiCannotUse = [];
     // }

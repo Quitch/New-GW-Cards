@@ -7,7 +7,7 @@ package-lock.json linguist-generated=true -diff
 
 # Keep development junk out of our ZIP files. The repo root is the mod root, so the ZIP
 # is the folder that gets dropped into client_mods - what is left in it is what the
-# author works in. The lint tooling, .prettierrc, README.md and CLAUDE.md are not junk
+# author works in. The lint tooling, .prettierrc, README.md, docs/ and CLAUDE.md are not junk
 # here: this template's product is code an inexperienced author writes themselves, so the
 # guidance and the Chrome 40 whitelist that stops a parse error taking out the scene have
 # to travel with it, and the checker only works because it sits beside ui/.

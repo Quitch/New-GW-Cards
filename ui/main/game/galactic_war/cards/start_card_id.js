@@ -1,8 +1,9 @@
 // AN EXAMPLE LOADOUT (START CARD)
 //
-// The README explains every part of a card in plain English, with worked
-// examples.  Keep it open beside this file.  Read "How to read the card files"
-// in the README first if you have never edited a file like this before.
+// The guide explains every part of a card in plain English, with worked
+// examples.  It starts at README.md, and docs/loadouts.md covers this card.
+// Keep it open beside this file.  Read docs/reading-card-files.md first if
+// you have never edited a file like this before.
 //
 // 1. Rename this file.  The file name without ".js" is the ID of the loadout.
 //    A loadout ID MUST contain "_start_", and it must NOT start with
@@ -11,10 +12,9 @@
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to start_cards.js, in the locked list or in the unlocked list.
 // 4. In the same file, set prefix and path in model.gwoLoadoutBanks, and set
-//    LS_KEY in bank.js - see "The bank and LS_KEY" in the README.  Without
-//    the model.gwoLoadoutBanks entry a locked loadout can never unlock, and
-//    nothing warns you.  "Minimum required changes" in the README lists every
-//    step.
+//    LS_KEY in bank.js - see "The bank and LS_KEY" in docs/loadouts.md.
+//    Without the model.gwoLoadoutBanks entry a locked loadout can never
+//    unlock, and nothing warns you.  docs/checklist.md lists every step.
 //
 // Do not change the define([ ... ]) block or the "function (...) {" line below
 // it, except the bank.js address.  They load the tools that the card uses.
@@ -72,8 +72,8 @@ define([
       //   ];
       // The Dox already has one tool, so the tool that you pushed is number 1.
       // Tools count from 0.  You must also list a borrowed file in specs.js, or
-      // the tag points at nothing.  The README section "Whenever your value is a
-      // file name, tag it" explains both halves.
+      // the tag points at nothing.  "Whenever your value is a file name, tag it"
+      // in docs/changing-units.md explains both halves.
       //
       // Delete the two lines below if your loadout changes no unit stats.
       var mods = [];
@@ -83,8 +83,8 @@ define([
       // Most loadouts do not need this.  An example of the list contents.  It
       // lets basic bot factories build something that only advanced bot
       // factories could build before.  "MyUnit" must be replaced with a real
-      // to_build name from the game's AI files - see "Change what your Sub
-      // Commanders build" in the README:
+      // to_build name from the game's AI files - see
+      // docs/ai-build-orders.md:
       //   var aiMods = [
       //     {
       //       type: "factory",

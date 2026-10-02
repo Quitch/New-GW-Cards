@@ -1,20 +1,22 @@
 // AN EXAMPLE CARD THAT IMPROVES ONE UNIT
 //
-// The README explains every part of a card in plain English, with worked
-// examples.  Keep it open beside this file.  Read "How to read the card files"
-// in the README first if you have never edited a file like this before.
+// The guide explains every part of a card in plain English, with worked
+// examples.  It starts at README.md, and docs/first-card.md covers this card.
+// Keep it open beside this file.  Read docs/reading-card-files.md first if
+// you have never edited a file like this before.
 //
 // 1. Rename this file.  The file name without ".js" is the ID of the card, for
-//    example "mym_dox_health.js" has the ID "mym_dox_health".
-//    Start it with a prefix of your own.  Never start it with "gwc_" or
-//    "gwaio_".  If a card has the same name as one of the game's or GWO's, the
-//    game silently ignores one of the two files, and which one depends on
-//    which mod loads last.  GWO offers a card with "_upgrade_" in its ID to
-//    MLA players only, unless its model.gwoCardsToUnits entry in
-//    tech_cards.js names Legion, Bugs, Exiles, or add-on units, or lists the
-//    races to offer it to, for example races: ["mla", "legion"].  Leave
-//    "_upgrade_" out only when players of other races should get the card too,
-//    and the card changes only values such as health or damage.
+//    example "mym_upgrade_dox.js" has the ID "mym_upgrade_dox".
+//    Start it with a prefix of your own, then "_upgrade_", then the unit.
+//    Never start it with "gwc_" or "gwaio_".  If a card has the same name as
+//    one of the game's or GWO's, the game silently ignores one of the two
+//    files, and which one depends on which mod loads last.  GWO offers a card
+//    with "_upgrade_" in its ID to MLA players only, unless its
+//    model.gwoCardsToUnits entry in tech_cards.js names Legion, Bugs, Exiles,
+//    or add-on units, or lists the races to offer it to, for example
+//    races: ["mla", "legion"].  Leave "_upgrade_" out only when players of
+//    other races should get the card too, and the card changes only values
+//    such as health or damage.
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to tech_cards.js, in model.gwoCards and in
 //    model.gwoCardsToUnits.  The game never deals a card that is not in
@@ -67,8 +69,8 @@ define([
       // If a value that you write is the NAME OF ANOTHER FILE - a weapon, a build
       // arm, or something that spawns on death - it needs a second entry with
       // op: "tag" and no value.  Without that entry the player's other cards
-      // do not apply to what you added, and nothing warns you.  The README
-      // section "Whenever your value is a file name, tag it" explains it.
+      // do not apply to what you added, and nothing warns you.  "Whenever your
+      // value is a file name, tag it" in docs/changing-units.md explains it.
       inventory.addMods(
         gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 })
       );
@@ -76,9 +78,11 @@ define([
         gwoCard.mods(gwoUnit.doxWeapon, "add", { max_range: 20 })
       );
     },
-    // You can add three more parts here.  The "gwoCard.upgradeCard" section of
-    // the README explains all three: `unless` (do not offer this card to a player
-    // who already holds some other card), `chance` (how often the game offers the
-    // card), and `slot: false` (do not give the player an extra card slot).
+    // You can add more parts here.  The "gwoCard.upgradeCard" section of
+    // docs/tech-cards.md explains each one.  The three most useful are `unless` (do not
+    // offer this card to a player who already holds some other card), `chance`
+    // (how often the game offers the card), and `slot: false` (do not give the
+    // player an extra card slot).  With `slot: false`, also give your own
+    // `describe`, or the description still says that the card adds a slot.
   });
 });

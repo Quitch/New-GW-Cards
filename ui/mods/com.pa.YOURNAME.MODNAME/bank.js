@@ -8,7 +8,7 @@
    If your mod has no loadouts, you do not need to change this file.
 
    CHANGE ONLY LS_KEY.  Everything below it makes the bank work.  Leave it
-   alone.  See "The bank and LS_KEY" in the README. */
+   alone.  See "The bank and LS_KEY" in docs/loadouts.md. */
 define(function () {
   // SET THIS TO A VALUE THAT IS UNIQUE TO YOUR MOD, for example
   // "yourname_modname_bank".  Keep the quotation marks.

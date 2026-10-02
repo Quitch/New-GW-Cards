@@ -6,11 +6,12 @@ file sits in it, so it applies both in the template repo and in the copy the aut
 renames into their `client_mods`. `CONTRIBUTING.md` governs the other job — changing the
 template itself — and does not travel with the copy.
 
-`README.md`, which does travel, is the author-facing guide, written in plain English for
-someone who does not code. It is the reference for what every part of a card does, and
-you should follow it. This file adds what the README deliberately leaves out: where to
-find the real values on the user's own machine, and the runtime behaviour that fails
-**silently** when you get it wrong.
+`README.md` and the pages in `docs/`, which do travel, are the author-facing guide,
+written in plain English for someone who does not code. `README.md` is the landing page
+and contents; `docs/` holds one page per topic. Together they are the reference for what
+every part of a card does, and you should follow them. This file adds what the guide
+deliberately leaves out: where to find the real values on the user's own machine, and
+the runtime behaviour that fails **silently** when you get it wrong.
 
 The user may know nothing about coding. Explain what you changed in plain language, keep
 the heavy comment style the template uses, and never leave a placeholder behind.
@@ -93,8 +94,9 @@ If the user has no mod folder yet, create one before writing any card:
    plays the host's war with the host's cards, so its own copy of the flag decides
    nothing. The host's flagged mods are published as the war's required client mods, and a
    viewer missing one, holding a flagged mod the host lacks, or running a different
-   `version` of one, is refused at connect. It has no effect in a solo war. README's
-   "Sharing your mod in a co-op war" section is the author-facing explanation.
+   `version` of one, is refused at connect. It has no effect in a solo war.
+   `docs/releasing.md`, "Sharing your mod in a co-op war", is the author-facing
+   explanation.
 
 The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
 must agree. If they disagree the game loads nothing and reports nothing. A mod that ships
@@ -107,7 +109,9 @@ fill its placeholders in.
 ## Registering a card
 
 GWO never deals a card that is not registered. The card's ID is its file name without
-`.js`. See the README's "Feature reference" for the full list of `model.gwo*` arrays.
+`.js`. The `model.gwo*` arrays are documented on the guide page that uses each one:
+`docs/tech-cards.md`, `docs/loadouts.md`, `docs/changing-units.md` (`gwoSpecs`),
+`docs/deal.md` (`gwoCardsGrantingAdvancedTech`), and `docs/decks.md`.
 
 Write the card in the shape its family calls for. GWO's `docs/tech-cards.md` prescribes
 the first two, and both factories live in its `shared/cards.js`:
@@ -119,9 +123,17 @@ the first two, and both factories live in its `shared/cards.js`:
 | Everything else                          | An object literal            |
 
 `upgradeCard` **is** the card: it supplies `visible`, the extra card slot, `getContext`, a
-`withSlot` description and an `upgradeDeal` chance gated on `requires`, leaving `name`,
-`description`, `icon`, `audio`, `requires` and `buff` (plus optional `unless`, `chance`,
-`slot: false`). Its `dull` is empty, so it cannot forbid units — a card that must is an
+`withSlot` description and an `upgradeDeal` chance gated on `requires` (checked against
+`gwoCard.fieldedUnits`, so a race unit works), leaving `name`, `description`, `icon`,
+`audio`, `requires` and `buff`. The optional fields are:
+
+- `unless`.
+- `chance`, as a number or as a function of the inventory.
+- `slot: false`, which skips the slot but not the `withSlot` sentence. Pass your own
+  `describe` with it, as GWO's `gwaio_upgrade_subcommander_tactics.js` does.
+- `describe`, `available` and `deal`, which replace those parts.
+
+Its `dull` is empty, so it cannot forbid units. A card that must forbid units is an
 object literal. `loadout(CARD, {bank, start, apply, dulls})` returns the `{buff, dull}`
 pair a start card needs and is the only shape to write one in: the
 buffCount/lookupCard/maxCards/addStartCard sequence it replaces is easy to get subtly
@@ -140,25 +152,24 @@ wrong and fails quietly. The template's three example cards are one of each shap
   be listed in `model.gwoSpecs` in `specs.js`, or GWO drops mods to it. So must a file
   one unit borrows from another — see "Writing a file name into a spec" below.
 
-**A registered loadout with no card file hangs the game, and it is the template's default
-state.** GWO resolves every ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs
-while generating a war; a missing file throws `Script error for: cards/<id>` and the
-generation promise never settles, so the client sits on `gw_start` forever with
-`makeGameBusy()` true and no visible error. The log line `War created using Galactic War
-Overhaul v…` appears anyway, so it is not evidence of success — the navigation to
-`gw_play` is. The shipped `start_cards.js` registers four placeholder IDs and ships no
-files for them, so **clear the lists of any example ID before the user enables the mod**,
-including when the job is only tech cards. Verified live 2026-08-11: removing just those
-two `push` calls took the same war from a permanent hang to `gw_play` in seconds.
-Placeholder IDs in `model.gwoCards` are not equivalent — those 404 non-fatally and the
-war plays.
+**Every registered loadout ID needs a card file of that name.** `gw_start` resolves each
+ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs. A missing file reaches
+GWO's errback, which logs `Start card failed to load: <id>`. Setup then continues
+(`gw_start/setup.js`). If the player picks that loadout, war creation fails with
+`No matching start card ID found`, and GWO reseeds or shows
+its generation-error message (`gw_start/war_generation.js`). The shipped
+`start_cards.js` registers no loadouts: its example IDs are in comments above two empty
+`push()` calls. When you add an ID there, write its card file in the same change. A
+missing file
+for an ID in `model.gwoCards` logs `GWO card failed to load: <id>` and the war plays
+without that card.
 
 ## Co-op AI players run `buff` on a copy
 
-From the GWO release that adds co-op AI players, a host can seat AI players in a co-op
-war, and under per-player tech each one picks its own cards. It judges a card by applying
-it to a scratch copy of its inventory - the real `GWInventory.applyCards` with every bank
-held shut, one apply at a time, each against a 5-second timeout - and scoring what
+A host can seat AI players in a co-op war, and under per-player tech each one picks its
+own cards. It judges a card by applying it to a scratch copy of its inventory - the real
+`GWInventory.applyCards` with every bank held shut, one apply at a time, each against a
+10-second timeout - and scoring what
 changed: units unlocked, unit stats modded, AI mods, and Sub Commanders and card slots
 added. It never reads the card's ID. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
 authority. What that means for a card, all of it silent when wrong:
@@ -167,9 +178,10 @@ authority. What that means for a card, all of it silent when wrong:
   given inventory (random choices belong in `deal`'s `params`), touch only the
   `inventory` it is passed, and never throw. A side effect anywhere else happens for real.
   `applyCards` catches a throw, so a throwing card just looks like it does nothing.
-- **It must be fast.** A hand's decision gets 20 seconds; past that the AI takes the
-  hand's first card that fits, unjudged, and after two timed-out decisions it declines
-  every deal for the rest of the session.
+- **It must be fast.** A hand's decision gets 20 seconds; past that, or on an error, the
+  AI takes the hand's first card that is not a loadout, unjudged, and declines the hand
+  if that card does not fit (`fallback` in `gw_play/coop_ai_driver.js`). After two
+  timed-out decisions it declines every deal for the rest of the session.
 - **List a card in `model.gwoCardsToUnits` only when it changes units.** A card with no
   effect the AI can see is valued by its own `deal` chance - unless it is in
   `gwoCardsToUnits`, which tells the AI to expect a unit effect, so it scores zero and is
@@ -179,7 +191,8 @@ authority. What that means for a card, all of it silent when wrong:
 
 ## `inventory.addMods` — changing unit stats
 
-The README documents the shape. This is the behaviour that is not obvious from it. The
+`docs/changing-units.md` documents the shape. This is the behaviour that is not obvious
+from it. The
 code is in `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js`: each op is a
 function in its `ops` table.
 
@@ -197,15 +210,14 @@ function in its `ops` table.
   means "delete every occurrence of it".
 - **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
-  creates missing intermediate levels for you. On GWO v7.4.1 and earlier it does so for
-  every op, so a radius `multiply` over `gwoCard.observerPaths` can give a unit an empty
-  observer item it lacked. **Unreleased:** on GWO `develop` after v7.4.1, `multiply` and
-  `tag` stop at a missing level and write nothing. If an intermediate segment is a
+  creates missing intermediate levels for you, except for `multiply`, `tag` and `clone`,
+  which stop at a missing level and write nothing (`clone` warns
+  `clone: attribute is missing or null`). If an intermediate segment is a
   **string**, GWO treats it as another spec file and follows it — which means your change
   lands in that shared file and affects **every unit that references it**. GWO never
   follows the final segment (that is what `op: "tag"` exists for).
-- **Observer items by layer and channel.** **Unreleased:** on GWO `develop` after v7.4.1,
-  a segment `[layer=<layer>,channel=<channel>]` selects every array item whose `layer` and
+- **Observer items by layer and channel.** A segment `[layer=<layer>,channel=<channel>]`
+  selects every array item whose `layer` and
   `channel` equal those values, and the change applies to each.
   `gwoCard.observerPath(layer, channel, field)` builds
   `recon.observer.items.[layer=…,channel=…].<field>`. Units order their observer items
@@ -225,15 +237,14 @@ function in its `ops` table.
 - **The file must be in play.** It has to be a unit the player was granted, or reachable
   from one, or listed in `model.gwoSpecs`. Otherwise GWO logs
   `Warning: File not found in mod` followed by the descriptor as JSON (`<GWO>`
-  `gw_play/specs.js`; v7.4.0 and earlier print `Object` in place of the JSON) and skips
-  that entry. **Expect to see this warning in normal play** — GWO deals a card touching
+  `gw_play/specs.js`) and skips that entry. **Expect to see this warning in normal play** — GWO deals a card touching
   several units to players owning only some of them, and dropping the rest is the
   intended behaviour. It only indicates a bug when the file _should_ have been reachable:
   a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
 - **Follow a value that is a file name with `op: "tag"`** on the same `file` and
   `path`. See the section below — this is the failure that is hardest to spot.
-- **`clone` and `eval` are advanced — avoid them**, as the README says.
+- **`clone` and `eval` are advanced — avoid them**, as `docs/changing-units.md` says.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
   never gets it, silently. A loadout's `dulls` forbid their units for the whole war.
@@ -251,9 +262,12 @@ itself more than once.
 
 Every mod whose `value` is a spec reference needs a second mod, `op: "tag"`, on the same
 `file` and `path` and with no `value`. The reference fields are the ones `tagSpec`
-renames: `base_spec`, `tools[].spec_id`, `ammo_id`, `replaceable_units`,
-`buildable_projectiles`, `factory.initial_build_spec`, `death_weapon.ground_ammo_spec`,
-`death_weapon.air_ammo_spec`, `spawn_unit_on_death`.
+renames: `base_spec`, `tools[].spec_id`, `ammo_id` (or `ammo_id[].id` when it is a list),
+`replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` (only when it
+is a string), `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec`,
+`spawn_unit_on_death`. The `tag` op takes only a string, so a list field
+(`replaceable_units`, `buildable_projectiles`) is tagged one entry at a time by index
+(`buildable_projectiles.0`); `tag` on the list itself warns and changes nothing.
 
 Two things follow.
 
@@ -322,8 +336,8 @@ arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
 entry with any builder outside the list, or with no `builders`, is untouched. It ignores
 `toBuild`, `idToMod`, `refId`, `refValue`, and `matchAll`, and it reads `treeOnly`. Use it
 when a card changes what a builder can build and the AI must stop ordering everything else
-from that builder. It needs GWO v7.3.2 or later; on v7.3.1 and earlier the descriptor logs
-"Invalid AI mod operation" and does nothing.
+from that builder. A missing `value` throws, so `applyAiMods` logs
+`applyAiMods: op threw` and skips it.
 
 **`op: "load"`.** It reads `/pa/ai_tech/<folder>/<value>` from your own mod, where the
 folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds/`,
@@ -331,19 +345,17 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 `pa/ai_tech/factory_builds/my_card.json` shipped alongside your `ui` folder.
 
 - `value` must include the `.json`.
-- **If that file is missing, its builds are lost.** On GWO v7.4.1 and earlier the battle
-  never starts: nothing errors, and loading just hangs. **Unreleased:** on GWO `develop`
-  after v7.4.1, the referee logs `AI file of a load mod not read, skipped:` with the path,
-  and the battle starts without that file's builds. Confirm the file exists on disk
-  before shipping a `load`.
+- **If that file is missing, its builds are lost.** The referee logs
+  `AI file of a load mod not read, skipped:` with the path, and the battle starts without
+  that file's builds. Confirm the file exists on disk before shipping a `load`.
 - Name it after your card ID. A name another mod also uses replaces that mod's file.
 - GWO walks a loaded file like any other build file, so every descriptor of that `type`
   lands on it — your card's own, and those of every other card in the hand.
 - `treeOnly: true` on a build-list descriptor keeps it off every file under `/pa/ai_tech/`
   (`aiModsInScopeOfFile`). A card that zeroes stock entries — by `replace` on
   `priority`, or by `silence` — and re-supplies them from its `load` file **needs** it, or
-  it silently zeroes its own replacements and the AI builds nothing. `load` and `squad` do
-  not read it.
+  it silently zeroes its own replacements and the AI builds nothing. `load` does not read
+  it. `squad` reads it.
   Worked example: `<GWO>` `cards/gwaio_start_rapid.js`; reference: GWO's
   `docs/ai-pipeline.md`.
 
@@ -351,7 +363,7 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 
 Only when the user asks for translations. The template ships none of it — no
 `translations.js`, no `translations/` folder, no `modinfo.json` wiring — and the mod
-works in English without it. The README's "Translating your mod" is the author-facing
+works in English without it. `docs/translating.md` is the author-facing
 procedure; the framework is the Mod Translations mod (`com.pa.quitch.modtranslations`),
 whose README ("For mod authors") and `docs/design.md` are the authority. Every step below
 fails silently: the text just stays English.
@@ -427,7 +439,7 @@ visible cause.
 
 ## When something here disagrees with the game
 
-GWO is the authority, not this file and not the README. Its `docs/tech-cards.md` holds
+GWO is the authority, not this file and not the guide. Its `docs/tech-cards.md` holds
 the card contract, the `model.gwo*` list, and the loadout bank rules; its
 `test/modder_api.test.js` pins the surface you write a card against — the helper names
 in `shared/cards.js`, the unit and group keys, `deal`'s arguments. If a card behaves
@@ -436,12 +448,14 @@ actually guarantees today.
 
 ## Checking the work
 
-There is no test suite — validation is in-game, and the README's "Testing your mod"
-section is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
+There is no test suite — validation is in-game, and `docs/testing.md` is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
 Coherent UI Debugger console, deal the card from the `X` panel, then build the units in a
 GW battle — a skirmish or sandbox game uses stock specs, so it cannot show a card's
-effect). The panel's give-card box finds only IDs in `model.gwoCards`. The README also
-lists the two messages PA prints normally, so you do not mistake them for a fault.
+effect). The panel's give-card box finds IDs in `model.gwoCards`, which `gw_play` rebuilds
+as the registered cards plus every GWO loadout plus the war's deck
+(`shared/deal.js:setupGwoCards`). The same page also lists the two messages PA prints
+normally, so you do not mistake them for a fault. `docs/troubleshooting.md` maps each
+silent failure to its cause.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance
