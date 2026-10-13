@@ -209,22 +209,27 @@ as in the example above.
 player's units are worked out from the game's units that they have, so:
 
 - `inventory.removeUnits([gwoUnit.ant])` forbids the Ant and every race unit that takes
-  its place. A Legion player has neither the Shank nor the Stoke.
+  its place. A Legion player has neither the Shank nor the Stoke, unless they also have
+  the Stryker, which brings both. To take them away, forbid both:
+  `inventory.removeUnits([gwoUnit.ant, gwoUnit.stryker])`.
 - A race unit that a card gave by name is not affected. If a card's `buff` gave
   `gwoUnit.legion.shank`, the player keeps the Shank.
 - `inventory.removeUnits([gwoUnit.legion.shank])` removes only a Shank that a card gave by
-  name. While the player has the Ant, they still get the Shank in its place.
+  name. While the player has the Ant, they still get the Shank in its place. A race unit
+  that comes from a factory, not from one of the game's units, stays while the player has
+  a factory that builds it.
 
-This card gives the Shank and forbids the Ant. A Legion player has the Shank but not the
-Stoke. A player of any other race loses the Ant, or whatever takes its place, and does not
-get the Shank, which only Legion players can have.
+This card gives the Shank and forbids the Ant and the Stryker. A Legion player has the
+Shank but not the Stoke. A player of any other race loses the Ant and the Stryker, or
+whatever takes their place, and does not get the Shank, which only Legion players can
+have.
 
 ```js
 buff: function (inventory) {
   inventory.addUnits([gwoUnit.legion.shank]);
 },
 dull: function (inventory) {
-  inventory.removeUnits([gwoUnit.ant]);
+  inventory.removeUnits([gwoUnit.ant, gwoUnit.stryker]);
 },
 ```
 

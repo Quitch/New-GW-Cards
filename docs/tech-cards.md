@@ -177,14 +177,17 @@ dull: function (inventory) {
 in place of the game's own, worked out from the game's units that they have. So forbidding
 a unit works like this for them:
 
-- Forbid one of the game's units, and the race units that take its place go too. Forbid
-  the Ant, and a Legion player has neither the Shank nor the Stoke.
+- Forbid one of the game's units, and the race units that take its place go too, unless
+  another unit the player has also brings them. Forbid the Ant, and a Legion player has
+  neither the Shank nor the Stoke, unless they have the Stryker, which brings both.
 - A race unit that a card gave by name stays. If a card gives the Shank, a Legion player
   keeps it even when the Ant is forbidden.
 - Forbid a race unit, and only a copy that a card gave by name goes. While the player has
   the Ant, a Legion player still gets the Shank in its place.
 
-You cannot forbid only one race's version of a unit. See
+Some race units come from a factory, not from one of the game's units. Forbidding one of
+those does nothing while the player has a factory that builds it. You cannot forbid only
+one race's version of a unit. See
 [Change the unit in `buff`](race-cards.md#4-change-the-unit-in-buff).
 
 **Loadouts** don't write their own `dull`. They use the one that `gwoCard.loadout` gives
