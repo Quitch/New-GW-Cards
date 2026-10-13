@@ -220,13 +220,15 @@ player's add-on units, so:
   place.
 - A race or add-on unit that takes the place of none of the game's units comes from what
   the player can build. It stays while something they have can build it, such as a
-  factory, a fabber, or the commander. Section 17's Big Bill, for example, comes from its
-  gantry.
+  factory, a fabber, or the commander, even when a card gave it by name and `removeUnits`
+  names it. Section 17's Big Bill, for example, comes from its gantry, and the player gets
+  the gantry the same way.
 
 This card gives the Shank and forbids the Ant and the Stryker. A Legion player has the
-Shank but not the Stoke. A player of any other race loses the Ant and the Stryker, or
-whatever takes their place, and does not get the Shank, which only Legion players can
-have.
+Shank but not the Stoke. GWO offers the card only to Legion players, because its entry in
+`model.gwoCardsToUnits` names a Legion unit (step 2). A loadout is different: every player
+who picks it gets its `dulls`, so a player of another race would lose the Ant and the
+Stryker, or whatever takes their place.
 
 ```js
 buff: function (inventory) {

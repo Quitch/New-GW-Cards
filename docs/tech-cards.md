@@ -185,12 +185,14 @@ the same way. So forbidding a unit works like this for them:
 - Forbidding the Ant does not take away a race unit that a card gave by name. If a card
   gives the Shank, a Legion player keeps it even when the Ant is forbidden.
 - Forbid a race unit, and only a copy that a card gave by name goes. While the player has
-  the Ant or the Stryker, a Legion player still gets the Shank in its place.
+  the Ant or the Stryker, a Legion player still gets the Shank in its place. Some race
+  units do not even go then: see the next paragraph.
 
 Some race and add-on units do not take the place of any of the game's units. The player
 gets one when something they have can build it: Section 17's Big Bill, for example, comes
-from its gantry. Forbidding one of those does nothing while something the player has can
-build it. You cannot forbid only one race's version of a unit. See
+from its gantry, and the player gets the gantry the same way. Forbidding one of those,
+even one that a card gave by name, does nothing while something the player has can build
+it. You cannot forbid only one race's version of a unit. See
 [Change the unit in `buff`, or forbid it in `dull`](race-cards.md#4-change-the-unit-in-buff-or-forbid-it-in-dull).
 
 **Loadouts** don't write their own `dull`. They use the one that `gwoCard.loadout` gives
