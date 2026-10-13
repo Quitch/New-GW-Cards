@@ -199,25 +199,27 @@ define([
 });
 ```
 
-## 4. Change the unit in `buff`
+## 4. Change the unit in `buff`, or forbid it in `dull`
 
 `inventory.addMods` and `inventory.addUnits` work with race units exactly as they work
 with the game's own units. Write the race unit's ID in `file`, or give it to `gwoCard.mods`,
 as in the example above.
 
 `inventory.removeUnits` takes race units too, but it works differently for them. A race
-player's units are worked out from the game's units that they have, so:
+player's units are worked out from the game's units that they have, and so are an MLA
+player's add-on units, so:
 
 - `inventory.removeUnits([gwoUnit.ant])` forbids the Ant and every race unit that takes
   its place. A Legion player has neither the Shank nor the Stoke, unless they also have
   the Stryker, which brings both. To take them away, forbid both:
   `inventory.removeUnits([gwoUnit.ant, gwoUnit.stryker])`.
-- A race unit that a card gave by name is not affected. If a card's `buff` gave
-  `gwoUnit.legion.shank`, the player keeps the Shank.
+- Forbidding the Ant does not take away a race unit that a card gave by name. If a card's
+  `buff` gave `gwoUnit.legion.shank`, the player keeps the Shank.
 - `inventory.removeUnits([gwoUnit.legion.shank])` removes only a Shank that a card gave by
-  name. While the player has the Ant, they still get the Shank in its place. A race unit
-  that comes from a factory, not from one of the game's units, stays while the player has
-  a factory that builds it.
+  name. While the player has the Ant, they still get the Shank in its place.
+- A race unit that takes the place of none of the game's units comes from what the player
+  can build. It stays while something they have, such as a factory, a fabber, or the
+  commander, can build it.
 
 This card gives the Shank and forbids the Ant and the Stryker. A Legion player has the
 Shank but not the Stoke. A player of any other race loses the Ant and the Stryker, or

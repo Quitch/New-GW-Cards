@@ -94,8 +94,9 @@ var loadout = gwoCard.loadout(CARD, {
   them, even when the standard start or a later card gives them. The example above forbids
   the Inferno. Give a list, or a function that receives the inventory and returns a list.
   Never list a unit that `apply` gives, or the player never gets it. Leave `dulls` out if
-  your loadout forbids no units, as most loadouts do. For a player of another race,
-  forbidding one of the game's units also forbids the race units that take its place. See
+  your loadout forbids no units, as most loadouts do. For a player of another race, or an
+  MLA player with add-ons, forbidding one of the game's units also forbids the race or
+  add-on units that take its place. See
   [`dull`](tech-cards.md#dull--units-the-card-forbids).
 
 Then use what it gives you as the card's `buff` and `dull`:

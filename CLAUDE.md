@@ -191,14 +191,16 @@ authority. What that means for a card, all of it silent when wrong:
 
 ## `inventory.removeUnits` — forbidding units for another race
 
-`removeUnits` drops exact paths from `inventory.units()`, and GWO derives a race army from
-the stock paths left (GWO's `docs/races.md`, "Capability cells", "Removing units").
-Removing a stock unit removes its race stand-ins unless another held stock unit stands for
-them too (the Ant and the Stryker both bring Legion's Shank and Stoke); a race unit
-granted by name survives that, and a race unit in a cell no stock unit fills comes from
-build reach. Removing a race path removes only a by-name grant, so a user asking to forbid
-Legion's Shank alone cannot have it: say so, and offer forbidding the Ant and the Stryker,
-which takes every race's version with them ([GWO
+`removeUnits` drops exact paths from `inventory.units()`, and GWO derives a race army (or
+an MLA player's add-on units) from the stock paths left (GWO's `docs/races.md`,
+"Capability cells", "Removing units"). Removing a stock unit removes its race stand-ins
+unless another held stock unit stands for them too (the Ant and the Stryker both bring
+Legion's Shank and Stoke); a race unit granted by name survives that. A race unit that
+arrives through the build rule (in a cell no stock unit fills, or exclusive, such as
+Section 17's Big Bill) stays while anything granted can build it, so removing its path
+does nothing. Removing a race path removes only a by-name grant, so a user asking to
+forbid Legion's Shank alone cannot have it: say so, and offer forbidding the Ant and the
+Stryker, which takes every race's version with them ([GWO
 #492](https://github.com/Quitch/GW-AI-Overhaul/issues/492)).
 
 ## `inventory.addMods` — changing unit stats
