@@ -162,7 +162,7 @@ cards forbid no units, so their `dull` is empty, but it must still be there.
 Each time the game works out the player's units, it runs the `buff` of every card first,
 and then the `dull` of every card. So a unit that a `dull` removes is gone whichever card
 gave it, this card included, and every copy of it goes (for a player of another race,
-see below). **Never list a unit that the
+or with add-ons, see below). **Never list a unit that the
 card's own `buff` gives.** The player then never gets it, and nothing warns you. `dull`
 cannot undo a stat change or an AI change.
 
@@ -174,10 +174,10 @@ dull: function (inventory) {
 },
 ```
 
-**For a player of another race.** A Legion, Bugs, or Exiles player gets their race's units
-in place of the game's own, worked out from the game's units that they have. An MLA
-player with add-ons (Second Wave, Section 17, or Osmech) gets add-on units the same way.
-So forbidding a unit works like this for them:
+**For a player of another race, or with add-ons.** A Legion, Bugs, or Exiles player gets
+their race's units in place of the game's own, worked out from the game's units that they
+have. An MLA player with add-ons (Second Wave, Section 17, or Osmech) gets add-on units
+the same way. So forbidding a unit works like this for them:
 
 - Forbid one of the game's units, and the race units that take its place go too, unless
   another unit the player has also brings them. Forbid the Ant, and a Legion player has
@@ -185,12 +185,12 @@ So forbidding a unit works like this for them:
 - Forbidding the Ant does not take away a race unit that a card gave by name. If a card
   gives the Shank, a Legion player keeps it even when the Ant is forbidden.
 - Forbid a race unit, and only a copy that a card gave by name goes. While the player has
-  the Ant, a Legion player still gets the Shank in its place.
+  the Ant or the Stryker, a Legion player still gets the Shank in its place.
 
-Some race units do not take the place of any of the game's units. The player gets one when
-something they have can build it, such as a factory, a fabber, or the commander.
-Forbidding one of those does nothing while something the player has can build it. You
-cannot forbid only one race's version of a unit. See
+Some race and add-on units do not take the place of any of the game's units. The player
+gets one when something they have can build it: Section 17's Big Bill, for example, comes
+from its gantry. Forbidding one of those does nothing while something the player has can
+build it. You cannot forbid only one race's version of a unit. See
 [Change the unit in `buff`, or forbid it in `dull`](race-cards.md#4-change-the-unit-in-buff-or-forbid-it-in-dull).
 
 **Loadouts** don't write their own `dull`. They use the one that `gwoCard.loadout` gives

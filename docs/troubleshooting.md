@@ -78,6 +78,9 @@ messages are not faults.
   [Whenever your value is a file name, `tag` it](changing-units.md#whenever-your-value-is-a-file-name-tag-it).
 - The card's `dull` lists a unit that its own `buff` gives. See
   [`dull`](tech-cards.md#dull--units-the-card-forbids).
+- The card's `dull` forbids a unit, but a player of another race, or an MLA player with
+  add-ons, still has it or its race version. See
+  [`dull`](tech-cards.md#dull--units-the-card-forbids).
 
 ## My Sub Commanders do not build what my card gives them
 

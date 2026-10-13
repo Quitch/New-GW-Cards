@@ -216,10 +216,12 @@ player's add-on units, so:
 - Forbidding the Ant does not take away a race unit that a card gave by name. If a card's
   `buff` gave `gwoUnit.legion.shank`, the player keeps the Shank.
 - `inventory.removeUnits([gwoUnit.legion.shank])` removes only a Shank that a card gave by
-  name. While the player has the Ant, they still get the Shank in its place.
-- A race unit that takes the place of none of the game's units comes from what the player
-  can build. It stays while something they have, such as a factory, a fabber, or the
-  commander, can build it.
+  name. While the player has the Ant or the Stryker, they still get the Shank in its
+  place.
+- A race or add-on unit that takes the place of none of the game's units comes from what
+  the player can build. It stays while something they have can build it, such as a
+  factory, a fabber, or the commander. Section 17's Big Bill, for example, comes from its
+  gantry.
 
 This card gives the Shank and forbids the Ant and the Stryker. A Legion player has the
 Shank but not the Stoke. A player of any other race loses the Ant and the Stryker, or
