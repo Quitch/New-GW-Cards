@@ -219,10 +219,10 @@ player's add-on units, so:
   name. While the player has the Ant or the Stryker, they still get the Shank in its
   place.
 - A race or add-on unit that takes the place of none of the game's units comes from what
-  the player can build. It stays while something they have can build it, such as a
-  factory, a fabber, or the commander, even when a card gave it by name and `removeUnits`
-  names it. Section 17's Big Bill, for example, comes from its gantry, and the player gets
-  the gantry the same way.
+  the player can build. It stays while something they have can build it, such as a factory
+  or a fabber, even when a card gave it by name and `removeUnits` names it. Section 17's
+  Big Bill, for example, comes from its gantry, and the player gets the gantry the same
+  way.
 
 This card gives the Shank and forbids the Ant and the Stryker. A Legion player has the
 Shank but not the Stoke. GWO offers the card only to Legion players, because its entry in
