@@ -197,10 +197,11 @@ an MLA player's add-on units) from the stock paths left (GWO's `docs/races.md`,
 unless another held stock unit stands for them too (the Ant and the Stryker both bring
 Legion's Shank and Stoke); a race unit granted by name survives that. A race unit that
 arrives through the build rule (in a cell no stock unit fills, or exclusive, such as
-Section 17's Big Bill) stays while anything granted can build it, so removing its path
-does nothing. Removing a race path removes only a by-name grant, so a user asking to
-forbid Legion's Shank alone cannot have it: say so, and offer forbidding the Ant and the
-Stryker, which takes every race's version with them ([GWO
+Section 17's Big Bill) stays while a granted race unit can build it (for an MLA player's
+add-on units, a held stock builder counts too), so removing its path does nothing.
+Removing a race path removes only a by-name grant, so a user asking to forbid Legion's
+Shank alone cannot have it: say so, and offer forbidding the Ant and the Stryker, which
+takes every race's version with them ([GWO
 #492](https://github.com/Quitch/GW-AI-Overhaul/issues/492)).
 
 ## `inventory.addMods` — changing unit stats
@@ -261,8 +262,9 @@ function in its `ops` table.
 - **`clone` and `eval` are advanced — avoid them**, as `docs/changing-units.md` says.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
-  never gets it, silently. A loadout's `dulls` forbid their units for the whole war.
-  `dull` cannot undo a stat change or an AI change.
+  never gets it, silently. A loadout's `dulls` forbid their units for the whole war. For a
+  race or add-on unit, see the `removeUnits` section above. `dull` cannot undo a stat
+  change or an AI change.
 
 ### Writing a file name into a spec — `op: "tag"`
 

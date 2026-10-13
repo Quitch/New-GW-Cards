@@ -199,8 +199,9 @@ it. You cannot forbid only one race's version of a unit. See
 them, and list the units that they forbid as its `dulls` (see
 [Loadouts and `gwoCard.loadout`](loadouts.md#loadouts-and-gwocardloadout)). A loadout
 forbids those units for the whole war, even when the standard start or a later card gives
-them. Removing a loadout's units at the right moment is difficult, and the helper does it
-for you.
+them, with the same exceptions as above for a player of another race, or with add-ons.
+Removing a loadout's units at the right moment is difficult, and the helper does it for
+you.
 
 ## A shortcut for a card that improves one unit — `gwoCard.upgradeCard`
 
