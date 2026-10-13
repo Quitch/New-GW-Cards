@@ -173,6 +173,20 @@ dull: function (inventory) {
 },
 ```
 
+**For a player of another race.** A Legion, Bugs or Exiles player gets their race's units
+in place of the game's own, worked out from the game's units that they have. So forbidding
+a unit works like this for them:
+
+- Forbid one of the game's units, and the race units that take its place go too. Forbid
+  the Ant, and a Legion player has neither the Shank nor the Stoke.
+- A race unit that a card gave by name stays. If a card gives the Shank, a Legion player
+  keeps it even when the Ant is forbidden.
+- Forbid a race unit, and only a copy that a card gave by name goes. While the player has
+  the Ant, a Legion player still gets the Shank in its place.
+
+You cannot forbid only one race's version of a unit. See
+[Change the unit in `buff`](race-cards.md#4-change-the-unit-in-buff).
+
 **Loadouts** don't write their own `dull`. They use the one that `gwoCard.loadout` gives
 them, and list the units that they forbid as its `dulls` (see
 [Loadouts and `gwoCard.loadout`](loadouts.md#loadouts-and-gwocardloadout)). A loadout

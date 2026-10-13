@@ -189,6 +189,15 @@ authority. What that means for a card, all of it silent when wrong:
 - **`gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards` count the AI
   players' cards** under per-player tech, as they count connected viewers'.
 
+## `inventory.removeUnits` — forbidding units for another race
+
+`removeUnits` drops exact paths from `inventory.units()`, and GWO derives a race army
+from the stock paths left (GWO's `docs/races.md`, "Capability cells", "Removing units").
+Removing a stock unit removes its race stand-ins; a race unit granted by name survives
+that. Removing a race path removes only a by-name grant, so a user asking to forbid
+Legion's Shank alone cannot have it: say so, and offer forbidding the Ant, which takes
+every race's version with it ([GWO #492](https://github.com/Quitch/GW-AI-Overhaul/issues/492)).
+
 ## `inventory.addMods` — changing unit stats
 
 `docs/changing-units.md` documents the shape. This is the behaviour that is not obvious

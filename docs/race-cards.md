@@ -205,6 +205,33 @@ define([
 with the game's own units. Write the race unit's ID in `file`, or give it to `gwoCard.mods`,
 as in the example above.
 
+`inventory.removeUnits` takes race units too, but it works differently for them. A race
+player's units are worked out from the game's units that they have, so:
+
+- `inventory.removeUnits([gwoUnit.ant])` forbids the Ant and every race unit that takes
+  its place. A Legion player has neither the Shank nor the Stoke.
+- A race unit that a card gave by name is not affected. If a card's `buff` gave
+  `gwoUnit.legion.shank`, the player keeps the Shank.
+- `inventory.removeUnits([gwoUnit.legion.shank])` removes only a Shank that a card gave by
+  name. While the player has the Ant, they still get the Shank in its place.
+
+This card gives the Shank and forbids the Ant. A Legion player has the Shank but not the
+Stoke. A player of any other race loses the Ant, or whatever takes its place, and does not
+get the Shank, which only Legion players can have.
+
+```js
+buff: function (inventory) {
+  inventory.addUnits([gwoUnit.legion.shank]);
+},
+dull: function (inventory) {
+  inventory.removeUnits([gwoUnit.ant]);
+},
+```
+
+You cannot forbid only Legion's version of a unit: forbidding the game's unit takes every
+race's version with it. GWO may add a way to do this. See
+[GWO issue #492](https://github.com/Quitch/GW-AI-Overhaul/issues/492).
+
 ## 5. A race or add-on from another mod
 
 GWO's `gwoUnit` tables hold only the races and add-ons that GWO itself supports. Another
