@@ -3,7 +3,14 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+      semver-major-days: 30
+    groups:
+      dev-dependencies:
+        patterns:
+          - "*"
     ignore:
       # eslint, @eslint/js and eslint-plugin-es-x are held on 9.x: eslint-plugin-lodash
       # calls context.getSourceCode, which ESLint 10 removed, and es-x 10.x requires
