@@ -21,8 +21,10 @@ at, which it calls `system` (the star that the player is at), `context` (the gal
 - `gwoCard.hasUnit(inventory.units(), X)`: true if the player has **any** of unit(s) X.
 - `gwoCard.hasAllUnits(inventory.units(), X)`: true if the player has **all** of unit(s)
   X.
-- `gwoCard.missingUnit(inventory.units(), X)`: true if the player is missing **any** of
-  unit(s) X.
+- `gwoCard.missingObtainableUnit(inventory, X)`: true if a card that grants unit(s) X can
+  still add **any** of them. Units that the player's loadout removed for good
+  (`inventory.removedUnits()`) do not count as missing, so the card stops being offered
+  once it would add nothing. It takes the inventory, not `inventory.units()`.
 - `gwoCard.missingAllUnits(inventory.units(), X)`: true if the player is missing **all**
   of unit(s) X.
 - `gwoCard.fieldedUnits(inventory)`: use it in place of `inventory.units()` to include the
@@ -30,6 +32,9 @@ at, which it calls `system` (the star that the player is at), `context` (the gal
   [Cards for another race or an add-on](race-cards.md).
 - `context.totalSize`: the size of the galaxy (how many stars it has).
 - `system.distance()`: how far the current star is from the start.
+
+`gwoCard.missingUnit` is deprecated. Use `missingObtainableUnit`, or
+`!gwoCard.hasAllUnits(inventory.units(), X)` to ask whether the player lacks a unit.
 
 In this example, the chance is 25, but it becomes 120 when the player has the Dox. The
 `if (...) { ... }` means "if this is true, do what is inside the curly brackets":
@@ -85,7 +90,7 @@ deal: function (system, context, inventory) {
   if (
     gwoCard.travelledFar(system, context, GW.balance.numberOfSystems) &&
     gwoCard.hasUnit(inventory.units(), gwoUnit.boom) &&
-    gwoCard.missingUnit(inventory.units(), gwoGroup.botsBasicMobile)
+    !gwoCard.hasAllUnits(inventory.units(), gwoGroup.botsBasicMobile)
   ) {
     chance = 200;
   }
@@ -177,8 +182,8 @@ asks both:
 ```js
 deal: function (system, context, inventory) {
   return gwoCard.conditionalDeal(
-    gwoCard.missingUnit(
-      inventory.units(),
+    gwoCard.missingObtainableUnit(
+      inventory,
       gwoGroup.structuresDefencesAdvanced
     ) &&
       (gwoCard.hasAdvancedFabber(inventory) ||
