@@ -67,6 +67,8 @@ delete the whole block.
       your identifier.
 - [ ] Set `prefix` and `path` in the `model.gwoLoadoutBanks` entry in `start_cards.js`.
       Without this, a locked loadout can never unlock.
+- [ ] If not every race can use the loadout, added `races` to its entry (see
+      [`races`](loadouts.md#races--the-races-that-can-use-a-loadout)).
 
 **If you add a deck, also:**
 

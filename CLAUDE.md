@@ -147,7 +147,9 @@ wrong and fails quietly. The template's three example cards are one of each shap
   ID **must contain `_start_`** (GWO's `isStartLoadoutCardId` test) and **must not begin
   `gwc_start`** (GWO reserves that prefix for base-game loadouts, and routes the card to
   the base game's bank). Use a mod-specific prefix matching the one you register in
-  `model.gwoLoadoutBanks`.
+  `model.gwoLoadoutBanks`. A `races` list on the entry (`{ id: "…", races: ["mla"] }`)
+  names the races that can use the loadout, in place of the `_upgrade_` rule; `races` on
+  a `gwoCardsToUnits` entry does not reach a loadout.
 - A unit file the game does not otherwise load (an unused spec such as Ares' stomp) must
   be listed in `model.gwoSpecs` in `specs.js`, or GWO drops mods to it. So must a file
   one unit borrows from another — see "Writing a file name into a spec" below.

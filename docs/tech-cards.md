@@ -307,7 +307,9 @@ is one of those.
 To choose the races yourself, add `races` to the entry. GWO then offers the card only to
 players of the races in the list, whatever the card's ID. The race IDs are `mla`,
 `legion`, `bugs`, and `exiles`, and the ID of a race from another mod. A race in the
-list still needs a unit that a unit in the entry reaches.
+list still needs a unit that a unit in the entry reaches. This list does not control a
+loadout. A loadout takes `races` on its own entry instead (see
+[Loadouts](loadouts.md#races--the-races-that-can-use-a-loadout)).
 
 ```js
 model.gwoCardsToUnits.push({
