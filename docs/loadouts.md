@@ -96,8 +96,8 @@ For a player of a race that is not in the list:
 > **Don't give a loadout an empty list.** `races: []` means that no race can use the
 > loadout.
 >
-> A version of GWO older than this key ignores it. The loadout is then available to
-> every race, as if it had no `races` list.
+> GWO older than v7.8.0 ignores `races`. The loadout is then available to every race, as
+> if it had no `races` list.
 
 ## Loadouts and `gwoCard.loadout`
 
