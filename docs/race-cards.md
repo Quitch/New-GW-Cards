@@ -61,6 +61,8 @@ give its entry `races: ["mla"]` (see the warning below).
 > changes stock units must reach every race, leave `_upgrade_` out of its ID. A `races`
 > list in the entry replaces this rule: GWO offers the card to the races in the list. IDs
 > that contain `_upgrade_subcommander` or `_upgrade_ubercannon` are exempt from the rule.
+> For a loadout, put `races` on the loadout's own entry instead (see
+> [Loadouts](loadouts.md#races--the-races-that-can-use-a-loadout)).
 
 ## Keep a change on the stock unit — `stockOnly`
 
