@@ -62,6 +62,43 @@ model.gwoStartingCards.push({ id: "mym_start_myloadout" });
 > The template's lists start empty, with example IDs in the comments above them. A mod
 > with no loadouts works correctly.
 
+## `races` — the races that can use a loadout
+
+GWO lets a player fight a war as a race from another mod: Legion, Bugs, or Exiles (see
+[Cards for another race or an add-on](race-cards.md)). By default, every race can use
+your loadout. The exception is a loadout whose ID contains `_upgrade_`, other than
+`_upgrade_subcommander` and `_upgrade_ubercannon`: only MLA players can use it.
+
+To choose the races yourself, add `races` to the loadout's entry, in either list:
+
+```js
+model.gwoStartingCards.push({ id: "mym_start_engineer", races: ["legion"] });
+model.gwoNewStartCards.push({ id: "mym_start_drop", races: ["mla"] });
+```
+
+The race IDs are `mla`, `legion`, `bugs`, and `exiles`, and the ID of a race from another
+mod. Upper and lower case are the same. The list replaces the `_upgrade_` rule.
+
+Give a loadout `races: ["mla"]` when it is built on particular MLA units, for example
+when it gives the player a list of MLA units, or changes what an MLA unit is or builds.
+GWO cannot pass such a loadout on to the other races.
+
+For a player of a race that is not in the list:
+
+- The loadout screen shows the loadout grey, and the player cannot pick it.
+- The loadout's race icons do not include that race.
+- A Guardian planet does not award the loadout.
+- A co-op AI player of that race does not start with it.
+
+> **Put `races` on the loadout's entry, not in `model.gwoCardsToUnits`.** A `races` list
+> in `model.gwoCardsToUnits` controls only tech cards. GWO ignores it for a loadout.
+>
+> **Don't give a loadout an empty list.** `races: []` means that no race can use the
+> loadout.
+>
+> GWO older than v7.8.0 ignores `races`. The loadout is then available to every race, as
+> if it had no `races` list.
+
 ## Loadouts and `gwoCard.loadout`
 
 A loadout has more to do than a tech card. It must give the player the game's standard

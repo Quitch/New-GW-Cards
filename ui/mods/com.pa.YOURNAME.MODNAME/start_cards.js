@@ -31,6 +31,9 @@
     //     { id: "YOUR_LOCKED_LOADOUT_ID_1" },
     //     { id: "YOUR_LOCKED_LOADOUT_ID_N" }
     //   );
+    // Every race can use a loadout, unless you add a list of the races that
+    // can, for example { id: "YOUR_LOCKED_LOADOUT_ID_1", races: ["mla"] }.
+    // This works in both lists.  See "races" in docs/loadouts.md.
     model.gwoNewStartCards.push();
 
     // UNLOCKED LOADOUTS
