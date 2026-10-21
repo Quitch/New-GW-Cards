@@ -68,15 +68,15 @@ that sentence yourself.
 
 GWO deals only the cards that you register. Open `ui/mods/<your identifier>/tech_cards.js`.
 
-Find the `model.gwoCards.push(` lines. Replace the three example IDs with your card's ID:
+Find the `model.gwoCards.push();` line. The brackets start empty. Write your card's ID
+between them:
 
 ```js
 model.gwoCards.push("mym_upgrade_dox");
 ```
 
-Then find the `model.gwoCardsToUnits.push(` block. It lists, for each card, the units
-that the card's tooltip names. Replace the three example entries with one entry for your
-card:
+Then find the `model.gwoCardsToUnits.push();` line. It lists, for each card, the units
+that the card's tooltip names. Write one entry for your card between its brackets:
 
 ```js
 model.gwoCardsToUnits.push({
@@ -85,7 +85,11 @@ model.gwoCardsToUnits.push({
 });
 ```
 
-Change only the IDs and the entries. Leave the lines around them as they are.
+The comments above each line show more examples. Your entry uses `gwoUnit`, so also
+delete the three lines above `function (gwoUnit) {` that start `// The checker reports`,
+`// three lines`, and `// eslint-disable`. The checker warns about them until you do.
+
+Change only the lists and those three lines. Leave the other lines as they are.
 
 ## 4. Check it and try it
 

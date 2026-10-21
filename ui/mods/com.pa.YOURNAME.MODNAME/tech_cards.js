@@ -13,14 +13,15 @@
 // "GWO card failed to load:" and the ID, and the war carries on without that
 // card.
 //
-// Change only the lists.  Leave the other lines as they are: they wrap the
-// file so that a mistake in it cannot break the rest of the game.
+// Change only the lists, and delete the three lines marked below once a list
+// uses gwoUnit.  Leave the other lines as they are: they wrap the file so
+// that a mistake in it cannot break the rest of the game.
 (function () {
   try {
     requireGW(
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
-      // The checker reports gwoUnit as unused while the lists are empty.  This
-      // line silences that.  Delete it when your list uses gwoUnit.
+      // The checker reports gwoUnit as unused while the lists are empty.  These
+      // three lines silence that.  Delete all three when a list uses gwoUnit.
       // eslint-disable-next-line no-unused-vars
       function (gwoUnit) {
         // THE CARDS THAT THE GAME CAN DEAL
