@@ -77,7 +77,7 @@ them.
 ## Loading a ready-made build file — `load`
 
 The simplest AI change loads a whole AI build file that you write. Some of GWO's cards
-teach the AI to use a new unit in this way. `load` uses only `type`, `op` and
+teach the AI to use a new unit in this way. `load` uses only `type`, `op`, and
 `value`, where `value` is the name of a JSON file that GWO reads from `/pa/ai_tech/`. The
 `type` decides which folder inside it: `fabber_builds/`, `factory_builds/`,
 `platoon_builds/`, or `platoon_templates/` for `template`.
@@ -126,7 +126,7 @@ Replace `MyUnit` with a real `to_build` name from the AI files.
 ### The shape of a build entry
 
 You need this before you use `new` or `remove`. Each entry in an AI build file has
-`to_build`, `priority`, `builders`, `instance_count` and `build_conditions`. Platoon
+`to_build`, `priority`, `builders`, `instance_count`, and `build_conditions`. Platoon
 entries have no `builders`, and some fabber entries have no `to_build`. The
 `build_conditions` of an entry is a **list of lists**. Each inner list is a group of
 tests, and every test in a group must pass. The AI builds the entry if any one group
@@ -212,7 +212,7 @@ of names, but `except` can be an empty list. **Always write `except`.** Without 
 nothing. A missing `value` shows an error that starts `applyAiMods: op threw` in the
 Console, and the change is skipped.
 
-### `new`, `remove` and `squad`
+### `new`, `remove`, and `squad`
 
 These change the AI's build files in ways that need a good understanding of them. Read
 [The shape of a build entry](#the-shape-of-a-build-entry) first.

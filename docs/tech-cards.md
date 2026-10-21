@@ -79,8 +79,8 @@ below, and [loadouts](loadouts.md#loadouts-and-gwocardloadout).
 | `hint`       | loadouts   | The text shown while the loadout is still locked.                                                                  |
 
 You may also see `keep`, `discard`, and `releaseContext` in a card that you copy. Most
-cards never use them. See
-[`keep`, `discard` and `releaseContext`](advanced.md#keep-discard-and-releasecontext--rare-parts).
+cards never use them. See [`keep`, `discard`, and
+`releaseContext`](advanced.md#keep-discard-and-releasecontext--rare-parts).
 
 ### `summarize`, `describe`, `icon` — name, description, picture
 
@@ -336,8 +336,8 @@ model.gwoCardsToUnits.push({
 
 ### `model.gwoCardsGrantingAdvancedTech` — cards that unlock advanced tech (in `tech_cards.js`)
 
-Optional. List a card here when it gives the player advanced (T2) tech, so that the
-cards that wait for that access can see it. See
+Optional. List a card here when it gives the player advanced (T2) tech, so that the cards
+that wait for that access can see it. See
 [`model.gwoCardsGrantingAdvancedTech`](deal.md#modelgwocardsgrantingadvancedtech--cards-that-unlock-advanced-tech-in-tech_cardsjs).
 
 ### `model.gwoCardsWithoutTooltip` — tech cards with no unit tooltip (in `tech_cards.js`)

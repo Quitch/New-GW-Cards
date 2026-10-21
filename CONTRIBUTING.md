@@ -10,7 +10,7 @@ Read `CLAUDE.md` when the user writes a card. Keep the two files consistent when
 changes its card contract or its op behaviour.
 
 The repo root is also the mod root, so the release ZIP _is_ the folder that the author
-copies into `client_mods`. `CLAUDE.md`, `README.md`, `docs/`, the lint tools and
+copies into `client_mods`. `CLAUDE.md`, `README.md`, `docs/`, the lint tools, and
 `.prettierrc` are all in that ZIP. The audience takes the ZIP instead of cloning the repo, and the checker
 works only because it sits beside `ui/`. This file is the one document that
 `.gitattributes` still marks `export-ignore`, because it is about a change to the
@@ -31,7 +31,7 @@ GWO workspace (`GW-AI-Overhaul`) is the authoritative source for card examples, 
 IDs, and for the `referee.js` and AI-mod runtime that the cards use.
 
 This repo, like GWO, contains plain JS and JSON that the game's embedded Chrome 40 loads.
-There is **no build step, no transpile step and no bundler**. The only tooling is ESLint
+There is **no build step, no transpile step, and no bundler**. The only tooling is ESLint
 (`package.json` and `eslint.config.mjs`). Unlike GWO, this repo has **no test harness**.
 You do the other validation by hand, in the game, with the Coherent UI Debugger. See
 "Testing" below.
@@ -53,8 +53,8 @@ They are **not** faults to correct in this repo:
   loadouts.
 - `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,
   `YOUR_PREFIX_start_`, `UNIT_PATH`, `AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`,
-  `CHOSEN_LINE_HERE` and the `!LOC:...HERE` strings. The three example card files
-  `start_card_id.js`, `tech_card_id.js` and `unit_upgrade_card_id.js` are also
+  `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` strings. The three example card files
+  `start_card_id.js`, `tech_card_id.js`, and `unit_upgrade_card_id.js` are also
   placeholders. The author renames them to `PREFIX_EFFECT_UNITTYPE.js`, for example
   `mym_damage_bots.js`. Never use a `gwc_` or `gwaio_` prefix in an example: those are
   the stock and GWO card namespaces, and of two same-named card files the game silently
@@ -72,7 +72,7 @@ whole job.
 The repo root **is** the mod root. `modinfo.json` and `ui/` sit at the top level, and the
 author copies the whole folder. The copy therefore carries `CLAUDE.md`, the authoring
 guide named above, and the lint tools with it. PA cannot see the other files in the root
-(`package.json`, `eslint.config.mjs`, `.prettierrc`, `README.md`, `docs/`, `LICENSE` and
+(`package.json`, `eslint.config.mjs`, `.prettierrc`, `README.md`, `docs/`, `LICENSE`, and
 this file). PA reads only `modinfo.json` and the files that its `scenes` block names.
 
 The author guide is `README.md` plus the pages in `docs/`. `README.md` is the landing
@@ -141,14 +141,14 @@ dependency on Mod Translations (`com.pa.quitch.modtranslations`). This was the d
 on issue #8, on 2026-09-17: the documents give the author the steps, and a mod that ships
 no translations carries nothing extra. Do not add the scaffold.
 
-Three places describe the steps: `docs/translating.md`, the `CLAUDE.md` section
-"Shipping translations", and the "If you ship translations, also:" block of
-`docs/checklist.md`. Keep those three consistent with each other. The
-README of Mod Translations, and its `docs/design.md` for the log line, are the authority on
-how the framework behaves, so keep them consistent with them too: the `priority` of 50, the `global_mod_list` rule, the key format
-and the format of the `[ModTranslations]` log line. A `translations.js` is the one loader
-that goes under `global_mod_list` and under no scene, which is the opposite of the rule
-above.
+Three places describe the steps: `docs/translating.md`, the `CLAUDE.md` section "Shipping
+translations", and the "If you ship translations, also:" block of `docs/checklist.md`.
+Keep those three consistent with each other. The README of Mod Translations, and its
+`docs/design.md` for the log line, are the authority on how the framework behaves, so keep
+them consistent with them too: the `priority` of 50, the `global_mod_list` rule, the key
+format, and the format of the `[ModTranslations]` log line. A `translations.js` is the one
+loader that goes under `global_mod_list` and under no scene, which is the opposite of the
+rule above.
 
 ## Card contract
 
@@ -157,9 +157,9 @@ GWO's fixed card shape. See "The contract" in GWO's `docs/tech-cards.md` for the
 authoritative list, and GWO's `scripts/validate/cards-contract.js` for its validator. The
 templates here follow it:
 
-- `visible`, `describe`, `summarize`, `icon`, `deal`, `buff` and `dull` are always
+- `visible`, `describe`, `summarize`, `icon`, `deal`, `buff`, and `dull` are always
   present. A tech card also carries `audio` and `getContext`. A start card carries `hint`
-  in place of those two. `keep`, `discard` and `releaseContext` are optional and almost
+  in place of those two. `keep`, `discard`, and `releaseContext` are optional and almost
   unused. GWO replaces PA's dealer, so GWO never calls `discard`, and it calls
   `keep(deal, context)` at deal time rather than when the player keeps the card. Only
   `releaseContext` behaves as its name says.
@@ -170,7 +170,7 @@ templates here follow it:
   never depends on `rng`, because the dealer calls `deal()` many times for each hand as a
   test. Only `params` may depend on `rng`.
 - `buff(inventory)` applies the card. It uses `inventory.addUnits(...)` with unit paths,
-  GWO unit IDs or group IDs. It uses `inventory.addMods(...)` for unit-spec stat mods,
+  GWO unit IDs, or group IDs. It uses `inventory.addMods(...)` for unit-spec stat mods,
   which have the shape `{file, path, op, value}`. It uses `inventory.addAIMods(...)` for
   AI build-order descriptors, which have the shape
   `{type, op, toBuild, idToMod, value, refId, refValue, matchAll, treeOnly}`. `unset`
@@ -180,8 +180,8 @@ templates here follow it:
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod with `op: "tag"`, on the
   same `file` and the same `path`. The file must also be reachable, or listed in
-  `model.gwoSpecs`. This is a silent failure. `docs/changing-units.md`, `CLAUDE.md` and
-  the comments in `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js` and
+  `model.gwoSpecs`. This is a silent failure. `docs/changing-units.md`, `CLAUDE.md`, and
+  the comments in `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js`, and
   `specs.js` all warn about it. Keep those warnings consistent with each other, and with GWO's
   `docs/specs.md`.
 - **A loadout ID that is registered with no card file of that name cannot be used.** GWO
@@ -260,7 +260,7 @@ template and the game disagree.
   `String.prototype.startsWith` and `String.prototype.endsWith` (PA's own polyfill takes
   one argument, drops the position argument without a message, and returns the wrong
   answer, so use `_.startsWith` or `_.endsWith`). The config also declares the known engine globals
-  (`api`, `model`, `_`, `requireGW`, `ko`, and the browser, jquery and amd sets).
+  (`api`, `model`, `_`, `requireGW`, `ko`, and the browser, jquery, and amd sets).
 - The ESLint config is a flat config. It uses `js/recommended` and
   `curly: ["error", "all"]`, and it applies the Prettier config last to disable rules that
   conflict. To run it, use `npm install`, then `npm run lint:js`. `package.json` pins the

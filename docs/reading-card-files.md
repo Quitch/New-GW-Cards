@@ -50,8 +50,8 @@ such as `});`, also stay as they are.
 
 **One mistake stops the whole file.** A missing comma, a missing quotation mark, or a
 bracket that is not closed makes the game skip the entire file, not only that line. Every
-`(`, `[` and `{` needs its partner `)`, `]` or `}`. In Visual Studio Code, click next to a
-bracket and the editor highlights its partner. The
+`(`, `[`, and `{` needs its partner `)`, `]`, or `}`. In Visual Studio Code, click next to
+a bracket and the editor highlights its partner. The
 [checker](setup.md#installing-the-checker-recommended) finds these mistakes for you.
 
 ---

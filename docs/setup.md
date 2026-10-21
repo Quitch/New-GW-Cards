@@ -11,9 +11,9 @@ The guide refers to two folders on your computer.
   bar of File Explorer to open it. For other systems, see
   [where is my PA data directory](https://support.planetaryannihilation.com/kb/faq.php?id=176).
 - **The PA install folder**, which this guide writes as `{PA_INSTALL_DIRECTORY}`. It holds
-  the game's own files, which you read to find unit names, stats and icons. To open it, go
-  to Steam, right-click the game, and choose **Manage** → **Browse local files**. **Never
-  change anything in this folder.** Steam overwrites it on every update.
+  the game's own files, which you read to find unit names, stats, and icons. To open it,
+  go to Steam, right-click the game, and choose **Manage** → **Browse local files**.
+  **Never change anything in this folder.** Steam overwrites it on every update.
 
 ## Preparing the mod
 

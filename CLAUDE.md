@@ -84,7 +84,7 @@ If the user has no mod folder yet, create one before writing any card:
    with it, and the checker only works from inside the mod folder. PA reads `modinfo.json`
    and the files its `scenes` block names, and ignores the rest.
 2. In `modinfo.json`, fill in `identifier` (style `com.pa.yourname.modname`),
-   `display_name`, `description` and `author`.
+   `display_name`, `description`, and `author`.
 3. Change every `coui://` address under `scenes` so it contains that identifier.
    `modinfo.json` lists some loaders under more than one scene; keep all of them.
 4. Rename `ui/mods/com.pa.YOURNAME.MODNAME/` to exactly that identifier.
@@ -101,16 +101,16 @@ If the user has no mod folder yet, create one before writing any card:
    mandatory in a co-op war. A viewer plays the host's war with the host's cards, so the
    host's flagged mods are published as the war's required client mods. A viewer's own
    flags count only at connect: a viewer missing one of the host's flagged mods, holding a
-   flagged mod the host lacks, or running a different `version` of one, is refused. It has no effect in a solo war.
-   `docs/releasing.md`, "Sharing your mod in a co-op war", is the author-facing
-   explanation.
+   flagged mod the host lacks, or running a different `version` of one, is refused. It has
+   no effect in a solo war. `docs/releasing.md`, "Sharing your mod in a co-op war", is the
+   author-facing explanation.
 
 The `scenes` addresses and the `ui/mods/` folder name must agree, or the game loads
 nothing and reports nothing. Keep the `identifier` in `modinfo.json` the same as them too:
 the game would accept a different one (GWO's own dev checkout is `…-dev` beside an
-unsuffixed folder), but one name in three places is the rule the guide teaches. A mod that ships
-translations has a fourth: the string passed to `ModTranslations.register` (see "Shipping
-translations").
+unsuffixed folder), but one name in three places is the rule the guide teaches. A mod that
+ships translations has a fourth: the string passed to `ModTranslations.register` (see
+"Shipping translations").
 
 Work in the user's copy. The template repo's own tree is the pristine skeleton — do not
 fill its placeholders in.
@@ -132,15 +132,15 @@ the first two, and both factories live in its `shared/cards.js`:
 | Everything else                          | An object literal            |
 
 `upgradeCard` **is** the card: it supplies `visible`, the extra card slot, `getContext`, a
-`withSlot` description and an `upgradeDeal` chance gated on `requires` (checked against
+`withSlot` description, and an `upgradeDeal` chance gated on `requires` (checked against
 `gwoCard.fieldedUnits`, so a race unit works), leaving `name`, `description`, `icon`,
-`audio`, `requires` and `buff`. The optional fields are:
+`audio`, `requires`, and `buff`. The optional fields are:
 
 - `unless`.
 - `chance`, as a number or as a function of the inventory.
 - `slot: false`, which skips the slot but not the `withSlot` sentence. Pass your own
   `describe` with it, as GWO's `gwaio_upgrade_subcommander_tactics.js` does.
-- `describe`, `available` and `deal`, which replace those parts.
+- `describe`, `available`, and `deal`, which replace those parts.
 
 Its `dull` is empty, so it cannot forbid units. A card that must forbid units is an
 object literal. `loadout(CARD, {bank, start, apply, dulls})` returns the `{buff, dull}`
@@ -198,7 +198,8 @@ authority. What that means for a card, all of it silent when wrong:
 - **List a card in `model.gwoCardsToUnits` only when it changes units.** A card with no
   effect the AI can see is valued by its own `deal` chance - unless it is in
   `gwoCardsToUnits`, which tells the AI to expect a unit effect, so it scores only its
-  slot cost, which is negative, and is never taken. Feature cards go in `model.gwoCardsWithoutTooltip`.
+  slot cost, which is negative, and is never taken. Feature cards go in
+  `model.gwoCardsWithoutTooltip`.
 - **`gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards` count the AI
   players' cards** under per-player tech, as they count connected viewers'.
 
@@ -223,7 +224,7 @@ function in its `ops` table.
   means "delete every occurrence of it".
 - **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
-  creates missing intermediate levels for you, except for `multiply`, `tag` and `clone`,
+  creates missing intermediate levels for you, except for `multiply`, `tag`, and `clone`,
   which stop at a missing level and write nothing (`clone` warns
   `clone: attribute is missing or null`, `tag` also warns, and only `multiply` is
   silent). If an intermediate segment is a
@@ -333,7 +334,7 @@ is skipped; it does not take the AI setup down.
 
 **What the files look like.** `fabber`/`factory`/`platoon` files are
 `{ "build_list": [ … ] }`, where each entry has `to_build`, `priority`, `builders`,
-`instance_count` and `build_conditions`. `build_conditions` is a **list of lists** — the
+`instance_count`, and `build_conditions`. `build_conditions` is a **list of lists** — the
 inner lists are groups of tests that must all pass, and the entry builds if any one group
 passes. You need that shape to use `new` or `remove`. `template` files are
 `{ "platoon_templates": { "<Name>": { "units": [ … ] } } }`.
@@ -341,8 +342,8 @@ passes. You need that shape to use `new` or `remove`. `template` files are
 **How matching works.** `toBuild` must equal an entry's `to_build` exactly — no wildcards,
 no partial matches. `idToMod` is the field on that entry you are changing (`builders`,
 `priority`, …). `refId`/`refValue` restrict the change to entries that already hold that
-value, which is the usual way to tell apart the same `to_build` in the TITANS, Queller and
-Penchant AI trees — `refId: "priority"` with the priority that tree uses.
+value, which is the usual way to tell apart the same `to_build` in the TITANS, Queller,
+and Penchant AI trees — `refId: "priority"` with the priority that tree uses.
 
 **What a missing or wrong field does.** Nothing, silently: a `toBuild` no file contains;
 `append`/`prepend`/`replace`/`unset` with no `idToMod`; `replace` against a field the
@@ -350,7 +351,7 @@ entry does not already have (it cannot create one); `remove` whose `value` is no
 exact copy of a whole test object; `squad` naming a template that does not exist;
 `silence` on `platoon` (no `platoon_builds` entry has `builders`). Damage, silently: a
 missing `toBuild` matches every entry with no `to_build` (fabber task entries); a missing
-`value` on `append`, `prepend`, `replace`, `new` or `squad` writes `undefined` (or `NaN`,
+`value` on `append`, `prepend`, `replace`, `new`, or `squad` writes `undefined` (or `NaN`,
 or a string ending in `undefined`) into the matched entries; `silence` with no `except`
 zeroes every entry in scope. A message: `silence` with no `value` logs
 `applyAiMods: op threw`; `load` with no or an unknown `type` logs
@@ -416,11 +417,11 @@ fail silently: the text just stays English. The `[ModTranslations]` log line (se
 
 **Keys.** The key is the text after `!LOC:`, trimmed
 (`<PA>/ui/main/shared/js/localization.js`, the `_.trim` in `loc()`), and nothing else is
-normalised: case, punctuation, numbers and `<br>` all count. Harvest every `"!LOC:…"`
+normalised: case, punctuation, numbers, and `<br>` all count. Harvest every `"!LOC:…"`
 literal from the user's `ui/**` rather than typing keys, and cover `summarize`,
 `describe`, `hint`, `upgradeCard`'s `name`/`description`, and a deck's `name`/`tooltip`.
 After **any** edit to English text, re-check that every key in every `<lang>.json` still
-exists in the source — a stale key is silent. An entry whose `message` is empty, missing
+exists in the source — a stale key is silent. An entry whose `message` is empty, missing,
 or not a string (including a bare string value, `"Bot Damage": "Bot-Schaden"`), or a key
 containing `;;` or `::`, is skipped and counted `invalid`. Keep numbers and `<br>`
 identical in the message. The "Adds a new slot for another technology." line that
@@ -447,7 +448,7 @@ use the game's own wording for that language.
 
 This code runs in PA's embedded **Chrome 40**, and a parse error takes out the entire
 screen, not just the card. Use `var`; no `let`/`const`, arrow functions, template
-literals or `class`. Do not use `String.prototype.startsWith`/`endsWith` — PA's own
+literals, or `class`. Do not use `String.prototype.startsWith`/`endsWith` — PA's own
 polyfill ignores the position argument and returns the wrong answer; use `_.startsWith`
 or `_.endsWith`. `_` (lodash), `ko`, jQuery, `api`, and `model` are globals.
 
@@ -487,13 +488,13 @@ silent failure to its cause.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`,
-`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, and in `modinfo.json`
-`CHANGE THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release,
-`#.#.#`, `yyyy-mm-dd`, `THREAD_ID`, and `SOME_PUBLIC_URL_HERE`); a tech card's `deal` returns a chance
-above `0` that does not depend on its optional fourth argument `rng` (only `params` may be
-random, and a card drawing at all should use `rng` when it is given, with a fallback when
-it is not, as `docs/advanced.md` shows: the `X` panel, `starting_inventory.js` and the
-co-op AI's `chanceOf` call `deal` without it, so an unguarded `rng.…` call throws there);
-the card ID is registered in the right list; and the identifier is the same in all three
-places — four when the mod ships translations, where every key in every `<lang>.json`
-must also still match a `!LOC:` literal in the source.
+`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, and in `modinfo.json` `CHANGE
+THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release, `#.#.#`,
+`yyyy-mm-dd`, `THREAD_ID`, and `SOME_PUBLIC_URL_HERE`); a tech card's `deal` returns a
+chance above `0` that does not depend on its optional fourth argument `rng` (only `params`
+may be random, and a card drawing at all should use `rng` when it is given, with a
+fallback when it is not, as `docs/advanced.md` shows: the `X` panel,
+`starting_inventory.js`, and the co-op AI's `chanceOf` call `deal` without it, so an
+unguarded `rng.…` call throws there); the card ID is registered in the right list; and the
+identifier is the same in all three places — four when the mod ships translations, where
+every key in every `<lang>.json` must also still match a `!LOC:` literal in the source.

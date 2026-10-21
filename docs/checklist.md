@@ -15,15 +15,15 @@ each item as you complete it.
       identifier.
 - [ ] Renamed the folder under `ui/mods/` so that it matches your identifier.
 - [ ] Renamed the example card file that you use (`tech_card_id.js`,
-      `unit_upgrade_card_id.js` or `start_card_id.js`) to a unique name that does not
+      `unit_upgrade_card_id.js`, or `start_card_id.js`) to a unique name that does not
       start with `gwc_` or `gwaio_`, and noted that name, without `.js`, as the card's ID.
 - [ ] Gave the card a name, a description, and a picture.
 - [ ] Made the card do something in its `buff` (in `apply`, for a loadout): add units,
       change unit stats, or change the AI.
 - [ ] Replaced or deleted every placeholder left in the card, such as `UNIT_PATH`,
-      `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` text. A placeholder left in
-      a unit path or an ID breaks the card. One left in the text or the picture shows on
-      the card.
+      `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` text. A placeholder left
+      in a unit path or an ID breaks the card. One left in the text or the picture shows
+      on the card.
 - [ ] Checked the mod with the checker (see
       [Checking your work](testing.md#checking-your-work)) and fixed everything that it
       reported.

@@ -26,7 +26,7 @@ and the line number. Nothing after the two `>` lines means no problems.
 
 - **Typing mistakes**: a missing comma, or a bracket or quotation mark that is not closed.
 - **Newer JavaScript that PA cannot run.** The browser inside PA is very old. Modern
-  JavaScript that you may have seen elsewhere, such as `let`, `=>`, backtick strings and
+  JavaScript that you may have seen elsewhere, such as `let`, `=>`, backtick strings, and
   `class`, does not even load, and takes the whole file down with it. The checker knows
   exactly what PA supports, and reports the rest.
 - **Functions that PA does not have**, such as `Object.assign` and `Array.from`. These are
@@ -122,7 +122,7 @@ Other messages, and what each one means, are in
    panel finds the cards that you registered in `model.gwoCards`, the cards of the war's
    [deck](decks.md), and GWO's loadouts. A card that is in none of them is not found.
 4. Check that the card appears in your hand, and that no new errors appear in the Console.
-5. Hover over the card, and check that its name, description, picture and tooltip look
+5. Hover over the card, and check that its name, description, picture, and tooltip look
    right.
 6. In the debugger, tick the **Preserve log** box, so that the Console keeps its messages
    when the battle loads.
