@@ -478,7 +478,9 @@ silent failure to its cause.
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance
 above `0` that does not depend on its optional fourth argument `rng` (only `params` may be
-random, and a card drawing at all should use `rng`, not `Math.random()`); the card ID is
-registered in the right list; and the identifier is the same in all three places — four
-when the mod ships translations, where every key in every `<lang>.json` must also still
-match a `!LOC:` literal in the source.
+random, and a card drawing at all should use `rng` when it is given, with a fallback when
+it is not, as `docs/advanced.md` shows: the `X` panel, `starting_inventory.js` and the
+co-op AI's `chanceOf` call `deal` without it, so an unguarded `rng.…` call throws there);
+the card ID is registered in the right list; and the identifier is the same in all three
+places — four when the mod ships translations, where every key in every `<lang>.json`
+must also still match a `!LOC:` literal in the source.
