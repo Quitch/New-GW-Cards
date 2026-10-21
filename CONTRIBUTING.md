@@ -204,6 +204,15 @@ follow it:
   `docs/changing-units.md` (`model.gwoSpecs`), `CLAUDE.md` ("Setting the mod up" and
   "Registering a card"), the header comments in `start_cards.js`, `tech_cards.js`, and
   `specs.js`, and step 4 of the header in `start_card_id.js`.
+- **Which races a tech card is offered to** is stated in full once, in
+  `docs/tech-cards.md` ("Which races get an upgrade card"): an ID with `_upgrade_` (other
+  than `_upgrade_subcommander` and `_upgrade_ubercannon`) reaches MLA alone unless its
+  `model.gwoCardsToUnits` entry names race units or has `races`, and that includes a card
+  with no entry. GWO's `raceCanDeal` in `shared/cards_deal_helpers.js` is the code. These
+  places restate part of it and link to that section. Keep them consistent:
+  `docs/tech-cards.md` (`model.gwoCardsToUnits`), `docs/race-cards.md` (the `_upgrade_`
+  warning and step 2), and `docs/troubleshooting.md`. A loadout's `races` is a separate
+  rule, in `docs/loadouts.md`.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither

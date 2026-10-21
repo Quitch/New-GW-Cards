@@ -56,12 +56,11 @@ unit reaches the race units either. Keep `_upgrade_` in the ID of a card like th
 give its entry `races: ["mla"]` (see the warning below).
 
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
-> the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is
-> tuned to one MLA unit, so GWO does not pass it on to the other races. If a card that
-> changes stock units must reach every race, leave `_upgrade_` out of its ID. A `races`
-> list in the entry replaces this rule: GWO offers the card to the races in the list. IDs
-> that contain `_upgrade_subcommander` or `_upgrade_ubercannon` are exempt from the rule.
-> For a loadout, put `races` on the loadout's own entry instead (see
+> the card's `model.gwoCardsToUnits` entry names race or add-on units or has a `races`
+> list. An upgrade card is tuned to one MLA unit, so GWO does not pass it on to the other
+> races. If a card that changes stock units must reach every race, leave `_upgrade_` out
+> of its ID. [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card)
+> gives the whole rule. For a loadout, put `races` on the loadout's own entry instead (see
 > [Loadouts](loadouts.md#races--the-races-that-can-use-a-loadout)).
 
 ## Keep a change on the stock unit — `stockOnly`
@@ -154,11 +153,11 @@ anything from the base game, such as `gwoUnit.commander` or a shared weapon such
 always, and other races when they have that kind of unit.
 
 The same entry also works for a card whose ID contains `_upgrade_`, such as
-`mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
-units (see the warning above). When it names race units, it is written for that race, so
-GWO offers it to that race. An entry with a `races` list is offered to the races in the
+`mym_upgrade_shank`. When the entry names race units, the card is written for that race,
+so GWO offers it to that race. An entry with a `races` list is offered to the races in the
 list and to no others. Each race in the list still needs a unit that a unit in the entry
-reaches.
+reaches. [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card)
+gives the whole rule.
 
 ## 3. Check for the unit in `deal`
 

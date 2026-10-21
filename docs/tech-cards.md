@@ -256,6 +256,14 @@ Two things in the card's
 replace this rule: race or add-on units in `units`, and a `races` list. IDs that contain
 `_upgrade_subcommander` or `_upgrade_ubercannon` are exempt from the rule.
 
+The rule also applies to a card that has no entry, or an empty `units` list, such as a
+card in
+[`model.gwoCardsWithoutTooltip`](#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs).
+If its ID contains `_upgrade_`, only MLA players are offered it. Without `_upgrade_`, every
+race is.
+
+This section is the whole rule. The other pages that mention it link here.
+
 ## The lists that tell GWO about your cards
 
 GWO keeps several lists, and you add your cards to them. The name of each list starts
@@ -305,10 +313,11 @@ model.gwoCardsToUnits.push({
 });
 ```
 
-A card with no entry, or with an empty `units` list, is offered to players of every race.
-A card in
+A card with no entry, or with an empty `units` list, is offered to players of every race,
+unless its ID contains `_upgrade_`. A card in
 [`model.gwoCardsWithoutTooltip`](#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
-is one of those.
+has no entry, so this applies to it too. See
+[Which races get an upgrade card](#which-races-get-an-upgrade-card).
 
 To choose the races yourself, add `races` to the entry. GWO then offers the card only to
 players of the races in the list, whatever the card's ID. The race IDs are `mla`,
