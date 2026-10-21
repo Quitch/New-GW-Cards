@@ -188,13 +188,19 @@ follow it:
   no loadouts. Its two `push()` calls are empty, and the example IDs are in comments above
   them. This reverses the earlier rule, which kept live placeholder IDs in the lists and
   told the author to delete them. Those IDs cost every new author four console errors
-  and a cleanup step. Keep the lists empty. Keep the example inside a comment, not inside
-  the call. An author who removes the comment marks from only some entries inside the
+  and a cleanup step. The same reasoning keeps `tech_cards.js` empty (its live
+  placeholder IDs logged three `GWO card failed to load` errors) and the
+  `model.gwoLoadoutBanks` block in `start_cards.js` commented out (once the author renames
+  the `ui/mods/` folder, its placeholder path logs `Loadout bank failed to load` on all
+  three screens). The `eslint-disable-next-line no-unused-vars` above the `tech_cards.js`
+  callback exists only because its lists are empty. Keep the lists empty. Keep the
+  example inside a comment, not inside the call. An author who removes the comment marks from only some entries inside the
   call leaves a trailing comma, which Chrome 40 cannot parse. These places state the
   rule. Keep them consistent: `docs/loadouts.md` (the blockquote under
   `model.gwoStartingCards`), `docs/checklist.md` (the loadout item),
   `docs/testing.md` (the "failed to load" entry), `docs/troubleshooting.md`,
-  `CLAUDE.md` ("Registering a card"), and the header comment in `start_cards.js`.
+  `CLAUDE.md` ("Registering a card"), and the header comments in `start_cards.js` and
+  `tech_cards.js`.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither

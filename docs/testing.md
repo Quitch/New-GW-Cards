@@ -81,8 +81,8 @@ Learn these two:
 
   You listed `SOME_ID` somewhere, but there is no `SOME_ID.js` in
   `ui/main/game/galactic_war/cards/`, or the file has a typing mistake that stops it from
-  loading. The usual cause is a misspelled ID, an example ID that you forgot to delete, or
-  a typing mistake that the [checker](#checking-your-work) would find. The first message
+  loading. The usual cause is a misspelled ID, an example ID that you copied without
+  changing it, or a typing mistake that the [checker](#checking-your-work) would find. The first message
   is for a tech card: the game skips that card, and the war continues. The second is for
   a loadout: that loadout cannot be used. Some screens show the third message instead of
   the first two. See the warning under

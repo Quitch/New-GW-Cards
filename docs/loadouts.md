@@ -203,6 +203,7 @@ already contains the first two, and `start_cards.js` contains the third:
 
 3. `start_cards.js` tells GWO where the bank is, through
    [`model.gwoLoadoutBanks`](#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
+   That block starts with comment marks, so remove them first.
    If you miss this step, the loadout stays locked forever.
 
 The loadout screen then reads your bank, with the same `LS_KEY`, to decide whether to show
@@ -241,6 +242,12 @@ chose.
 
 `path` is the address of your `bank.js`. Like every other address in the mod, it contains
 your identifier.
+
+The template's `start_cards.js` has this block with comment marks (`//`) in front of each
+line, so that a mod with no loadouts does not point GWO at a bank. Remove the comment
+marks from those seven lines, and then set `prefix` and `path`. If you set `path` but
+leave a wrong identifier in it, the debugger shows `Loadout bank failed to load:` and the
+address.
 
 You give the address, not the file itself, because GWO builds the loadout list before the
 game loads any of your mod's files. An address that GWO can read when it is ready is the

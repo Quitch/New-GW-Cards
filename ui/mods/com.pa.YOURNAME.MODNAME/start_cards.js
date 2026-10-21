@@ -56,6 +56,8 @@
 
     // TELL GALACTIC WAR OVERHAUL WHERE YOUR BANK IS
     // A mod with only tech cards can leave this block as it is, or delete it.
+    // A mod with locked loadouts needs it: remove the comment marks (//) from
+    // the seven lines at the end of this block, and edit them.
     //
     // Your own bank.js records your locked loadouts.  Galactic War Overhaul
     // cannot find that file without help, so you give it the address here.
@@ -69,13 +71,13 @@
     //          to the start of your loadout IDs, for example "mym_start_".
     // path   - the address of your bank.js.  CHANGE THE IDENTIFIER TO MATCH
     //          YOURS.
-    if (!model.gwoLoadoutBanks) {
-      model.gwoLoadoutBanks = [];
-    }
-    model.gwoLoadoutBanks.push({
-      prefix: "YOUR_PREFIX_start_",
-      path: "coui://ui/mods/com.pa.YOURNAME.MODNAME/bank.js",
-    });
+    // if (!model.gwoLoadoutBanks) {
+    //   model.gwoLoadoutBanks = [];
+    // }
+    // model.gwoLoadoutBanks.push({
+    //   prefix: "YOUR_PREFIX_start_",
+    //   path: "coui://ui/mods/com.pa.YOURNAME.MODNAME/bank.js",
+    // });
 
     // OPTIONAL: loadouts that an allied commander cannot work with.
     // If the effect of your loadout would break the allied-commander feature,
