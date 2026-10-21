@@ -380,8 +380,9 @@ Only when the user asks for translations. The template ships none of it — no
 `translations.js`, no `translations/` folder, no `modinfo.json` wiring — and the mod
 works in English without it. `docs/translating.md` is the author-facing
 procedure; the framework is the Mod Translations mod (`com.pa.quitch.modtranslations`),
-whose README ("For mod authors") and `docs/design.md` are the authority. Every step below
-fails silently: the text just stays English.
+whose README ("For mod authors") and `docs/design.md` are the authority. Most steps below
+fail silently: the text just stays English. The `[ModTranslations]` log line (see
+"Priority") shows which one, and invalid JSON logs an error.
 
 1. **Dependency.** Add `"com.pa.quitch.modtranslations"` to `dependencies` in
    `modinfo.json`, beside GWO.
@@ -408,7 +409,8 @@ normalised: case, punctuation, numbers and `<br>` all count. Harvest every `"!LO
 literal from the user's `ui/**` rather than typing keys, and cover `summarize`,
 `describe`, `hint`, `upgradeCard`'s `name`/`description`, and a deck's `name`/`tooltip`.
 After **any** edit to English text, re-check that every key in every `<lang>.json` still
-exists in the source — a stale key is silent. An entry with an empty `message`, or a key
+exists in the source — a stale key is silent. An entry whose `message` is empty, missing or not a
+string (including a bare string value, `"Bot Damage": "Bot-Schaden"`), or a key
 containing `;;` or `::`, is skipped and counted `invalid`. Keep numbers and `<br>`
 identical in the message. The "Adds a new slot for another technology." line that
 `upgradeCard` appends (`withSlot` in `<GWO>` `shared/cards.js`) is GWO's key, already

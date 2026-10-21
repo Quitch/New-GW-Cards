@@ -4,11 +4,13 @@
 
 The Techs picker in the war setup normally offers two decks: **Basic** (the base
 game's tech cards) and **Galactic War Overhaul** (the full GWO deck). A deck that you add
-here appears beside them, and a war started with it deals only that deck's cards.
+here appears beside them. A war started with it deals that deck's cards, and also every
+card that any mod adds to `model.gwoCards`.
 
 You don't need a deck to add cards. Cards that you add to `model.gwoCards` join **every**
-deck. Add a deck only when you want players to be able to choose a different set of
-cards, for example a smaller themed deck.
+deck, and so do other mods' cards. Add a deck only when you want players to be able to
+choose a different set of cards, for example a smaller themed deck. A deck cannot leave
+out the cards that mods add to `model.gwoCards`.
 
 ```js
 if (!model.gwoDecks) {
