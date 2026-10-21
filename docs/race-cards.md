@@ -191,7 +191,7 @@ define([
 with the game's own units. Write the race unit's ID in `file`, or give it to `gwoCard.mods`,
 as in the example above.
 
-## Keep a change on the stock unit — `stockOnly`
+### Keep a change on the stock unit — `stockOnly`
 
 Sometimes one change must stay on the stock unit. For example, a card gives the Dox +50%
 health, but the Legion bots must not get it. Add `stockOnly: true` to that change, or

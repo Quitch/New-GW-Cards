@@ -47,8 +47,10 @@ They are **not** faults to correct in this repo:
   `ui/mods/com.pa.YOURNAME.MODNAME/` directory name, and in the `coui://` scene URLs. The
   author must change all three together and keep them the same. See "Preparing the mod"
   in `docs/setup.md`.
-- `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, and the `THREAD_ID` and `SOME_PUBLIC_URL_HERE`
-  placeholders in the `forum` and `icon` values of `modinfo.json`.
+- `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, `CHANGE THIS` in `display_name`,
+  `DESCRIBE THEM/THE THEME` in `description`, and the `THREAD_ID` and
+  `SOME_PUBLIC_URL_HERE` placeholders in the `forum` and `icon` values of `modinfo.json`.
+- `!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, the `hint` in `start_card_id.js`.
 - `your_mod_id` — the `LS_KEY` in `bank.js`. It is the localStorage key for unlocked
   loadouts.
 - `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,

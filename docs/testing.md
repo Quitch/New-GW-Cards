@@ -19,8 +19,9 @@ folder after the `npm install` in
 npm run lint:js
 ```
 
-It prints two lines that start with `>`, and then one line for each problem, with the file
-and the line number. Nothing after the two `>` lines means no problems.
+It prints two lines that start with `>`. If there are problems, it then names each file
+that has one, lists its problems below the name with their line numbers, and ends with a
+count. Nothing after the two `>` lines means no problems.
 
 ### What it catches
 

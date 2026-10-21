@@ -30,7 +30,7 @@
         //
         // To use this list, remove the comment marks (//) from the start of the
         // line below, and change the example files to your own.
-        // model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
+        // model.gwoSpecs.push(gwoUnit.aresStomp);
       }
     );
   } catch (e) {

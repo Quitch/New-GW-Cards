@@ -92,8 +92,8 @@ You write that file yourself. Put it in your own mod at the matching path, for e
 `pa/ai_tech/factory_builds/mym_upgrade_myunit.json`, next to your `ui` folder. Copy the
 shape from one of the game's build files in `{PA_INSTALL_DIRECTORY}/media/pa/ai/`. Name it
 after your card, because a file with the same name as one in GWO or another mod would
-replace it. Remember the `.json` at the end of `value`: without it, the base-game AI
-skips the file, and nothing reports it.
+replace it. Remember the `.json` at the end of `value`: without it, GWO skips the
+file, and nothing reports it.
 
 > **Check that the file really is there before you share the mod.** If a `load` names a
 > file that is missing, the AI never gets the builds in it. The battle starts without
@@ -137,8 +137,10 @@ passes. `remove` needs a `value` that is an exact copy of a whole test.
 When an `append`, `prepend`, `replace`, or `unset` does not match the entry itself (the
 entry lacks `idToMod`, or `refId` does not hold `refValue`), GWO looks at the tests in
 the entry's `build_conditions` instead. It changes the tests where `refId` holds
-`refValue`. A `refValue` that is a list never matches a test. `matchAll: true` changes
-every test on the entry instead.
+`refValue`. `replace`, `append`, and `prepend` change only the tests whose value at
+`idToMod` is a list, or is not empty, `0`, or `false`. `unset` removes `idToMod` from
+every one of the matching tests. A `refValue` that is a list never matches a test.
+`matchAll: true` selects every test on the entry instead, with the same limits.
 
 ### When your card replaces builds — `treeOnly`
 
