@@ -62,8 +62,8 @@ labels:
   `events.fired.effect_spec`. If a step along the way is the name of another file rather
   than a value, the game follows it into that file and carries on from there. To pick one
   item from a list of vision, radar, and jammer ranges by what it is rather than where it
-  sits, write `[layer=…,channel=…]` as a step (see [Vision, radar, and jammer
-  ranges](#vision-radar-and-jammer-ranges--gwocardobserverpath)).
+  sits, write `[layer=…,channel=…]` as a step (see
+  [Vision, radar, and jammer ranges](#vision-radar-and-jammer-ranges--gwocardobserverpath)).
 - `op`: the kind of change. See below.
 - `value`: the amount or value to use.
 

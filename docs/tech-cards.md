@@ -79,8 +79,8 @@ below, and [loadouts](loadouts.md#loadouts-and-gwocardloadout).
 | `hint`       | loadouts   | The text shown while the loadout is still locked.                                                                  |
 
 You may also see `keep`, `discard`, and `releaseContext` in a card that you copy. Most
-cards never use them. See [`keep`, `discard`, and
-`releaseContext`](advanced.md#keep-discard-and-releasecontext--rare-parts).
+cards never use them. See
+[`keep`, `discard`, and `releaseContext`](advanced.md#keep-discard-and-releasecontext--rare-parts).
 
 ### `summarize`, `describe`, `icon` — name, description, picture
 

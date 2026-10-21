@@ -67,9 +67,9 @@ entries that are already there:
 ```
 
 Don't add `translations.js` to `gw_play`, `gw_start`, or `gw_coop_per_player_loadout`.
-This is the one exception to the rule in [Understanding the
-pieces](setup.md#understanding-the-pieces) that a loader goes on every screen that needs
-it.
+This is the one exception to the rule in
+[Understanding the pieces](setup.md#understanding-the-pieces) that a loader goes on every
+screen that needs it.
 
 The reason is timing. The game translates the text of its own screens, and remembers the
 result, before it runs any one screen's list. A script under `gw_play` or `gw_start`
