@@ -32,8 +32,10 @@ copy the folder, rename it, and fill in the blanks.
 ## What you need
 
 - **Planetary Annihilation: TITANS.**
-- **Galactic War Overhaul v7.5.0 or later.** To install it, open **Community Mods** from
-  the main menu. Find _Galactic War Overhaul_ in the AVAILABLE list, and install it.
+- **Galactic War Overhaul v7.5.0 or later.** A few features need a later version:
+  `gwoCard.missingObtainableUnit` needs v7.7.0 or later, and the races that can use a
+  loadout need v7.8.0 or later. To install it, open **Community Mods** from the main
+  menu. Find _Galactic War Overhaul_ in the AVAILABLE list, and install it.
   Community Mods updates it for you.
 - **A text editor.** Any plain-text editor works, but
   [Visual Studio Code](https://code.visualstudio.com/) (free) is much better. It colours

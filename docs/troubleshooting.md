@@ -41,8 +41,8 @@ Most other mistakes show no message at all. The rest of this page lists them by 
 
 ## Nothing from the mod appears at all
 
-- The identifier is not the same in all three places: `identifier` in `modinfo.json`,
-  the `scenes` addresses in `modinfo.json`, and the folder name under `ui/mods/`. See
+- The `scenes` addresses in `modinfo.json` and the folder name under `ui/mods/` do not
+  use the same identifier. See
   [Preparing the mod](setup.md#preparing-the-mod).
 - The mod is not enabled in **Community Mods**, or Galactic War Overhaul is not
   installed. See [What you need](../README.md#what-you-need).
@@ -62,8 +62,11 @@ Most other mistakes show no message at all. The rest of this page lists them by 
   without `.js`, letter for letter.
 - The card file has a typing mistake. The Console shows `GWO card failed to load:` and
   the ID. The [checker](setup.md#installing-the-checker-recommended) finds most of these.
+
+## The test panel gives me a card, but not mine
+
 - The ID starts with `gwc_` or `gwaio_`. The game then normally uses GWO's file of that
-  name, not yours. See
+  name, not yours, so the panel finds the ID and deals GWO's card. See
   [Naming and registering your card](tech-cards.md#naming-and-registering-your-card).
 
 ## The test panel gives me the card, but a war never offers it
@@ -110,7 +113,7 @@ Most other mistakes show no message at all. The rest of this page lists them by 
 
 ## My Sub Commanders do not build what my card gives them
 
-- A `load` file is missing. The battle's log shows
+- A `load` file is missing. While the war screen prepares the battle, the Console shows
   `AI file of a load mod not read, skipped:` and the path. See
   [Loading a ready-made build file](ai-build-orders.md#loading-a-ready-made-build-file--load).
 - A `toBuild` or builder name is not in the AI's files, an op is missing a label that it

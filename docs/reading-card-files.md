@@ -29,7 +29,7 @@ the quotation marks, but both quotation marks must stay.
 ```
 
 **Labelled values** are written between curly brackets. Each entry is a label, a colon,
-and a value, with a comma after it:
+and a value, with a comma between entries:
 
 ```js
 { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 }
@@ -50,8 +50,8 @@ such as `});`, also stay as they are.
 
 **One mistake stops the whole file.** A missing comma, a missing quotation mark, or a
 bracket that is not closed makes the game skip the entire file, not only that line. Every
-`(`, `[` and `{` needs its partner `)`, `]` or `}`. In Visual Studio Code, click next to a
-bracket and the editor highlights its partner. The
+`(`, `[`, and `{` needs its partner `)`, `]`, or `}`. In Visual Studio Code, click next to
+a bracket and the editor highlights its partner. The
 [checker](setup.md#installing-the-checker-recommended) finds these mistakes for you.
 
 ---

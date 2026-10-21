@@ -66,8 +66,8 @@ entries that are already there:
     "gw_play": [
 ```
 
-Don't add `translations.js` to `gw_play`, `gw_start` or `gw_coop_per_player_loadout`. This
-is the one exception to the rule in
+Don't add `translations.js` to `gw_play`, `gw_start`, or `gw_coop_per_player_loadout`.
+This is the one exception to the rule in
 [Understanding the pieces](setup.md#understanding-the-pieces) that a loader goes on every
 screen that needs it.
 
@@ -84,7 +84,7 @@ for each language, named `<lang>.json`.
 
 `<lang>` must be the name of a folder in
 `{PA_INSTALL_DIRECTORY}/media/ui/main/_i18n/locales/`, for example `de`, `fr`, `es-ES`,
-`ru` or `zh-CN`. Copy the name exactly. A name that is not in that folder never loads.
+`ru`, or `zh-CN`. Copy the name exactly from that folder.
 
 A regional language also reads its base language's file. A player who uses `de-AT`
 (Austrian German) gets `de-AT.json` first and then `de.json`, so one `de.json` serves
@@ -108,9 +108,9 @@ for your translators. The game never loads that file. It is only a catalogue.
 ### The key must be your English text, exactly
 
 The key is the English text exactly as you wrote it after `!LOC:` in the card. Every
-character counts, including capital letters, punctuation, numbers and `<br>`. Only spaces
-at the very start and the very end don't count. For `"!LOC:Bot Damage"` the key is
-`"Bot Damage"`.
+character counts, including capital letters, punctuation, numbers, and `<br>`. Only spaces
+and other blank characters at the very start and the very end don't count. For
+`"!LOC:Bot Damage"` the key is `"Bot Damage"`.
 
 **A key that does not match leaves that one text in English, and no message tells you.**
 Copy each key out of the card file. Don't type it again.
@@ -128,13 +128,13 @@ These rules follow from that:
 
 Text that needs a key:
 
-- `summarize`, `describe` and `hint` in a card.
+- `summarize`, `describe`, and `hint` in a card.
 - `name` and `description` in a `gwoCard.upgradeCard` card.
 - `name` and `tooltip` in a deck.
 
 Text that needs no key: the line "Adds a new slot for another technology." that
-`gwoCard.upgradeCard` adds to a description. That line belongs to GWO, which already
-translates it.
+`gwoCard.upgradeCard` adds to a description. The game's own translation files already
+translate it.
 
 **Put only your own text in your files.** When two mods translate the same key, the mod
 with the higher `priority` number wins everywhere that the key appears. GWO's `priority`

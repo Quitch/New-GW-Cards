@@ -19,14 +19,15 @@ folder after the `npm install` in
 npm run lint:js
 ```
 
-It prints one line for each problem, with the file and the line number. No output means no
-problems.
+It prints two lines that start with `>`. If there are problems, it then names each file
+that has one, lists its problems below the name with their line numbers, and ends with a
+count. Nothing after the two `>` lines means no problems.
 
 ### What it catches
 
 - **Typing mistakes**: a missing comma, or a bracket or quotation mark that is not closed.
 - **Newer JavaScript that PA cannot run.** The browser inside PA is very old. Modern
-  JavaScript that you may have seen elsewhere, such as `let`, `=>`, backtick strings and
+  JavaScript that you may have seen elsewhere, such as `let`, `=>`, backtick strings, and
   `class`, does not even load, and takes the whole file down with it. The checker knows
   exactly what PA supports, and reports the rest.
 - **Functions that PA does not have**, such as `Object.assign` and `Array.from`. These are
@@ -84,8 +85,8 @@ Learn these:
   loading. The usual cause is a misspelled ID, an example ID that you copied without
   changing it, or a typing mistake that the [checker](#checking-your-work) would find.
   The first message is for a tech card: the game skips that card, and the war continues.
-  The second is for a loadout: that loadout cannot be used. Some screens show the third
-  message instead of the first two. See the warning under
+  The second is for a loadout: that loadout cannot be used. The game itself can show the
+  third message as well as one of the first two. See the warning under
   [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 - ERROR: _Loadout bank failed to load: ADDRESS_
@@ -122,7 +123,7 @@ Other messages, and what each one means, are in
    panel finds the cards that you registered in `model.gwoCards`, the cards of the war's
    [deck](decks.md), and GWO's loadouts. A card that is in none of them is not found.
 4. Check that the card appears in your hand, and that no new errors appear in the Console.
-5. Hover over the card, and check that its name, description, picture and tooltip look
+5. Hover over the card, and check that its name, description, picture, and tooltip look
    right.
 6. In the debugger, tick the **Preserve log** box, so that the Console keeps its messages
    when the battle loads.

@@ -86,10 +86,11 @@ deal: function (system, context, inventory) {
 },
 ```
 
-Outside a co-op game they answer for the one player, so you can use them anywhere. GWO
-uses them for things that the whole war shares, such as whether Tsunami Tech floods the
-planets that everyone fights on. No GWO card needs them, so use `inventory.hasCard` first,
-and use these two only when your card's effect really covers the whole team.
+Outside a co-op game they answer for the one player, so you can use them anywhere. GWO's
+own code, outside its cards, uses them for things that the whole war shares, such as
+whether Tsunami Tech floods the planets that everyone fights on. No GWO card needs them,
+so use `inventory.hasCard` first, and use these two only when your card's effect really
+covers the whole team.
 
 ## How co-op AI players choose your card
 
@@ -131,7 +132,7 @@ instead, as this guide already asks.
 [`model.gwoLoadoutsAiCannotUse`](loadouts.md#modelgwoloadoutsaicannotuse--loadouts-that-a-co-op-ai-player-cannot-use-in-start_cardsjs),
 so that an AI player never starts with it.
 
-## `keep`, `discard` and `releaseContext` — rare parts
+## `keep`, `discard`, and `releaseContext` — rare parts
 
 **You almost certainly don't want these.** They are left over from the way that PA's own
 cards worked. No GWO card uses `keep` or `discard`, and under GWO they don't do what their

@@ -44,10 +44,11 @@ buildings are matched by kind alone.
 gives the full rule, including the order of the fallbacks. To see which race units your
 card reaches, test it as that race (see [Testing a race card](#8-testing-a-race-card)).
 
-A unit of a kind that the base game has no unit for is the exception: no card for stock
-units reaches it. Such units include Section 17's Big Bill, Pineapple, Floater, Horntail,
-Poseidon, and gantries, the add-ons' fabrication towers and advanced storages, and the
-Bugs research unlocks. To change one of them, name it, such as
+Some race and add-on units are the exception: no card for stock units reaches them. Some
+are of a kind that the base game has no unit for, such as Section 17's Poseidon and
+gantries, the add-ons' fabrication towers and advanced storages, and the Bugs research
+unlocks. Others are marked by their mod as its own, such as Section 17's Big Bill,
+Pineapple, Floater, and Horntail. To change one of them, name it, such as
 `gwoUnit.section17.bigBill`.
 
 This works for changes to values such as health, speed, cost, or damage. A change to
@@ -65,25 +66,6 @@ give its entry `races: ["mla"]` (see the warning below).
 > of its ID. [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card)
 > gives the whole rule. For a loadout, put `races` on the loadout's own entry instead (see
 > [Loadouts](loadouts.md#races--the-races-that-can-use-a-loadout)).
-
-## Keep a change on the stock unit — `stockOnly`
-
-Sometimes one change must stay on the stock unit. For example, a card gives the Dox +50%
-health, but the Legion bots must not get it. Add `stockOnly: true` to that change, or
-give the changes to `gwoCard.stockOnly`:
-
-```js
-inventory.addMods(
-  gwoCard
-    .stockOnly(gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 }))
-    .concat(gwoCard.mods(gwoUnit.dox, "multiply", { build_metal_cost: 0.8 }))
-);
-```
-
-The health change stays on the Dox. The cost change, which is not marked, still reaches
-the Legion, Bugs, and Exiles bots that the Dox reaches, and the add-on bots it reaches. A
-player whose race has no Dox gets nothing from the marked change. For an MLA player with
-no add-ons, the mark changes nothing.
 
 ## 1. Name the unit
 
@@ -208,6 +190,25 @@ define([
 `inventory.addMods` and `inventory.addUnits` work with race units exactly as they work
 with the game's own units. Write the race unit's ID in `file`, or give it to `gwoCard.mods`,
 as in the example above.
+
+### Keep a change on the stock unit — `stockOnly`
+
+Sometimes one change must stay on the stock unit. For example, a card gives the Dox +50%
+health, but the Legion bots must not get it. Add `stockOnly: true` to that change, or
+give the changes to `gwoCard.stockOnly`:
+
+```js
+inventory.addMods(
+  gwoCard
+    .stockOnly(gwoCard.mods(gwoUnit.dox, "multiply", { max_health: 1.5 }))
+    .concat(gwoCard.mods(gwoUnit.dox, "multiply", { build_metal_cost: 0.8 }))
+);
+```
+
+The health change stays on the Dox. The cost change, which is not marked, still reaches
+the Legion, Bugs, and Exiles bots that the Dox reaches, and the add-on bots it reaches. A
+player whose race has no Dox gets nothing from the marked change. For an MLA player with
+no add-ons, the mark changes nothing.
 
 ## 5. A race or add-on from another mod
 

@@ -13,7 +13,7 @@ Many parts of a card name a unit. There are three ways to do it.
   [unit IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js)
   and
   [group IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/unit_groups.js).
-  In those files, each line reads `name: "path"`. You write `gwoUnit.` followed by the
+  In those files, most lines read `name: "path"`. You write `gwoUnit.` followed by the
   name. For example, the line `dox: "/pa/units/land/assault_bot/assault_bot.json"` means
   that you write `gwoUnit.dox`.
 - A **unit path** is the location of a unit's file, such as
@@ -60,10 +60,10 @@ labels:
 - `path`: which value inside that file. A value at the top level of the file is just its
   name, such as `max_health`. A value deeper in the file uses dots, such as
   `events.fired.effect_spec`. If a step along the way is the name of another file rather
-  than a value, the game follows it into that file and carries on from there.
-  To pick one item from a list of vision, radar and jammer ranges by what it is rather
-  than where it sits, write `[layer=…,channel=…]` as a step (see
-  [Vision, radar and jammer ranges](#vision-radar-and-jammer-ranges--gwocardobserverpath)).
+  than a value, the game follows it into that file and carries on from there. To pick one
+  item from a list of vision, radar, and jammer ranges by what it is rather than where it
+  sits, write `[layer=…,channel=…]` as a step (see
+  [Vision, radar, and jammer ranges](#vision-radar-and-jammer-ranges--gwocardobserverpath)).
 - `op`: the kind of change. See below.
 - `value`: the amount or value to use.
 
@@ -88,10 +88,10 @@ The everyday `op` choices:
 | `merge`            | Folds your labelled values into an existing set of labelled values.  | `{ some_label: 5 }`                  |
 | `tag`              | Required after writing a file name. Takes no `value`. See below.     | none                                 |
 
-When the `value` of `push`, `prepend` or `pull` is itself a list, the game adds or removes
-its entries one by one. It does not add the list as one entry.
+When the `value` of `push`, `prepend`, or `pull` is itself a list, the game adds or
+removes its entries one by one. It does not add the list as one entry.
 
-There are three more: `wipe`, `clone` and `eval`. See
+There are three more: `wipe`, `clone`, and `eval`. See
 [More unit-stat ops](#more-unit-stat-ops--wipe-clone-and-eval).
 
 > **The order in which you write changes does not matter.** Across every card in the
@@ -166,7 +166,7 @@ are lists, so tag each entry that you wrote. Name the entry by its number, for e
 file name.
 
 **Use the correct number.** Tools are numbered from `0`, and you tag the numbering as it
-is **after** your change. Every `replace` runs before any `push`, `prepend` or `tag`, so
+is **after** your change. Every `replace` runs before any `push`, `prepend`, or `tag`, so
 count like this: open the unit's file in the game install, count the tools that it
 already has, and your pushed tool takes the next number. The Dox has one tool (number
 `0`), so the pushed tool is number `1`. A `prepend` goes in at `0` instead, and moves the
@@ -198,7 +198,7 @@ two reasons to do this.
 if (!model.gwoSpecs) {
   model.gwoSpecs = [];
 }
-model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
+model.gwoSpecs.push(gwoUnit.aresStomp);
 ```
 
 In the template's `specs.js`, this line starts with comment marks. Remove them, and also
@@ -233,9 +233,9 @@ inventory.addMods(
 ```
 
 Some changes need the same amount applied to several values together. To make a unit
-faster, for example, you change its speed, acceleration, braking and turning together. For
-those, give a **list of paths** and one amount instead of `path: value` pairs. GWO names
-the three sets that cards change most often:
+faster, for example, you change its speed, acceleration, braking, and turning together.
+For those, give a **list of paths** and one amount instead of `path: value` pairs. GWO
+names the three sets that cards change most often:
 
 | Set                          | What it covers                                             |
 | ---------------------------- | ---------------------------------------------------------- |
@@ -254,15 +254,15 @@ A list of paths that you write yourself works in the same way, and so does
 
 ## Rarely needed
 
-### Vision, radar and jammer ranges — `gwoCard.observerPath`
+### Vision, radar, and jammer ranges — `gwoCard.observerPath`
 
-A unit's sight, radar and jammer ranges are a list of items in its file, under
+A unit's sight, radar, and jammer ranges are a list of items in its file, under
 `recon.observer.items`. Each item has a `layer` (such as `surface_and_air` or
-`underwater`), a `channel` (such as `sight`, `radar` or `radar_jammer`) and a `radius`.
+`underwater`), a `channel` (such as `sight`, `radar`, or `radar_jammer`) and a `radius`.
 The order of the items is different from unit to unit. The stock Radar Jamming Station
-keeps its jammer third in the list, but Legion's jamming station keeps underwater sight
-there. If you name an item by its number in the list, a race or add-on unit that stands
-in for the stock unit gets the change on the wrong item.
+keeps its jammer third in the list, but another unit can keep a different item there. If
+you name an item by its number in the list, a race or add-on unit that stands in for the
+stock unit gets the change on the wrong item.
 
 To change one of these ranges, name the item by its layer and channel with
 `gwoCard.observerPath(layer, channel, "radius")`. Do not use its number in the list.
@@ -282,7 +282,7 @@ inventory.addMods(
 A unit that has no item of that layer and channel gets no change. GWO never adds an item
 for you.
 
-### More unit-stat ops — `wipe`, `clone` and `eval`
+### More unit-stat ops — `wipe`, `clone`, and `eval`
 
 - `wipe`: despite its name, this does not clear the value. It finds and replaces text
   inside a text value. `value` is a pair, `[what to find, what to put in its place]`. A
