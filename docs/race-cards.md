@@ -16,30 +16,31 @@ Exiles units that those stock units reach, and the add-on units they reach. GWO 
 for you. Write a race card only when you want to change one particular unit of a race or an
 add-on.
 
-GWO matches combat units by kind and by what they do, from the unit's own types:
-anti-air, artillery, scout, and so on. A stock unit reaches the race units of its kind that
-do its job. For example, a card for the Stinger, an anti-air bot, changes the Legion
-Patriot, Legion's anti-air bot. A card for the Dox changes the Legion Peacekeeper and
-Investigator. A group card, such as `gwoGroup.botsBasicMobile`, changes every basic Legion
-combat bot.
+GWO matches each race unit to stock units by two things, both read from the unit's own
+types:
 
-A race unit that has no job, or whose job no stock unit of its kind does, is reached
-instead by other stock units of its kind: by every one with no job of its own; when there
-are none, by every one whose job the race has no unit for; and when there are none of
-those either, by every stock unit of its kind. So a card for the Ant, which has no job,
-changes the Legion Shank, which has none either, and the Legion Stoke, an amphibious tank,
-since no stock basic tank is amphibious. Bugs has no anti-air bot, and every stock basic
-bot has a job, so for a Bugs player a card for the Stinger changes the Ripper, the Stealth
-Ripper, and the Runner. With Second Wave, the Legion Almaz, an orbital laser platform,
-falls to the last case: a card for the Avenger, the Astraeus, the Hermes, or the Arkyd
-changes it. Any other stock unit reaches no race unit: for a Legion player, a card for the
-Skitter changes no Legion unit. A stock unit that no commander can build, such as the
-Squall's drone (`gwoUnit.squall`), takes no part in this and reaches every race unit of
-its kind. Defences, superweapons, and intel structures (radars and jammers) are matched
-by kind and by job in the same way. Titans, commanders, fabricators, factories, and the
-other buildings are matched by kind alone.
+- its **kind**: what it is, such as a basic bot, a basic tank, or an orbital unit.
+- its **job**: what it does within its kind, such as anti-air, artillery, or scouting.
+  Some units have no job.
+
+A stock unit reaches the race units of the same kind that do the same job. For example, a
+card for the Stinger, an anti-air bot, changes the Legion Patriot, Legion's anti-air bot.
+A card for the Dox changes the Legion Peacekeeper and Investigator. A group card, such as
+`gwoGroup.botsBasicMobile`, changes every basic Legion combat bot.
+
+When no stock unit of the same kind does a race unit's job, GWO falls back to other stock
+units of that kind. For example, a card for the Ant, which has no job, changes the Legion
+Shank, which has none either, and also the Legion Stoke, an amphibious tank, because no
+stock basic tank is amphibious. Bugs has no anti-air bot, so for a Bugs player a card for
+the Stinger changes the Ripper, the Stealth Ripper, and the Runner. Some stock units reach
+no race unit at all: for a Legion player, a card for the Skitter changes no Legion unit.
+
+Defences, superweapons, and intel structures (radars and jammers) are matched by kind and
+by job in the same way. Titans, commanders, fabricators, factories, and the other
+buildings are matched by kind alone.
 [GWO's documentation](https://github.com/Quitch/GW-AI-Overhaul/blob/master/docs/races.md#jobs)
-gives the full rule.
+gives the full rule, including the order of the fallbacks. To see which race units your
+card reaches, test it as that race (see [Testing a race card](#8-testing-a-race-card)).
 
 A unit of a kind that the base game has no unit for is the exception: no card for stock
 units reaches it. Such units include Section 17's Big Bill, Pineapple, Floater, Horntail,
