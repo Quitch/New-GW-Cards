@@ -33,8 +33,7 @@ Each change is written with these labels:
 - `matchAll`, `treeOnly`: optional and advanced. See
   [More AI changes](#more-ai-changes).
 
-Each op needs a particular set of these labels. An op that is missing a label that it
-needs does nothing at all, with no error:
+Each op needs a particular set of these labels:
 
 | `op`                           | needs, besides `type`         |
 | ------------------------------ | ----------------------------- |
@@ -46,19 +45,34 @@ needs does nothing at all, with no error:
 `unset` is the opposite of `replace`: it removes the `idToMod` part from the entry, so it
 has no `value`.
 
+A missing label does not always do nothing:
+
+- Without `toBuild`, an op changes every entry that has no `to_build` name. Some
+  `fabber` entries have none.
+- Without `value`, `append`, `prepend`, `replace`, `new`, and `squad` write an empty value
+  into the entry, which can break it.
+- Without `idToMod`, `append`, `prepend`, `replace`, and `unset` change nothing.
+- `silence` without `value`, and `load` without `type`, show an error in the Console. See
+  [Messages you may see](troubleshooting.md#messages-you-may-see).
+
+Only those two show an error, so check each change against the table.
+
 **Where the names come from.** `toBuild` must match one of the AI's build entries exactly.
 Those names are the `to_build` values inside the AI's build files, which you can read in
 `{PA_INSTALL_DIRECTORY}/media/pa/ai/`, and in `media/pa_ex1/ai/` and
 `media/pa_ex1/ai_queller/` for the TITANS and Queller AIs. The builder names that you put
-in `builders`, such as `BasicBotFactory`, come from
-`{PA_INSTALL_DIRECTORY}/media/pa/ai/unit_maps/ai_unit_map.json`. A name that is not in
-those files changes nothing and reports nothing. The AI files are one long line; use
+in `builders`, such as `BasicBotFactory`, come from the AI's unit maps:
+`media/pa_ex1/ai/unit_maps/ai_unit_map.json`, and `ai_unit_map_x1.json` beside it, which
+holds the names for TITANS units such as `SupportCommander`. The Queller AI has its own
+in `media/pa_ex1/ai_queller/<tier>/unit_maps/`. Don't read
+`media/pa/ai/unit_maps/ai_unit_map.json`: TITANS replaces it with the `pa_ex1` copy. A
+name that is not in those files changes nothing and reports nothing. The AI files are one long line; use
 **Format Document** in Visual Studio Code to read them, and don't save them.
 
 ## Loading a ready-made build file — `load`
 
-The simplest AI change loads a whole AI build file that you write. Most of GWO's upgrade
-cards teach the AI to use a new unit in this way. `load` uses only `type`, `op` and
+The simplest AI change loads a whole AI build file that you write. Some of GWO's cards
+teach the AI to use a new unit in this way. `load` uses only `type`, `op` and
 `value`, where `value` is the name of a JSON file that GWO reads from `/pa/ai_tech/`. The
 `type` decides which folder inside it: `fabber_builds/`, `factory_builds/`,
 `platoon_builds/`, or `platoon_templates/` for `template`.
@@ -162,7 +176,7 @@ entries that other mods add. `silence` does the work with one change:
 ```js
 inventory.addAIMods([
   {
-    type: "factory", // fabber, factory, or platoon
+    type: "factory", // fabber or factory
     op: "silence",
     value: {
       builders: ["BasicBotFactory", "AdvancedBotFactory"],
@@ -176,22 +190,35 @@ inventory.addAIMods([
 `silence` sets the `priority` to `0` on every entry whose `builders` are **all** in
 `value.builders`. It does not change an entry whose `to_build` name is in `value.except`.
 It also leaves alone an entry that has any builder outside `value.builders`, or that has
-no `builders`.
+no `builders`. No `platoon` entry has `builders`, so `silence` on `platoon` changes
+nothing.
 
 `silence` uses only `type`, `op`, `value`, and `treeOnly`. It ignores `toBuild`,
 `idToMod`, `refId`, `refValue`, and `matchAll`. `builders` and `except` must both be lists
-of names, but `except` can be an empty list. A `value` with the wrong shape changes
-nothing and reports nothing. A missing `value` shows an error that starts
-`applyAiMods: op threw` in the Console, and the change is skipped.
+of names, but `except` can be an empty list. **Always write `except`.** Without it,
+`silence` stops every entry whose builders are all in `value.builders`, and reports
+nothing. A missing `value` shows an error that starts `applyAiMods: op threw` in the
+Console, and the change is skipped.
 
 ### `new`, `remove` and `squad`
 
-These change the AI's build files in ways that need a good understanding of them:
-`new` adds a build condition to an entry, `remove` takes one away, and `squad` changes the
-units in a platoon template. There are no examples here. Read GWO's cards that use them,
-in its
-[cards folder](https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards),
-and copy their shape.
+These change the AI's build files in ways that need a good understanding of them. Read
+[The shape of a build entry](#the-shape-of-a-build-entry) first.
+
+- `new` adds build conditions to an entry, in one of two ways. **Without `idToMod`**,
+  `value` is a whole group: a list of tests, which the entry gets as a new group. **With
+  `idToMod`**, set to anything, `value` is one test, which GWO adds to every group that the
+  entry already has. Choose the form that matches your `value`: one test without
+  `idToMod` damages the entry.
+- `remove` takes a test away from every group of the entry. Its `value` is an exact copy
+  of one whole test.
+- `squad` adds one unit to a platoon template. It works only with `type: "template"`.
+
+GWO's own cards show `new` without `idToMod` in `gwaio_upgrade_icarus.js` and
+`nem_start_deepspace.js`, and `remove` in `nem_start_deepspace.js` and
+`nem_start_planetary.js`, in its
+[cards folder](https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards).
+No GWO card uses `squad`.
 
 ---
 

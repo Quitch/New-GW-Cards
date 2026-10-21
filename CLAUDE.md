@@ -45,24 +45,25 @@ Every one of these fails quietly when wrong: a bad icon name renders blank, a ba
 `toBuild` changes nothing, a bad unit path warns once in a console the user is not
 watching. Look each one up.
 
-| What you need                                           | Where it is                                                                                                                                                                                                                                       |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit paths, and the stat names you put in `path`        | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa/ammo/`, `<PA>/pa/tools/`                                                                              |
-| GWO unit IDs (`gwoUnit.*`) and group IDs (`gwoGroup.*`) | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js` and `shared/unit_groups.js`                                                                                                                                                        |
-| Race and add-on unit IDs (`gwoUnit.legion.shank`)       | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/race/*.js` and `addon/*.js`, the `units` block. Keys are generated and change with race-mod updates. A key whose path is already a stock `gwoUnit` path is left out of `gwoUnit`: use the stock key |
-| Race and add-on unit stats                              | the race's server mod zip in `<data>/download/` (for example `com.pa.legion-expansion-server.zip`); `base_spec` may lead back into `<PA>`                                                                                                         |
-| `gwoCard` helpers and exactly what they return          | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js`                                                                                                                                                                                    |
-| Worked examples of finished cards                       | `<GWO>` → `ui/main/game/galactic_war/cards/*.js` (hundreds of them); stock ones at `<PA>/ui/main/game/galactic_war/cards/*.js`                                                                                                                    |
-| Tech icon file names for `icon`                         | `<PA>/ui/main/game/galactic_war/gw_play/img/tech/` — that directory listing is the complete set of stock names                                                                                                                                    |
-| Discovery voice lines for `audio`                       | the list in the comment in `ui/main/game/galactic_war/cards/tech_card_id.js`                                                                                                                                                                      |
-| AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`                                                                                 |
-| AI `builders` roles and platoon template names          | keys of `<PA>/pa/ai/unit_maps/ai_unit_map.json` and `<GWO>` → `pa/ai_penchant/unit_maps/ai_unit_map.json`                                                                                                                                         |
-| Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                       |
-| What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available                                                                        |
-| Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                                                                                            |
-| The game's existing wording for a stock term            | `<PA>/ui/main/_i18n/locales/<lang>/*.json`                                                                                                                                                                                                        |
-| Worked examples of translation files                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/translations/<lang>.json`                                                                                                                                                                           |
-| How Mod Translations behaves                            | `<data>/download/com.pa.quitch.modtranslations.zip`, otherwise the README and `docs/design.md` on the **`main`** branch of `Quitch/Mod-Translations`                                                                                              |
+| What you need                                           | Where it is                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit paths, and the stat names you put in `path`        | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa/ammo/`, `<PA>/pa/tools/`                                                                                                                                                                      |
+| GWO unit IDs (`gwoUnit.*`) and group IDs (`gwoGroup.*`) | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js` and `shared/unit_groups.js`                                                                                                                                                                                                                                                |
+| Race and add-on unit IDs (`gwoUnit.legion.shank`)       | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/race/*.js` and `addon/*.js`, the `units` block. Keys are generated and change with race-mod updates. A key whose path is already a stock `gwoUnit` path is left out of `gwoUnit`: use the stock key                                                                                         |
+| Race and add-on unit stats                              | the race's server mod zip in `<data>/download/` (for example `com.pa.legion-expansion-server.zip`); `base_spec` may lead back into `<PA>`                                                                                                                                                                                                 |
+| `gwoCard` helpers and exactly what they return          | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/cards.js`                                                                                                                                                                                                                                                                            |
+| Worked examples of finished cards                       | `<GWO>` → `ui/main/game/galactic_war/cards/*.js` (hundreds of them); stock ones at `<PA>/ui/main/game/galactic_war/cards/*.js`                                                                                                                                                                                                            |
+| Tech icon file names for `icon`                         | `<PA>/ui/main/game/galactic_war/gw_play/img/tech/` — that directory listing is the complete set of stock names                                                                                                                                                                                                                            |
+| Discovery voice lines for `audio`                       | the list in the comment in `ui/main/game/galactic_war/cards/tech_card_id.js`                                                                                                                                                                                                                                                              |
+| AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`                                                                                                                                                                         |
+| AI `builders` roles                                     | keys under `unit_map` in `<PA>/pa_ex1/ai/unit_maps/ai_unit_map.json` and `ai_unit_map_x1.json` (TITANS roles such as `SupportCommander` are only in `_x1`), `<PA>/pa_ex1/ai_queller/q_*/unit_maps/*.json`, and `<GWO>` → `pa/ai_penchant/unit_maps/*.json`. `pa_ex1` shadows `<PA>/pa/ai/unit_maps/ai_unit_map.json`: never read that one |
+| Platoon template names (`squad`'s `toBuild`)            | keys under `platoon_templates` in `<PA>/pa_ex1/ai/platoon_templates/*.json` and `<PA>/pa_ex1/ai_queller/q_*/platoon_templates/*.json`                                                                                                                                                                                                     |
+| Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                                                                                                               |
+| What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available                                                                                                                                                                |
+| Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                                                                                                                                                                                    |
+| The game's existing wording for a stock term            | `<PA>/ui/main/_i18n/locales/<lang>/*.json`                                                                                                                                                                                                                                                                                                |
+| Worked examples of translation files                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/translations/<lang>.json`                                                                                                                                                                                                                                                                   |
+| How Mod Translations behaves                            | `<data>/download/com.pa.quitch.modtranslations.zip`, otherwise the README and `docs/design.md` on the **`main`** branch of `Quitch/Mod-Translations`                                                                                                                                                                                      |
 
 Two path rules that catch everyone:
 
@@ -292,8 +293,8 @@ Worked examples in `<GWO>`: `cards/gwaio_upgrade_firefly.js` (replace then tag),
 The code is in `<GWO>` `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/referee_ai.js`: every op
 but `load` is a function in its `aiModOps` table, and `applyAiMods` applies them.
 
-**Fields each op needs.** All need `type`. Missing any of these makes the descriptor do
-nothing:
+**Fields each op needs.** All need `type`. A missing field does not always do nothing:
+see "What a missing or wrong field does" below.
 
 | op                             | also needs                       |
 | ------------------------------ | -------------------------------- |
@@ -303,6 +304,11 @@ nothing:
 | `remove`, `new`                | `toBuild`, `value`               |
 | `silence`                      | `value` (`{ builders, except }`) |
 | `squad`                        | `toBuild`, `value`               |
+
+`new` reads `idToMod` as a flag. When it is truthy, `value` is one test object, pushed
+into every existing group of the entry. When it is absent, `value` is a whole group (a
+list of tests), added as a new group. This is the form GWO's own cards use
+(`gwaio_upgrade_icarus.js`). A single test with no `idToMod` adds a malformed group.
 
 `squad` works only with `type: "template"`; the other seven (`append`, `prepend`,
 `replace`, `unset`, `remove`, `new`, `silence`) work only with `fabber`, `factory`, and
@@ -327,11 +333,17 @@ no partial matches. `idToMod` is the field on that entry you are changing (`buil
 value, which is the usual way to tell apart the same `to_build` in the TITANS, Queller and
 Penchant AI trees — `refId: "priority"` with the priority that tree uses.
 
-**Things that silently do nothing:** a `toBuild` no file contains; `append`/`prepend`/
-`replace` with no `idToMod`; `replace` against a field the entry does not already have (it
-cannot create one); `remove` whose `value` is not an exact copy of a whole test object;
-`squad` naming a template that does not exist; `silence` with a `value` that is not
-`{builders: [...], except: [...]}`.
+**What a missing or wrong field does.** Nothing, silently: a `toBuild` no file contains;
+`append`/`prepend`/`replace`/`unset` with no `idToMod`; `replace` against a field the
+entry does not already have (it cannot create one); `remove` whose `value` is not an
+exact copy of a whole test object; `squad` naming a template that does not exist;
+`silence` on `platoon` (no `platoon_builds` entry has `builders`). Damage, silently: a
+missing `toBuild` matches every entry with no `to_build` (fabber task entries); a missing
+`value` on `append`, `prepend`, `replace`, `new` or `squad` writes `undefined` (or `NaN`,
+or a string ending in `undefined`) into the matched entries; `silence` with no `except`
+zeroes every entry in scope. A message: `silence` with no `value` logs
+`applyAiMods: op threw`; `load` with no or an unknown `type` logs
+`Invalid AI file type in load mod`; an unknown `op` logs `Invalid AI mod operation`.
 
 **`op: "silence"`**. `value` is `{ builders: [...], except: [...] }`, both string
 arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
