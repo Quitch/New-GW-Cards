@@ -12,10 +12,11 @@
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to start_cards.js, in the locked list or in the unlocked list.
 // 4. In the same file, remove the comment marks from the
-//    model.gwoLoadoutBanks block and set its prefix and path.  Set
-//    LS_KEY in bank.js - see "The bank and LS_KEY" in docs/loadouts.md.
-//    Without the model.gwoLoadoutBanks entry a locked loadout can never
-//    unlock, and nothing warns you.  docs/checklist.md lists every step.
+//    model.gwoLoadoutBanks block and set its prefix and path.  Set LS_KEY in
+//    bank.js - see "The bank and LS_KEY" in docs/loadouts.md.  Without the
+//    model.gwoLoadoutBanks entry, an unlock goes to Galactic War Overhaul's
+//    own storage instead of to your bank, and nothing warns you.
+//    docs/checklist.md lists every step.
 //
 // Do not change the define([ ... ]) block or the "function (...) {" line below
 // it, except the bank.js address.  They load the tools that the card uses.
@@ -33,10 +34,8 @@ define([
 
   // gwoCard.loadout writes the difficult half of a loadout for you.  When the
   // player starts a war with this loadout, it gives them the standard starting
-  // units of the game and then runs your `apply` below.  If the same loadout
-  // appears again later in the war, it gives an extra card slot instead.  If the
-  // player wins a copy on a Guardian planet, it records that copy in your bank,
-  // and the loadout then unlocks.  You complete only the parts below.
+  // units of the game and then runs your `apply` below.  It also forbids the
+  // units in `dulls` for the whole war.  You complete only the parts below.
   var loadout = gwoCard.loadout(CARD, {
     bank: myBank,
     start: GWCStart,

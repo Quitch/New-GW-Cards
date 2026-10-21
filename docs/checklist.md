@@ -62,8 +62,8 @@ each item as you complete it.
 - [ ] Changed the `bank.js` address at the top of the loadout card so that it contains
       your identifier.
 - [ ] Removed the comment marks from the `model.gwoLoadoutBanks` block in
-      `start_cards.js`, and set its `prefix` and `path`.
-      Without this, a locked loadout can never unlock.
+      `start_cards.js`, and set its `prefix` and `path`. Without this, an unlock goes to
+      GWO's own storage, and it stays behind when the player removes your mod.
 - [ ] If not every race can use the loadout, added `races` to its entry (see
       [`races`](loadouts.md#races--the-races-that-can-use-a-loadout)).
 

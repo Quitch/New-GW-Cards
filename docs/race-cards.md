@@ -16,30 +16,33 @@ Exiles units that those stock units reach, and the add-on units they reach. GWO 
 for you. Write a race card only when you want to change one particular unit of a race or an
 add-on.
 
-GWO matches combat units by kind and by what they do, from the unit's own types:
-anti-air, artillery, scout, and so on. A stock unit reaches the race units of its kind that
-do its job. For example, a card for the Stinger, an anti-air bot, changes the Legion
-Patriot, Legion's anti-air bot. A card for the Dox changes the Legion Peacekeeper and
-Investigator. A group card, such as `gwoGroup.botsBasicMobile`, changes every basic Legion
-combat bot.
+GWO matches each race unit to stock units by two things, both read from the unit's own
+types:
 
-A race unit that has no job, or whose job no stock unit of its kind does, is reached
-instead by other stock units of its kind: by every one with no job of its own; when there
-are none, by every one whose job the race has no unit for; and when there are none of
-those either, by every stock unit of its kind. So a card for the Ant, which has no job,
-changes the Legion Shank, which has none either, and the Legion Stoke, an amphibious tank,
-since no stock basic tank is amphibious. Bugs has no anti-air bot, and every stock basic
-bot has a job, so for a Bugs player a card for the Stinger changes the Ripper, the Stealth
-Ripper, and the Runner. With Second Wave, the Legion Almaz, an orbital laser platform,
-falls to the last case: a card for the Avenger, the Astraeus, the Hermes, or the Arkyd
-changes it. Any other stock unit reaches no race unit: for a Legion player, a card for the
-Skitter changes no Legion unit. A stock unit that no commander can build, such as the
-Squall's drone (`gwoUnit.squall`), takes no part in this and reaches every race unit of
-its kind. Defences, superweapons, and intel structures (radars and jammers) are matched
-by kind and by job in the same way. Titans, commanders, fabricators, factories, and the
-other buildings are matched by kind alone.
+- its **kind**: what it is, such as a basic bot, a basic tank, or an orbital unit.
+- its **job**: what it does within its kind, such as anti-air, artillery, or scouting.
+  Some units have no job.
+
+A stock unit reaches the race units of the same kind that do the same job. For example, a
+card for the Stinger, an anti-air bot, changes the Legion Patriot, Legion's anti-air bot.
+A card for the Dox changes the Legion Peacekeeper and Investigator. A group card, such as
+`gwoGroup.botsBasicMobile`, changes every basic Legion combat bot.
+
+When no stock unit of the same kind does a race unit's job, GWO falls back to other stock
+units of that kind. For example, a card for the Ant, which has no job, changes the Legion
+Shank, which has none either, and also the Legion Stoke, an amphibious tank, because no
+stock basic tank is amphibious. Bugs has no anti-air bot, so for a Bugs player a card for
+the Stinger changes the Ripper, the Stealth Ripper, and the Runner. Some stock units reach
+no race unit at all: for a Legion player, a card for the Skitter changes no Legion unit.
+A stock unit that no commander can build, such as the Squall's drone (`gwoUnit.squall`),
+is the opposite: it reaches every race unit of its kind.
+
+Defences, superweapons, and intel structures (radars and jammers) are matched by kind and
+by job in the same way. Titans, commanders, fabricators, factories, and the other
+buildings are matched by kind alone.
 [GWO's documentation](https://github.com/Quitch/GW-AI-Overhaul/blob/master/docs/races.md#jobs)
-gives the full rule.
+gives the full rule, including the order of the fallbacks. To see which race units your
+card reaches, test it as that race (see [Testing a race card](#8-testing-a-race-card)).
 
 A unit of a kind that the base game has no unit for is the exception: no card for stock
 units reaches it. Such units include Section 17's Big Bill, Pineapple, Floater, Horntail,
@@ -56,12 +59,11 @@ unit reaches the race units either. Keep `_upgrade_` in the ID of a card like th
 give its entry `races: ["mla"]` (see the warning below).
 
 > **Warning:** GWO offers a card whose ID contains `_upgrade_` only to MLA players, unless
-> the card's `model.gwoCardsToUnits` entry names race or add-on units. An upgrade card is
-> tuned to one MLA unit, so GWO does not pass it on to the other races. If a card that
-> changes stock units must reach every race, leave `_upgrade_` out of its ID. A `races`
-> list in the entry replaces this rule: GWO offers the card to the races in the list. IDs
-> that contain `_upgrade_subcommander` or `_upgrade_ubercannon` are exempt from the rule.
-> For a loadout, put `races` on the loadout's own entry instead (see
+> the card's `model.gwoCardsToUnits` entry names race or add-on units or has a `races`
+> list. An upgrade card is tuned to one MLA unit, so GWO does not pass it on to the other
+> races. If a card that changes stock units must reach every race, leave `_upgrade_` out
+> of its ID. [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card)
+> gives the whole rule. For a loadout, put `races` on the loadout's own entry instead (see
 > [Loadouts](loadouts.md#races--the-races-that-can-use-a-loadout)).
 
 ## Keep a change on the stock unit — `stockOnly`
@@ -154,11 +156,11 @@ anything from the base game, such as `gwoUnit.commander` or a shared weapon such
 always, and other races when they have that kind of unit.
 
 The same entry also works for a card whose ID contains `_upgrade_`, such as
-`mym_upgrade_shank`. GWO offers such a card only to MLA players when it names only stock
-units (see the warning above). When it names race units, it is written for that race, so
-GWO offers it to that race. An entry with a `races` list is offered to the races in the
+`mym_upgrade_shank`. When the entry names race units, the card is written for that race,
+so GWO offers it to that race. An entry with a `races` list is offered to the races in the
 list and to no others. Each race in the list still needs a unit that a unit in the entry
-reaches.
+reaches. [Which races get an upgrade card](tech-cards.md#which-races-get-an-upgrade-card)
+gives the whole rule.
 
 ## 3. Check for the unit in `deal`
 

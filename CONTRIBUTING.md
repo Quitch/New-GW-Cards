@@ -117,6 +117,9 @@ There are two separate trees in `ui/`:
     tooltip.
   - `specs.js` (the `gw_play` scene) → `model.gwoSpecs`. Use it to mod unit specs that the
     base game does not otherwise load, such as an unused unit.
+  - `decks.js` (`gw_play`, `gw_start`, `gw_coop_per_player_loadout`) → `model.gwoDecks`,
+    a deck of the mod's own for the Techs picker. It ships commented out. See
+    `docs/decks.md`.
   - `bank.js` — an AMD module written with `define()`. `start_card_id.js` calls `require`
     on it and gives it to `gwoCard.loadout` as the `bank`. It stores unlocked loadouts
     under a `localStorage` key that is private to the mod, so that removal of the mod does
@@ -125,9 +128,10 @@ There are two separate trees in `ui/`:
 The `scenes` block in `modinfo.json` is the real list of entry points. The game loads only
 the files listed there, and every URL must match the mod `identifier`. **Each scene gets a
 new `model` page.** A loader must therefore appear under every scene that needs its data.
-That is why `start_cards.js` appears three times and `tech_cards.js` appears twice. If you
-register loadouts only in `gw_start`, they are absent from the `gw_play` treasure pool, so
-the game can never award them, and they are also absent from the co-op loadout picker.
+That is why `start_cards.js` and `decks.js` appear three times and `tech_cards.js` appears
+twice. If you register loadouts only in `gw_start`, they are absent from the `gw_play`
+treasure pool, so the game can never award them, and they are also absent from the co-op
+loadout picker.
 
 ### Translations
 
@@ -149,9 +153,9 @@ above.
 ## Card contract
 
 Cards are AMD modules (`define([deps], function(...) {...})`). Each returns an object with
-GWO's fixed card shape. See the "Tech card contract" section in the CLAUDE.md of the
-GW-AI-Overhaul workspace for the authoritative list and its validator. The templates here
-follow it:
+GWO's fixed card shape. See "The contract" in GWO's `docs/tech-cards.md` for the
+authoritative list, and GWO's `scripts/validate/cards-contract.js` for its validator. The
+templates here follow it:
 
 - `visible`, `describe`, `summarize`, `icon`, `deal`, `buff` and `dull` are always
   present. A tech card also carries `audio` and `getContext`. A start card carries `hint`
@@ -204,6 +208,23 @@ follow it:
   `docs/changing-units.md` (`model.gwoSpecs`), `CLAUDE.md` ("Setting the mod up" and
   "Registering a card"), the header comments in `start_cards.js`, `tech_cards.js`, and
   `specs.js`, and step 4 of the header in `start_card_id.js`.
+- **Which races a tech card is offered to** is stated in full once, in
+  `docs/tech-cards.md` ("Which races get an upgrade card"): an ID with `_upgrade_` (other
+  than `_upgrade_subcommander` and `_upgrade_ubercannon`) reaches MLA alone unless its
+  `model.gwoCardsToUnits` entry names race units or has `races`, and that includes a card
+  with no entry. GWO's `raceCanDeal` in `shared/cards_deal_helpers.js` is the code. These
+  places restate part of it and link to that section. Keep them consistent:
+  `docs/tech-cards.md` (`model.gwoCardsToUnits`), `docs/race-cards.md` (the `_upgrade_`
+  warning and step 2), and `docs/troubleshooting.md`. A loadout's `races` is a separate
+  rule, in `docs/loadouts.md`.
+- **Without a `model.gwoLoadoutBanks` entry a locked loadout still unlocks**, into GWO's
+  `gwaio_bank` (`gw_play/treasure_loadouts.js`), which both unlock checks read
+  (`shared/loadouts.js`). The cost is that the unlock outlives the mod. A Guardian win is
+  banked by GWO directly, so `gwoCard.loadout`'s `bank` is not how an unlock is recorded.
+  These places state the rule. Keep them consistent: `docs/loadouts.md` (the bank steps
+  and `model.gwoLoadoutBanks`), `docs/checklist.md` (the loadout item),
+  `docs/troubleshooting.md` (the two loadout entries), `CLAUDE.md` ("Setting the mod up",
+  step 5), and the comments in `start_cards.js` and `start_card_id.js`.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither

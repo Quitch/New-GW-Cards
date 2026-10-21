@@ -110,6 +110,9 @@ Learn these:
   [unit IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js)
   before you decide that the message is the harmless kind.
 
+Other messages, and what each one means, are in
+[Messages you may see](troubleshooting.md#messages-you-may-see).
+
 ### Testing tech cards
 
 1. Start a new Galactic War.

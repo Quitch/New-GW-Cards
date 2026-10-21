@@ -10,8 +10,9 @@ GWO already uses it. A player who does not have Mod Translations sees your text 
 A player whose language you have no file for also sees English. Nothing breaks in either
 case.
 
-There are four steps. Each one fails without a message if you get it wrong, so do them in
-order, and then do the [test](#testing-your-translations) at the end.
+There are four steps. A mistake in most of them shows no error, and the text simply stays
+English. So do them in order, and then do the [test](#testing-your-translations) at the
+end: it shows where a mistake is.
 
 ## Step 1: add the dependency in `modinfo.json`
 
@@ -51,7 +52,8 @@ Create a new file, `translations.js`, in `ui/mods/<your identifier>/`, next to
 > **This is a fourth place for your identifier.**
 > [Preparing the mod](setup.md#preparing-the-mod) names three places that must agree. The
 > identifier in this script must agree with them too. Mod Translations uses it to find
-> your files, so a different identifier finds nothing and reports nothing.
+> your files, so a different identifier finds none of them. The test at the end then shows
+> `"languages":[]`.
 
 ## Step 3: list the script under `global_mod_list`, and nowhere else
 
@@ -117,7 +119,9 @@ These rules follow from that:
 
 - If you change the English wording in a card, you change the key. Update that key in
   every language file at the same time.
-- `message` must not be empty. Mod Translations ignores an empty `message`.
+- Write each translation as `{ "message": "…" }`, and don't leave `message` empty. Mod
+  Translations ignores an entry whose `message` is empty or missing, or that is only the
+  text, such as `"Bot Damage": "Bot-Schaden"`.
 - A key that contains `;;` or `::` can never work. Change the English text in the card so
   that it contains neither.
 - Keep numbers and `<br>` the same in the translation as in the English text.
@@ -171,13 +175,17 @@ If something is wrong, the result tells you where to look:
 - **No `[ModTranslations]` line with your identifier.** `translations.js` is not under
   `global_mod_list`, the address there does not contain your identifier, Mod Translations
   is not enabled, or your `priority` is `50` or below.
-- **`languages` is empty, or `added` is `0`.** The game did not find your file. Check the
-  name of the `translations` folder, the file's name against the `locales` folder, and the
-  identifier in `translations.js`.
+- **`languages` is empty.** If the game's language is English, this is normal: Mod
+  Translations loads no files for English. Otherwise the game did not find your file.
+  Check the name of the `translations` folder, the file's name against the `locales`
+  folder, and the identifier in `translations.js`.
+- **`added` is `0`.** If `invalid` is `0` too, the file was found but is empty.
+  Otherwise, see the `invalid` point below.
 - **A red error that names your file.** The file is not valid JSON. The usual cause is a
   missing comma or quotation mark.
-- **`invalid` is above `0`.** An entry has an empty `message`, or its key contains `;;`
-  or `::`.
+- **`invalid` is above `0`.** An entry has an empty or missing `message`, or is written
+  without `{ "message": … }`, such as `"Bot Damage": "Bot-Schaden"`. Or its key contains
+  `;;` or `::`.
 - **One text is still English.** Its key does not match the English text in the card.
   Copy the text from the card again.
 
