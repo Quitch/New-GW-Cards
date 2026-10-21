@@ -61,8 +61,10 @@ The guide refers to two folders on your computer.
    `com.pa.YOURNAME.MODNAME`, to your identifier. The name must match exactly.
 
 > **Keep three things the same:** the `identifier` in `modinfo.json`, the `scenes`
-> addresses in that same file, and the folder name under `ui/mods/`. All three must use the
-> same identifier. If they disagree, the game loads nothing and reports nothing.
+> addresses in that same file, and the folder name under `ui/mods/`. If the `scenes`
+> addresses and the folder name disagree, the game loads nothing and reports nothing.
+> Use the same identifier in all three, so that you never have to remember which two
+> must match.
 
 `modinfo.json` also holds a `galacticWarMod` entry. Leave it at `false` for now. It
 matters only in a co-op war, and
@@ -86,10 +88,12 @@ cards. When Galactic War starts, GWO reads them and adds your cards to the game:
 
 - `tech_cards.js`: lists your tech cards and the units that they change.
 - `start_cards.js`: lists your loadouts, and tells GWO where your `bank.js` is.
-- `bank.js`: records which of your locked loadouts the player has unlocked.
 - `specs.js`: lists any extra unit files that you want to change. Most mods don't need it.
 - `decks.js`: optional. Offers a whole [deck](decks.md) of your own in the Techs picker.
   Most mods don't need it.
+
+The same folder holds `bank.js`, which records which of your locked loadouts the player
+has unlocked. It is not a loader: your loadout cards load it.
 
 There is one more loader, `translations.js`, which is optional. The template does not
 include it, and you create it yourself. See [Translating your mod](translating.md).

@@ -1,6 +1,7 @@
 # `deal` — how often the card appears
 
-**Who needs this page:** every mod with a tech card that does not use `gwoCard.upgradeCard`.
+**Who needs this page:** every mod with a tech card that does not use `gwoCard.upgradeCard`,
+and any `gwoCard.upgradeCard` card that sets its own `chance`.
 
 `deal` gives back ("returns") a **chance** number. A larger number makes the game offer
 the card more often, and `0` means never. As a rough guide, from GWO's own cards: below 30
@@ -16,7 +17,8 @@ deal: function () {
 
 The chance can also depend on the situation. The game gives `deal` three things to look
 at, which it calls `system` (the star that the player is at), `context` (the galaxy), and
-`inventory` (the player's cards and units). GWO supplies checks that use them:
+`inventory` (the player's cards and units). A fourth, `rng`, is for random values (see
+[Randomness in `deal`](advanced.md#randomness-in-deal)). GWO supplies checks that use them:
 
 - `gwoCard.hasUnit(inventory.units(), X)`: true if the player has **any** of unit(s) X.
 - `gwoCard.hasAllUnits(inventory.units(), X)`: true if the player has **all** of unit(s)
@@ -107,8 +109,8 @@ For a card that is at its best in the middle of the map rather than at the edge,
 ## Upgrade cards — `gwoCard.upgradeDeal`
 
 An **upgrade card** improves something that the player already owns, and gives them one
-more card slot in return. Because it pays for its own place in the hand, the game must
-offer it even when the hand is full. Every upgrade card in GWO uses one helper that does
+more card slot in return. Because it pays for its own place in the hand, the player must
+be able to take it even when the hand is full. Every upgrade card in GWO uses one helper that does
 this, and your card must use it too:
 
 ```js
@@ -232,7 +234,7 @@ deal: function (system, context, inventory) {
 },
 ```
 
-Every naval tech card in GWO has that shape. `navalWeight` judges what the map is likely
+Several of GWO's naval tech cards have that shape. `navalWeight` judges what the map is likely
 to be worth, and `conditionalDeal` keeps the card out of the deck until the player can
 build ships at all.
 
@@ -274,8 +276,8 @@ deal: function (system, context, inventory) {
 },
 ```
 
-`upgradeDeal` lets the game offer the card to a player whose hand is full, because the
-card pays for its own slot. The card's `buff` must still add the slot.
+`upgradeDeal` lets a player whose hand is full take the card, because the card pays for
+its own slot. The card's `buff` must still add the slot.
 
 ### Sub Commander cards — `gwoCard.subcommanderWeight`
 

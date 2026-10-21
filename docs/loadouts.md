@@ -17,13 +17,13 @@ rules. A mistake in either one reports nothing.
   loadouts.
 
 Write your prefix, then `_start_`, then a name, as the existing mods do:
-`gwaio_start_ceo`, `nem_start_nuke`. Write `mym_start_engineer`, not
+`gwaio_start_rapid`, `nem_start_nuke`. Write `mym_start_engineer`, not
 `gwc_start_engineer`.
 
 A mistake here is hard to spot. An ID without `_start_` still appears on the loadout
 screen, and the player can still pick it, so the mod looks fine. The damage is inside
-the war: GWO handles the card as ordinary tech, so a copy that the player wins on a
-Guardian planet is never recorded in your bank, and a locked loadout never unlocks. The
+the war: GWO does not treat the card as a loadout, so a Guardian planet never offers it,
+and a locked loadout never unlocks. The
 game treats an ID that starts with `gwc_start` as one of its own, so it writes the
 unlock into the game's storage instead of into your bank. That record stays behind
 after the player removes your mod, and it points at a card that no longer exists.
@@ -249,9 +249,9 @@ marks from those seven lines, and then set `prefix` and `path`. If you set `path
 leave a wrong identifier in it, the debugger shows `Loadout bank failed to load:` and the
 address.
 
-You give the address, not the file itself, because GWO builds the loadout list before the
-game loads any of your mod's files. An address that GWO can read when it is ready is the
-only way for it to reach your bank in time.
+You give the address, not the file itself, because GWO must wait for the bank before it
+builds the loadout list. GWO loads the file from the address and waits for it. A bank
+that your own loader loaded would arrive too late.
 
 ## Rarely needed
 

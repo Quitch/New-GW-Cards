@@ -116,7 +116,7 @@ visible: _.constant(true),
 ### `audio` — the discovery voice line (tech cards)
 
 This is the voice line that plays when the player finds the card. The example file
-`tech_card_id.js` lists every line that you can choose, such as
+`tech_card_id.js` lists the lines that most cards choose from, such as
 `board_tech_available_bot`. Put your choice at the end of the path:
 
 ```js
@@ -333,6 +333,12 @@ model.gwoCardsToUnits.push({
   races: ["mla"],
 });
 ```
+
+### `model.gwoCardsGrantingAdvancedTech` — cards that unlock advanced tech (in `tech_cards.js`)
+
+Optional. List a card here when it gives the player advanced (T2) tech, so that the
+cards that wait for that access can see it. See
+[`model.gwoCardsGrantingAdvancedTech`](deal.md#modelgwocardsgrantingadvancedtech--cards-that-unlock-advanced-tech-in-tech_cardsjs).
 
 ### `model.gwoCardsWithoutTooltip` — tech cards with no unit tooltip (in `tech_cards.js`)
 

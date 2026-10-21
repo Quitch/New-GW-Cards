@@ -47,12 +47,12 @@ They are **not** faults to correct in this repo:
   `ui/mods/com.pa.YOURNAME.MODNAME/` directory name, and in the `coui://` scene URLs. The
   author must change all three together and keep them the same. See "Preparing the mod"
   in `docs/setup.md`.
-- `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, and the empty `forum` and `icon` values in
-  `modinfo.json`.
+- `YOUR NAME HERE`, `#.#.#`, `yyyy-mm-dd`, and the `THREAD_ID` and `SOME_PUBLIC_URL_HERE`
+  placeholders in the `forum` and `icon` values of `modinfo.json`.
 - `your_mod_id` — the `LS_KEY` in `bank.js`. It is the localStorage key for unlocked
   loadouts.
 - `YOUR_CARD_ID_*`, `YOUR_LOCKED_LOADOUT_ID_*`, `YOUR_UNLOCKED_LOADOUT_ID_*`,
-  `YOUR_PREFIX_start_`, `UNIT_PATH`, `PATH_*`, `PNG_FILE_NAME`,
+  `YOUR_PREFIX_start_`, `UNIT_PATH`, `AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`,
   `CHOSEN_LINE_HERE` and the `!LOC:...HERE` strings. The three example card files
   `start_card_id.js`, `tech_card_id.js` and `unit_upgrade_card_id.js` are also
   placeholders. The author renames them to `PREFIX_EFFECT_UNITTYPE.js`, for example
@@ -144,8 +144,8 @@ no translations carries nothing extra. Do not add the scaffold.
 Three places describe the steps: `docs/translating.md`, the `CLAUDE.md` section
 "Shipping translations", and the "If you ship translations, also:" block of
 `docs/checklist.md`. Keep those three consistent with each other. The
-README of Mod Translations is the authority on how the framework behaves, so keep them
-consistent with it too: the `priority` of 50, the `global_mod_list` rule, the key format
+README of Mod Translations, and its `docs/design.md` for the log line, are the authority on
+how the framework behaves, so keep them consistent with them too: the `priority` of 50, the `global_mod_list` rule, the key format
 and the format of the `[ModTranslations]` log line. A `translations.js` is the one loader
 that goes under `global_mod_list` and under no scene, which is the opposite of the rule
 above.
@@ -186,7 +186,7 @@ templates here follow it:
   `docs/specs.md`.
 - **A loadout ID that is registered with no card file of that name cannot be used.** GWO
   logs `Start card failed to load: <id>` and war setup carries on. If the player picks
-  that loadout, war creation fails and GWO reseeds or shows its error message. Until GWO
+  that loadout, war creation fails and GWO shows its error message. Until GWO
   v7.4.1 the same mistake stopped war generation completely (verified in the game on
   2026-08-11 against GWO DEV v6.10.1). The supplied `start_cards.js` therefore registers
   no loadouts. Its two `push()` calls are empty, and the example IDs are in comments above
@@ -267,7 +267,8 @@ template and the game disagree.
   six lint dependencies (`eslint`, `@eslint/js`, `eslint-config-prettier`,
   `eslint-plugin-es-x`, `eslint-plugin-lodash`, and `globals`) with caret ranges.
   The `eslint-plugin-lodash` `v3` rules apply to `ui/**` only, with every
-  non-`prefer-*` rule on and, of the `prefer-*` rules, only `prefer-get`,
+  non-`prefer-*` rule that the preset enables on (it leaves `collection-ordering` and
+  `no-unbound-this` off) and, of the `prefer-*` rules, only `prefer-get`,
   `prefer-includes`, and `prefer-startswith` kept (there the lodash method stands in
   for a post-ES5 feature Chrome 40 lacks). ESLint is held at 9.x because that plugin
   calls `context.getSourceCode`, which ESLint 10 removed, and `eslint-plugin-es-x` is

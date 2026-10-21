@@ -10,7 +10,8 @@ This changes the build orders of the AI that fights for the player:
 
 In a co-op war, each player's Sub Commanders get that player's changes. Each co-op AI
 player gets its own changes. On a Guardian star, where the enemy mirrors the players'
-tech, the enemy AI gets the changes of every player. It does not change other enemies.
+tech, the enemy AI gets the changes of every player, and so do the host's Sub
+Commanders. It does not change other enemies.
 
 **Most cards don't need this.** Use it when your card gives units that the Sub Commanders
 would otherwise never build, or changes what a factory can build.
@@ -29,7 +30,8 @@ Each change is written with these labels:
   `silence`).
 - `idToMod`: which part of that entry to change, for example `builders` or `priority`.
 - `refId` and `refValue`: optional. Make the change only when the entry already has
-  `refValue` at `refId`.
+  `refValue` at `refId`. When the entry does not match, GWO looks at its build
+  conditions instead (see [`matchAll`](#matchall--change-every-build-condition)).
 - `matchAll`, `treeOnly`: optional and advanced. See
   [More AI changes](#more-ai-changes).
 
@@ -60,8 +62,9 @@ Most mistakes show no error, so check each change against the table.
 
 **Where the names come from.** `toBuild` must match one of the AI's build entries exactly.
 Those names are the `to_build` values inside the AI's build files, which you can read in
-`{PA_INSTALL_DIRECTORY}/media/pa/ai/`, and in `media/pa_ex1/ai/` and
-`media/pa_ex1/ai_queller/` for the TITANS and Queller AIs. The builder names that you put
+`{PA_INSTALL_DIRECTORY}/media/pa/ai/`, in `media/pa_ex1/ai/` and
+`media/pa_ex1/ai_queller/` for the TITANS and Queller AIs, and in GWO's `pa/ai_penchant/`
+for the Penchant AI, which GWO's allied commanders can use. The builder names that you put
 in `builders`, such as `BasicBotFactory`, come from the AI's unit maps:
 `media/pa_ex1/ai/unit_maps/ai_unit_map.json`, and `ai_unit_map_x1.json` beside it, which
 holds the names for TITANS units such as `SupportCommander`. The Queller AI has its own
@@ -89,7 +92,8 @@ You write that file yourself. Put it in your own mod at the matching path, for e
 `pa/ai_tech/factory_builds/mym_upgrade_myunit.json`, next to your `ui` folder. Copy the
 shape from one of the game's build files in `{PA_INSTALL_DIRECTORY}/media/pa/ai/`. Name it
 after your card, because a file with the same name as one in GWO or another mod would
-replace it. Remember the `.json` at the end of `value`.
+replace it. Remember the `.json` at the end of `value`: without it, the base-game AI
+skips the file, and nothing reports it.
 
 > **Check that the file really is there before you share the mod.** If a `load` names a
 > file that is missing, the AI never gets the builds in it. The battle starts without
@@ -122,13 +126,19 @@ Replace `MyUnit` with a real `to_build` name from the AI files.
 ### The shape of a build entry
 
 You need this before you use `new` or `remove`. Each entry in an AI build file has
-`to_build`, `priority`, `builders`, `instance_count` and `build_conditions`. The
+`to_build`, `priority`, `builders`, `instance_count` and `build_conditions`. Platoon
+entries have no `builders`, and some fabber entries have no `to_build`. The
 `build_conditions` of an entry is a **list of lists**. Each inner list is a group of
 tests, and every test in a group must pass. The AI builds the entry if any one group
 passes. `remove` needs a `value` that is an exact copy of a whole test.
 
-`matchAll: true` changes every build condition on the entry, instead of only the ones
-where `refId` holds `refValue`.
+### `matchAll` — change every build condition
+
+When an `append`, `prepend`, `replace`, or `unset` does not match the entry itself (the
+entry lacks `idToMod`, or `refId` does not hold `refValue`), GWO looks at the tests in
+the entry's `build_conditions` instead. It changes the tests where `refId` holds
+`refValue`. A `refValue` that is a list never matches a test. `matchAll: true` changes
+every test on the entry instead.
 
 ### When your card replaces builds — `treeOnly`
 

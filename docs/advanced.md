@@ -86,9 +86,9 @@ deal: function (system, context, inventory) {
 },
 ```
 
-Outside a co-op game they answer for the one player, so you can use them anywhere. GWO
-uses them for things that the whole war shares, such as whether Tsunami Tech floods the
-planets that everyone fights on. No GWO card needs them, so use `inventory.hasCard` first,
+Outside a co-op game they answer for the one player, so you can use them anywhere. GWO's
+own code, outside its cards, uses them for things that the whole war shares, such as
+whether Tsunami Tech floods the planets that everyone fights on. No GWO card needs them, so use `inventory.hasCard` first,
 and use these two only when your card's effect really covers the whole team.
 
 ## How co-op AI players choose your card

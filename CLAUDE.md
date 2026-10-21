@@ -38,7 +38,8 @@ Prefer these local copies to anything on GitHub: they are what the user is actua
 running. The two exceptions are GWO's `docs/` and `scripts/`, which the zip does not
 contain — read those from a `GW-AI-Overhaul` checkout if the user has one, otherwise from
 the repo's **`master`** branch (what releases are built from). Never read `develop`; it
-can be ahead of what is live.
+can be ahead of what is live. A checkout may be on `develop`, so check its branch first,
+and read with `git show master:<path>` when it is not on `master`.
 
 ## Never invent an identifier — read it from a file
 
@@ -48,7 +49,7 @@ watching. Look each one up.
 
 | What you need                                           | Where it is                                                                                                                                                                                                                                                                                                                               |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit paths, and the stat names you put in `path`        | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa/ammo/`, `<PA>/pa/tools/`                                                                                                                                                                      |
+| Unit paths, and the stat names you put in `path`        | `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`; follow the `base_spec` chain for inherited stats. Ammo and tools live under `<PA>/pa_ex1/ammo/` and `<PA>/pa_ex1/tools/` first, then `<PA>/pa/ammo/`, `<PA>/pa/tools/`                                                                                                             |
 | GWO unit IDs (`gwoUnit.*`) and group IDs (`gwoGroup.*`) | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js` and `shared/unit_groups.js`                                                                                                                                                                                                                                                |
 | Race and add-on unit IDs (`gwoUnit.legion.shank`)       | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/race/*.js` and `addon/*.js`, the `units` block. Keys are generated and change with race-mod updates. A key whose path is already a stock `gwoUnit` path is left out of `gwoUnit`: use the stock key                                                                                         |
 | Race and add-on unit stats                              | the race's server mod zip in `<data>/download/` (for example `com.pa.legion-expansion-server.zip`); `base_spec` may lead back into `<PA>`                                                                                                                                                                                                 |
@@ -97,16 +98,17 @@ If the user has no mod folder yet, create one before writing any card:
    seen in a test does not prove the entry is right: check that the ID lands under the
    mod's `LS_KEY`.
 6. Leave `galacticWarMod` at `false` unless the user asks for it. `true` makes the mod
-   mandatory in a co-op war, and the flag is read from the host's mods only - a viewer
-   plays the host's war with the host's cards, so its own copy of the flag decides
-   nothing. The host's flagged mods are published as the war's required client mods, and a
-   viewer missing one, holding a flagged mod the host lacks, or running a different
-   `version` of one, is refused at connect. It has no effect in a solo war.
+   mandatory in a co-op war. A viewer plays the host's war with the host's cards, so the
+   host's flagged mods are published as the war's required client mods. A viewer's own
+   flags count only at connect: a viewer missing one of the host's flagged mods, holding a
+   flagged mod the host lacks, or running a different `version` of one, is refused. It has no effect in a solo war.
    `docs/releasing.md`, "Sharing your mod in a co-op war", is the author-facing
    explanation.
 
-The identifier in `modinfo.json`, the `scenes` addresses and the `ui/mods/` folder name
-must agree. If they disagree the game loads nothing and reports nothing. A mod that ships
+The `scenes` addresses and the `ui/mods/` folder name must agree, or the game loads
+nothing and reports nothing. Keep the `identifier` in `modinfo.json` the same as them too:
+the game would accept a different one (GWO's own dev checkout is `…-dev` beside an
+unsuffixed folder), but one name in three places is the rule the guide teaches. A mod that ships
 translations has a fourth: the string passed to `ModTranslations.register` (see "Shipping
 translations").
 
@@ -165,8 +167,9 @@ wrong and fails quietly. The template's three example cards are one of each shap
 ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs. A missing file reaches
 GWO's errback, which logs `Start card failed to load: <id>`. Setup then continues
 (`gw_start/setup.js`). If the player picks that loadout, war creation fails with
-`No matching start card ID found`, and GWO reseeds or shows its generation-error message
-(`gw_start/war_generation.js`). The shipped `start_cards.js` registers no loadouts and no
+`No matching start card ID found`, and GWO shows its generation-error message
+(`gw_start/war_generation.js`); it does not retry with a new seed, as it does for a
+spawn shortage. The shipped `start_cards.js` registers no loadouts and no
 bank: its example IDs are in comments above two empty `push()` calls, and its
 `model.gwoLoadoutBanks` block is commented out. The shipped `tech_cards.js` likewise
 registers no cards. When you add an ID to either file, write its card file in the same
@@ -177,7 +180,8 @@ and the war plays without that card.
 
 A host can seat AI players in a co-op war, and under per-player tech each one picks its
 own cards. It judges a card by applying it to a scratch copy of its inventory - the real
-`GWInventory.applyCards` with every bank held shut, one apply at a time, each against a
+`GWInventory.applyCards` with GWO's bank and the stock bank held shut (a mod's own bank
+is not), one apply at a time, each against a
 10-second timeout - and scoring what
 changed: units unlocked, unit stats modded, AI mods, and Sub Commanders and card slots
 added. It never reads the card's ID. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
@@ -193,8 +197,8 @@ authority. What that means for a card, all of it silent when wrong:
   timed-out decisions it declines every deal for the rest of the session.
 - **List a card in `model.gwoCardsToUnits` only when it changes units.** A card with no
   effect the AI can see is valued by its own `deal` chance - unless it is in
-  `gwoCardsToUnits`, which tells the AI to expect a unit effect, so it scores zero and is
-  never taken. Feature cards go in `model.gwoCardsWithoutTooltip`.
+  `gwoCardsToUnits`, which tells the AI to expect a unit effect, so it scores only its
+  slot cost, which is negative, and is never taken. Feature cards go in `model.gwoCardsWithoutTooltip`.
 - **`gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards` count the AI
   players' cards** under per-player tech, as they count connected viewers'.
 
@@ -221,7 +225,8 @@ function in its `ops` table.
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
   creates missing intermediate levels for you, except for `multiply`, `tag` and `clone`,
   which stop at a missing level and write nothing (`clone` warns
-  `clone: attribute is missing or null`). If an intermediate segment is a
+  `clone: attribute is missing or null`, `tag` also warns, and only `multiply` is
+  silent). If an intermediate segment is a
   **string**, GWO treats it as another spec file and follows it — which means your change
   lands in that shared file and affects **every unit that references it**. GWO never
   follows the final segment (that is what `op: "tag"` exists for).
@@ -452,7 +457,7 @@ shipped. Anything not on that list is not allowed. It came with the template and
 the mod folder alongside `package.json`, so checking a card is `npm install` once in that
 folder, then `npm run lint:js`.
 
-The `eslint-plugin-lodash` `v3` rules apply to shipped code only, because `_` is a PA runtime global the Node tooling does not have. Every non-`prefer-*` rule is on. Of the `prefer-*` rules only `prefer-get`, `prefer-includes`, and `prefer-startswith` are kept, since there the lodash method stands in for a post-ES5 feature Chrome 40 lacks; the other fourteen are off as style preferences over ES5 equivalents. ESLint is held at **9.x**: `eslint-plugin-lodash` calls `context.getSourceCode`, which ESLint 10 removed. `eslint-plugin-es-x` is held at 9.x for the same reason (its 10.x needs ESLint >= 10.6).
+The `eslint-plugin-lodash` `v3` rules apply to shipped code only, because `_` is a PA runtime global the Node tooling does not have. Every non-`prefer-*` rule that the `v3` preset enables is on (it leaves `collection-ordering` and `no-unbound-this` off). Of the `prefer-*` rules only `prefer-get`, `prefer-includes`, and `prefer-startswith` are kept, since there the lodash method stands in for a post-ES5 feature Chrome 40 lacks; the other fourteen are off as style preferences over ES5 equivalents. ESLint is held at **9.x**: `eslint-plugin-lodash` calls `context.getSourceCode`, which ESLint 10 removed. `eslint-plugin-es-x` is held at 9.x for the same reason (its 10.x needs ESLint >= 10.6).
 
 The loader files (`tech_cards.js`, `start_cards.js`, `decks.js`, `specs.js`) are each
 one immediately invoked function, `(function () { ... })();`, and wrap their body in
@@ -481,7 +486,10 @@ normally, so you do not mistake them for a fault. `docs/troubleshooting.md` maps
 silent failure to its cause.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
-`PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`); a tech card's `deal` returns a chance
+`AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`,
+`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, and in `modinfo.json`
+`CHANGE THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release,
+`#.#.#`, `yyyy-mm-dd`, `THREAD_ID`, and `SOME_PUBLIC_URL_HERE`); a tech card's `deal` returns a chance
 above `0` that does not depend on its optional fourth argument `rng` (only `params` may be
 random, and a card drawing at all should use `rng` when it is given, with a fallback when
 it is not, as `docs/advanced.md` shows: the `X` panel, `starting_inventory.js` and the

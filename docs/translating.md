@@ -84,7 +84,7 @@ for each language, named `<lang>.json`.
 
 `<lang>` must be the name of a folder in
 `{PA_INSTALL_DIRECTORY}/media/ui/main/_i18n/locales/`, for example `de`, `fr`, `es-ES`,
-`ru` or `zh-CN`. Copy the name exactly. A name that is not in that folder never loads.
+`ru` or `zh-CN`. Copy the name exactly from that folder.
 
 A regional language also reads its base language's file. A player who uses `de-AT`
 (Austrian German) gets `de-AT.json` first and then `de.json`, so one `de.json` serves
@@ -109,7 +109,7 @@ for your translators. The game never loads that file. It is only a catalogue.
 
 The key is the English text exactly as you wrote it after `!LOC:` in the card. Every
 character counts, including capital letters, punctuation, numbers and `<br>`. Only spaces
-at the very start and the very end don't count. For `"!LOC:Bot Damage"` the key is
+and other blank characters at the very start and the very end don't count. For `"!LOC:Bot Damage"` the key is
 `"Bot Damage"`.
 
 **A key that does not match leaves that one text in English, and no message tells you.**
@@ -133,8 +133,8 @@ Text that needs a key:
 - `name` and `tooltip` in a deck.
 
 Text that needs no key: the line "Adds a new slot for another technology." that
-`gwoCard.upgradeCard` adds to a description. That line belongs to GWO, which already
-translates it.
+`gwoCard.upgradeCard` adds to a description. The game's own translation files already
+translate it.
 
 **Put only your own text in your files.** When two mods translate the same key, the mod
 with the higher `priority` number wins everywhere that the key appears. GWO's `priority`

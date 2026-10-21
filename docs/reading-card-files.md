@@ -29,7 +29,7 @@ the quotation marks, but both quotation marks must stay.
 ```
 
 **Labelled values** are written between curly brackets. Each entry is a label, a colon,
-and a value, with a comma after it:
+and a value, with a comma between entries:
 
 ```js
 { file: gwoUnit.dox, path: "max_health", op: "multiply", value: 1.5 }

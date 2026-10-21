@@ -19,8 +19,8 @@ folder after the `npm install` in
 npm run lint:js
 ```
 
-It prints one line for each problem, with the file and the line number. No output means no
-problems.
+It prints two lines that start with `>`, and then one line for each problem, with the file
+and the line number. Nothing after the two `>` lines means no problems.
 
 ### What it catches
 
@@ -84,8 +84,8 @@ Learn these:
   loading. The usual cause is a misspelled ID, an example ID that you copied without
   changing it, or a typing mistake that the [checker](#checking-your-work) would find.
   The first message is for a tech card: the game skips that card, and the war continues.
-  The second is for a loadout: that loadout cannot be used. Some screens show the third
-  message instead of the first two. See the warning under
+  The second is for a loadout: that loadout cannot be used. The game itself can show the
+  third message as well as one of the first two. See the warning under
   [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
 
 - ERROR: _Loadout bank failed to load: ADDRESS_

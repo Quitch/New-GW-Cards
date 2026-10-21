@@ -32,7 +32,8 @@ copy the folder, rename it, and fill in the blanks.
 ## What you need
 
 - **Planetary Annihilation: TITANS.**
-- **Galactic War Overhaul v7.5.0 or later.** To install it, open **Community Mods** from
+- **Galactic War Overhaul v7.5.0 or later**, or v7.8.0 for the races that can use a
+  loadout. To install it, open **Community Mods** from
   the main menu. Find _Galactic War Overhaul_ in the AVAILABLE list, and install it.
   Community Mods updates it for you.
 - **A text editor.** Any plain-text editor works, but

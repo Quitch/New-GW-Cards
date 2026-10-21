@@ -13,7 +13,7 @@ Many parts of a card name a unit. There are three ways to do it.
   [unit IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js)
   and
   [group IDs](https://github.com/Quitch/GW-AI-Overhaul/blob/master/ui/mods/com.pa.quitch.gwaioverhaul/shared/unit_groups.js).
-  In those files, each line reads `name: "path"`. You write `gwoUnit.` followed by the
+  In those files, most lines read `name: "path"`. You write `gwoUnit.` followed by the
   name. For example, the line `dox: "/pa/units/land/assault_bot/assault_bot.json"` means
   that you write `gwoUnit.dox`.
 - A **unit path** is the location of a unit's file, such as
@@ -198,7 +198,7 @@ two reasons to do this.
 if (!model.gwoSpecs) {
   model.gwoSpecs = [];
 }
-model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
+model.gwoSpecs.push(gwoUnit.aresStomp);
 ```
 
 In the template's `specs.js`, this line starts with comment marks. Remove them, and also
@@ -260,8 +260,7 @@ A unit's sight, radar and jammer ranges are a list of items in its file, under
 `recon.observer.items`. Each item has a `layer` (such as `surface_and_air` or
 `underwater`), a `channel` (such as `sight`, `radar` or `radar_jammer`) and a `radius`.
 The order of the items is different from unit to unit. The stock Radar Jamming Station
-keeps its jammer third in the list, but Legion's jamming station keeps underwater sight
-there. If you name an item by its number in the list, a race or add-on unit that stands
+keeps its jammer third in the list, but another unit can keep a different item there. If you name an item by its number in the list, a race or add-on unit that stands
 in for the stock unit gets the change on the wrong item.
 
 To change one of these ranges, name the item by its layer and channel with
