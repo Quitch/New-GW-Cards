@@ -5,8 +5,8 @@
 //
 // To add a deck, remove the comment marks (//) from the lines below and edit
 // them.
-// Unlike the other loaders, this one starts inactive: an example deck would
-// appear in the picker, named "YOUR NAME HERE", the moment the mod is enabled.
+// This file starts inactive: an example deck would appear in the picker,
+// named "YOUR NAME HERE", the moment the mod is enabled.
 (function () {
   try {
     // The fields of a deck:
@@ -22,7 +22,7 @@
     //   War Overhaul deck (which already contains Basic).  You can also
     //   include another mod's deck: list that mod in `dependencies` in
     //   modinfo.json AND give your mod a HIGHER `priority` number than it, so
-    //   it loads first.  Remove the line for a standalone deck.
+    //   that mod loads first.  Remove the line for a standalone deck.
     // - cards (OPTIONAL): individual card IDs.  Your own cards, or any stock
     //   card - for example "gwc_minion" or "gwaio_upgrade_ant" - so you can
     //   cherry-pick cards without including a whole deck.  A card appears in

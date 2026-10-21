@@ -40,8 +40,8 @@ however many times these lists name it. `modinfo.json` already lists `decks.js` 
 three screens. If the player removes your mod, a war started with your deck deals the GWO
 deck instead.
 
-Unlike the other loaders, `decks.js` starts with its example turned off (commented out),
-because an example deck would appear in the picker as soon as the mod is enabled. Remove
+`decks.js` starts with its example turned off (commented out), because an example deck
+would appear in the picker as soon as the mod is enabled. Remove
 the comment marks and edit the values to use it. If you don't want a deck, you can delete
 `decks.js` and its three lines in `modinfo.json`.
 
