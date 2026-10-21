@@ -9,8 +9,9 @@
   try {
     requireGW(
       ["coui://ui/mods/com.pa.quitch.gwaioverhaul/shared/units.js"],
-      // The next line stops the checker warning that gwoUnit is not used
-      // while the line further down is still a comment.  Leave it.
+      // The checker reports gwoUnit as unused while the line further down is
+      // still a comment.  These three lines silence that.  Delete all three
+      // when you remove the comment marks from that line.
       // eslint-disable-next-line no-unused-vars
       function (gwoUnit) {
         if (!model.gwoSpecs) {

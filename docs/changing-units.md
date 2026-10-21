@@ -201,6 +201,10 @@ if (!model.gwoSpecs) {
 model.gwoSpecs.push(gwoUnit.aresStomp, gwoUnit.aresStompAmmo);
 ```
 
+In the template's `specs.js`, this line starts with comment marks. Remove them, and also
+delete the three lines above `function (gwoUnit) {` that the file marks, or the checker
+warns `Unused eslint-disable directive`.
+
 ### A shorthand for writing changes — `gwoCard.mods`
 
 Most cards change several values in the same file with the same `op`, which is

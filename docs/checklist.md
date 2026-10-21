@@ -42,10 +42,6 @@ each item as you complete it.
 - [ ] Listed the card in `model.gwoCardsToUnits` in `tech_cards.js`, or in
       `model.gwoCardsWithoutTooltip` if it changes no units.
 
-**If you make only tech cards:** the `model.gwoLoadoutBanks` block in `start_cards.js`
-still holds the placeholder `YOUR_PREFIX_start_`. It does no harm. You can leave it, or
-delete the whole block.
-
 **If your card is for another race or an add-on, also:**
 
 - [ ] Named the race or add-on units with `gwoUnit.<table>.<key>`, or with raw paths for a
@@ -65,7 +61,8 @@ delete the whole block.
 - [ ] Set a unique `LS_KEY` in `bank.js`.
 - [ ] Changed the `bank.js` address at the top of the loadout card so that it contains
       your identifier.
-- [ ] Set `prefix` and `path` in the `model.gwoLoadoutBanks` entry in `start_cards.js`.
+- [ ] Removed the comment marks from the `model.gwoLoadoutBanks` block in
+      `start_cards.js`, and set its `prefix` and `path`.
       Without this, a locked loadout can never unlock.
 - [ ] If not every race can use the loadout, added `races` to its entry (see
       [`races`](loadouts.md#races--the-races-that-can-use-a-loadout)).

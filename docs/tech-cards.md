@@ -275,6 +275,12 @@ if (!model.gwoCards) {
 model.gwoCards.push("mym_damage_bots", "mym_faster_air");
 ```
 
+The template's `tech_cards.js` starts with this list and `model.gwoCardsToUnits` empty,
+and with examples in the comments above them. Write your IDs inside the brackets of
+`push( )`. A mod with no tech cards can leave both lists empty. Once a list uses
+`gwoUnit`, delete the three lines above `function (gwoUnit) {` that the file marks, or
+the checker warns `Unused eslint-disable directive`.
+
 ### `model.gwoCardsToUnits` — tech-card tooltips (in `tech_cards.js`)
 
 This list connects a tech card to the units that it changes, so that the card's tooltip
