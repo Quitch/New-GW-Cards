@@ -10,6 +10,33 @@ the debugger's Console open, as [Checking and testing your mod](testing.md#setti
 describes. That section also lists the messages that PA prints in normal play. Those
 messages are not faults.
 
+## Messages you may see
+
+Some mistakes do show a message in the Console. Each message below contains the text
+shown. Find yours, and follow the link for the details.
+
+| Message                                                       | Normal? | What it means                                                                                                                                                                                               |
+| ------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Uncaught TypeError: undefined is not a function`             | Yes     | PA prints it on every screen. See [Setting up](testing.md#setting-up).                                                                                                                                      |
+| `Synchronous XMLHttpRequest on the main thread is deprecated` | Yes     | PA prints it on every screen.                                                                                                                                                                               |
+| `Warning: File not found in mod`                              | Usually | A card changed a unit that the player does not own. It is a fault only when the player should own it. See [Setting up](testing.md#setting-up).                                                              |
+| `GWO card failed to load:`                                    | No      | A tech-card ID has no card file of that name, or the file has a typing mistake.                                                                                                                             |
+| `Start card failed to load:`                                  | No      | The same, for a loadout. See [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).                                                                             |
+| `Uncaught Error: Script error for: cards/`                    | No      | A card file did not load. It can appear as well as one of the two messages above.                                                                                                                           |
+| `is invalid or missing from model.gwoCardsToUnits`            | No      | A tech card is in neither `model.gwoCardsToUnits` nor `model.gwoCardsWithoutTooltip`. See [the tooltip lists](tech-cards.md#modelgwocardstounits--tech-card-tooltips-in-tech_cardsjs).                      |
+| `Loadout bank failed to load:`                                | No      | The `path` in `model.gwoLoadoutBanks` does not lead to your `bank.js`. Check the identifier in it. See [`model.gwoLoadoutBanks`](loadouts.md#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs). |
+| `New GW Cards:`                                               | No      | One of your loader files stopped with an error. The rest of the message says why.                                                                                                                           |
+| An op name and a colon, such as `multiply:` or `tag:`         | No      | A change to a unit stat found the wrong kind of value, or no value. The message names the change. See [Change unit stats](changing-units.md#change-unit-stats--inventoryaddmods).                           |
+| `Invalid selector in mod`                                     | No      | A `[layer=…,channel=…]` part of a `path` is written wrongly. See [Change unit stats](changing-units.md#change-unit-stats--inventoryaddmods).                                                                |
+| `AI file of a load mod not read, skipped:`                    | No      | A `load` names a file that is missing. See [`load`](ai-build-orders.md#loading-a-ready-made-build-file--load).                                                                                              |
+| `Invalid AI file type in load mod`                            | No      | A `load` has no `type`, or a wrong one. See [Change what your Sub Commanders build](ai-build-orders.md).                                                                                                    |
+| `Invalid AI mod operation`                                    | No      | An AI change has a misspelled `op`. See [Change what your Sub Commanders build](ai-build-orders.md).                                                                                                        |
+| `applyAiMods: op threw`                                       | No      | An AI change is missing a label that it needs, for example a `silence` with no `value`. See [Change what your Sub Commanders build](ai-build-orders.md).                                                    |
+| `[ModTranslations]` with `"languages":[]`                     | No      | Your translations were not found. See [Testing your translations](translating.md#testing-your-translations).                                                                                                |
+| A red error that names one of your translation files          | No      | That file is not valid JSON. See [Testing your translations](translating.md#testing-your-translations).                                                                                                     |
+
+Most other mistakes show no message at all. The rest of this page lists them by symptom.
+
 ## Nothing from the mod appears at all
 
 - The identifier is not the same in all three places: `identifier` in `modinfo.json`,

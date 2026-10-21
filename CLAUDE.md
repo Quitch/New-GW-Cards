@@ -11,7 +11,8 @@ written in plain English for someone who does not code. `README.md` is the landi
 and contents; `docs/` holds one page per topic. Together they are the reference for what
 every part of a card does, and you should follow them. This file adds what the guide
 deliberately leaves out: where to find the real values on the user's own machine, and
-the runtime behaviour that fails **silently** when you get it wrong.
+the runtime behaviour that often fails **silently** when you get it wrong, or with a
+message the user is not watching for.
 
 The user may know nothing about coding. Explain what you changed in plain language, keep
 the heavy comment style the template uses, and never leave a placeholder behind.
