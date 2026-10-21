@@ -109,8 +109,8 @@ for your translators. The game never loads that file. It is only a catalogue.
 
 The key is the English text exactly as you wrote it after `!LOC:` in the card. Every
 character counts, including capital letters, punctuation, numbers, and `<br>`. Only spaces
-and other blank characters at the very start and the very end don't count. For `"!LOC:Bot
-Damage"` the key is `"Bot Damage"`.
+and other blank characters at the very start and the very end don't count. For
+`"!LOC:Bot Damage"` the key is `"Bot Damage"`.
 
 **A key that does not match leaves that one text in English, and no message tells you.**
 Copy each key out of the card file. Don't type it again.

@@ -488,8 +488,8 @@ silent failure to its cause.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`,
-`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, and in `modinfo.json` `CHANGE
-THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release, `#.#.#`,
+`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, and in `modinfo.json`
+`CHANGE THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release, `#.#.#`,
 `yyyy-mm-dd`, `THREAD_ID`, and `SOME_PUBLIC_URL_HERE`); a tech card's `deal` returns a
 chance above `0` that does not depend on its optional fourth argument `rng` (only `params`
 may be random, and a card drawing at all should use `rng` when it is given, with a
