@@ -47,8 +47,8 @@ has no `value`.
 
 A missing label does not always do nothing:
 
-- Without `toBuild`, an op changes every entry that has no `to_build` name. Some
-  `fabber` entries have none.
+- Without `toBuild`, an `append`, `prepend`, `replace`, `unset`, `remove`, or `new`
+  changes every entry that has no `to_build` name. Some `fabber` entries have none.
 - Without `value`, `append`, `prepend`, `replace`, `new`, and `squad` write an empty value
   into the entry, which can break it.
 - Without `idToMod`, `append`, `prepend`, `replace`, and `unset` change nothing.
