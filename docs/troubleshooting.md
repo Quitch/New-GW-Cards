@@ -92,8 +92,8 @@ messages are not faults.
 
 ## A locked loadout never unlocks
 
-- `model.gwoLoadoutBanks` is missing from `start_cards.js`, or its `prefix` does not
-  match the start of your loadout IDs. See
+- `model.gwoLoadoutBanks` is missing from `start_cards.js`, still has its comment marks,
+  or its `prefix` does not match the start of your loadout IDs. See
   [`model.gwoLoadoutBanks`](loadouts.md#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
 - The ID does not contain `_start_`, or starts with `gwc_start`. See
   [Loadout IDs](loadouts.md#loadout-ids).

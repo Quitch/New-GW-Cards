@@ -88,8 +88,8 @@ If the user has no mod folder yet, create one before writing any card:
 5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js`, update the
    `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card, and
    uncomment the `model.gwoLoadoutBanks` block in `start_cards.js` and set its
-   `prefix`/`path`. GWO reads
-   that entry to find the mod's bank; without it a locked loadout never unlocks.
+   `prefix`/`path`. GWO reads that entry to find the mod's bank; without it a locked
+   loadout never unlocks.
 6. Leave `galacticWarMod` at `false` unless the user asks for it. `true` makes the mod
    mandatory in a co-op war, and the flag is read from the host's mods only - a viewer
    plays the host's war with the host's cards, so its own copy of the flag decides
@@ -159,15 +159,13 @@ wrong and fails quietly. The template's three example cards are one of each shap
 ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs. A missing file reaches
 GWO's errback, which logs `Start card failed to load: <id>`. Setup then continues
 (`gw_start/setup.js`). If the player picks that loadout, war creation fails with
-`No matching start card ID found`, and GWO reseeds or shows
-its generation-error message (`gw_start/war_generation.js`). The shipped
-`start_cards.js` registers no loadouts and no bank: its example IDs are in comments above
-two empty `push()` calls, and its `model.gwoLoadoutBanks` block is commented out. The
-shipped `tech_cards.js` likewise registers no cards. When you add an ID there, write its
-card file in the same change. A
-missing file
-for an ID in `model.gwoCards` logs `GWO card failed to load: <id>` and the war plays
-without that card.
+`No matching start card ID found`, and GWO reseeds or shows its generation-error message
+(`gw_start/war_generation.js`). The shipped `start_cards.js` registers no loadouts and no
+bank: its example IDs are in comments above two empty `push()` calls, and its
+`model.gwoLoadoutBanks` block is commented out. The shipped `tech_cards.js` likewise
+registers no cards. When you add an ID to either file, write its card file in the same
+change. A missing file for an ID in `model.gwoCards` logs `GWO card failed to load: <id>`
+and the war plays without that card.
 
 ## Co-op AI players run `buff` on a copy
 

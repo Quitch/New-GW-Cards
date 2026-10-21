@@ -74,7 +74,7 @@ a problem:
   detrimental effects to the end user's experience. For more help, check
   <http://xhr.spec.whatwg.org/>._
 
-Learn these two:
+Learn these:
 
 - ERROR: _GWO card failed to load: SOME_ID_, _Start card failed to load: SOME_ID_, or
   _Uncaught Error: Script error for: cards/SOME_ID_
@@ -82,11 +82,17 @@ Learn these two:
   You listed `SOME_ID` somewhere, but there is no `SOME_ID.js` in
   `ui/main/game/galactic_war/cards/`, or the file has a typing mistake that stops it from
   loading. The usual cause is a misspelled ID, an example ID that you copied without
-  changing it, or a typing mistake that the [checker](#checking-your-work) would find. The first message
-  is for a tech card: the game skips that card, and the war continues. The second is for
-  a loadout: that loadout cannot be used. Some screens show the third message instead of
-  the first two. See the warning under
+  changing it, or a typing mistake that the [checker](#checking-your-work) would find.
+  The first message is for a tech card: the game skips that card, and the war continues.
+  The second is for a loadout: that loadout cannot be used. Some screens show the third
+  message instead of the first two. See the warning under
   [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).
+
+- ERROR: _Loadout bank failed to load: ADDRESS_
+
+  The `path` in `model.gwoLoadoutBanks` in `start_cards.js` does not lead to your
+  `bank.js`. Check the identifier in it. See
+  [`model.gwoLoadoutBanks`](loadouts.md#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
 
 - WARN: _Warning: File not found in mod {"file":"/pa/units/…",…}_
 
