@@ -102,10 +102,7 @@ For a player of a race that is not in the list:
 ## Loadouts and `gwoCard.loadout`
 
 A loadout has more to do than a tech card. It must give the player the game's standard
-starting units as well as its own. It must notice when the same loadout turns up again
-later in the war, and give a card slot instead of the units a second time. And when a
-player wins a copy of it on a Guardian planet, it must record that in your bank, so that
-the loadout unlocks.
+starting units as well as its own, and it must forbid units for the whole war.
 
 `gwoCard.loadout` does all of that. Give it your card and the four things below, and it
 gives back the card's `buff` and `dull`:
@@ -194,8 +191,7 @@ already contains the first two, and `start_cards.js` contains the third:
    "coui://ui/mods/<your identifier>/bank.js",
    ```
 
-2. The card hands that bank to `gwoCard.loadout` as `bank`. When the player earns the
-   loadout, it is recorded there:
+2. The card hands that bank to `gwoCard.loadout` as `bank`, which needs it:
 
    ```js
    bank: myBank,
@@ -203,18 +199,16 @@ already contains the first two, and `start_cards.js` contains the third:
 
 3. `start_cards.js` tells GWO where the bank is, through
    [`model.gwoLoadoutBanks`](#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
-   That block starts with comment marks, so remove them first.
-   If you miss this step, the loadout stays locked forever.
+   That block starts with comment marks, so remove them first. If you miss this step,
+   the loadout still unlocks, but the unlock goes to the wrong place (see below).
 
 The loadout screen then reads your bank, with the same `LS_KEY`, to decide whether to show
 your loadout as unlocked. Having your own key has two benefits. If the player removes your
 mod later, PA's built-in loadout list does not point at missing cards. And the player's
 unlocks leave with the mod, instead of staying behind in another mod's storage.
 
-A loadout reaches your bank in two ways. If the player wins a loadout on a Guardian
-planet, GWO writes it to the bank itself. Your card's code does not run in that case,
-which is why GWO needs the address above. The `bank` that you give to `gwoCard.loadout`
-covers the other way.
+When the player wins one of your loadouts on a Guardian planet, GWO writes it to your bank
+itself. Your card's code does not run then, which is why GWO needs the address above.
 
 Your bank also keeps PA's "loadouts unlocked" statistic up to date. `bank.js` already
 does that, and there is nothing for you to do.
@@ -222,8 +216,12 @@ does that, and there is nothing for you to do.
 ### `model.gwoLoadoutBanks` — where your bank lives (in `start_cards.js`)
 
 Your own `bank.js` records which of your locked loadouts the player has unlocked. GWO
-cannot find that file without help, so you give it the address. **Without this entry a
-locked loadout can never unlock**, and nothing warns you.
+cannot find that file without help, so you give it the address. **Without this entry,
+GWO writes the unlock to its own storage instead of to your bank.** The same happens when
+`prefix` does not match the start of your loadout IDs. The loadout still unlocks, so the
+mod looks fine, but the unlock stays behind after the player removes your mod, and
+nothing warns you. To check the entry, look for the loadout's ID under your `LS_KEY`
+after a test war unlocks it (see [Testing loadouts](testing.md#testing-loadouts)).
 
 ```js
 if (!model.gwoLoadoutBanks) {

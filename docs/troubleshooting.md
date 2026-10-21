@@ -119,10 +119,20 @@ Most other mistakes show no message at all. The rest of this page lists them by 
 
 ## A locked loadout never unlocks
 
+- The ID does not contain `_start_`, so a Guardian planet never offers it. See
+  [Loadout IDs](loadouts.md#loadout-ids).
+- `start_cards.js` is missing from the `gw_play` list in `modinfo.json`, so the war does
+  not know the loadout. See [Understanding the pieces](setup.md#understanding-the-pieces).
+- The loadout's `races` list leaves out the player's race. See
+  [`races`](loadouts.md#races--the-races-that-can-use-a-loadout).
+
+## A loadout unlocks, but its ID is not under my `LS_KEY`
+
 - `model.gwoLoadoutBanks` is missing from `start_cards.js`, still has its comment marks,
-  or its `prefix` does not match the start of your loadout IDs. See
+  or its `prefix` does not match the start of your loadout IDs. GWO then writes the
+  unlock to its own storage, and it stays behind when the player removes your mod. See
   [`model.gwoLoadoutBanks`](loadouts.md#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs).
-- The ID does not contain `_start_`, or starts with `gwc_start`. See
+- The ID starts with `gwc_start`. The game then writes the unlock to its own storage. See
   [Loadout IDs](loadouts.md#loadout-ids).
 
 ## My text stays in English

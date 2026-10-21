@@ -66,8 +66,9 @@ in `builders`, such as `BasicBotFactory`, come from the AI's unit maps:
 holds the names for TITANS units such as `SupportCommander`. The Queller AI has its own
 in `media/pa_ex1/ai_queller/<tier>/unit_maps/`. Don't read
 `media/pa/ai/unit_maps/ai_unit_map.json`: TITANS replaces it with the `pa_ex1` copy. A
-name that is not in those files changes nothing and reports nothing. The AI files are one long line; use
-**Format Document** in Visual Studio Code to read them, and don't save them.
+name that is not in those files changes nothing and reports nothing. The AI files are one
+long line; use **Format Document** in Visual Studio Code to read them, and don't save
+them.
 
 ## Loading a ready-made build file — `load`
 

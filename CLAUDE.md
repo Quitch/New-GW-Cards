@@ -90,8 +90,12 @@ If the user has no mod folder yet, create one before writing any card:
 5. If the mod ships loadouts, set a unique `LS_KEY` in `bank.js`, update the
    `coui://ui/mods/<identifier>/bank.js` line at the top of each loadout card, and
    uncomment the `model.gwoLoadoutBanks` block in `start_cards.js` and set its
-   `prefix`/`path`. GWO reads that entry to find the mod's bank; without it a locked
-   loadout never unlocks.
+   `prefix`/`path`. GWO reads that entry to find the mod's bank. Without it, or with a
+   `prefix` that does not match, a locked loadout still unlocks, but GWO writes the unlock
+   to its own bank (`gwaio_bank`), where it outlives the mod
+   (`gw_play/treasure_loadouts.js`; `shared/loadouts.js` reads both banks). So an unlock
+   seen in a test does not prove the entry is right: check that the ID lands under the
+   mod's `LS_KEY`.
 6. Leave `galacticWarMod` at `false` unless the user asks for it. `true` makes the mod
    mandatory in a co-op war, and the flag is read from the host's mods only - a viewer
    plays the host's war with the host's cards, so its own copy of the flag decides
@@ -410,8 +414,8 @@ normalised: case, punctuation, numbers and `<br>` all count. Harvest every `"!LO
 literal from the user's `ui/**` rather than typing keys, and cover `summarize`,
 `describe`, `hint`, `upgradeCard`'s `name`/`description`, and a deck's `name`/`tooltip`.
 After **any** edit to English text, re-check that every key in every `<lang>.json` still
-exists in the source — a stale key is silent. An entry whose `message` is empty, missing or not a
-string (including a bare string value, `"Bot Damage": "Bot-Schaden"`), or a key
+exists in the source — a stale key is silent. An entry whose `message` is empty, missing
+or not a string (including a bare string value, `"Bot Damage": "Bot-Schaden"`), or a key
 containing `;;` or `::`, is skipped and counted `invalid`. Keep numbers and `<br>`
 identical in the message. The "Adds a new slot for another technology." line that
 `upgradeCard` appends (`withSlot` in `<GWO>` `shared/cards.js`) is GWO's key, already

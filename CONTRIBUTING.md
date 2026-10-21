@@ -217,6 +217,14 @@ templates here follow it:
   `docs/tech-cards.md` (`model.gwoCardsToUnits`), `docs/race-cards.md` (the `_upgrade_`
   warning and step 2), and `docs/troubleshooting.md`. A loadout's `races` is a separate
   rule, in `docs/loadouts.md`.
+- **Without a `model.gwoLoadoutBanks` entry a locked loadout still unlocks**, into GWO's
+  `gwaio_bank` (`gw_play/treasure_loadouts.js`), which both unlock checks read
+  (`shared/loadouts.js`). The cost is that the unlock outlives the mod. A Guardian win is
+  banked by GWO directly, so `gwoCard.loadout`'s `bank` is not how an unlock is recorded.
+  These places state the rule. Keep them consistent: `docs/loadouts.md` (the bank steps
+  and `model.gwoLoadoutBanks`), `docs/checklist.md` (the loadout item),
+  `docs/troubleshooting.md` (the two loadout entries), `CLAUDE.md` ("Setting the mod up",
+  step 5), and the comments in `start_cards.js` and `start_card_id.js`.
 - `dull(inventory)` runs after the `buff` of every card, each time the game works out the
   player's units, and removes the units that the card forbids. It must never list the
   units that `buff` adds, or the player never gets them. A start card writes neither

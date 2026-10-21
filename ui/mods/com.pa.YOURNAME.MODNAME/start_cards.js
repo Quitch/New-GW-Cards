@@ -61,8 +61,10 @@
     //
     // Your own bank.js records your locked loadouts.  Galactic War Overhaul
     // cannot find that file without help, so you give it the address here.
-    // Without this entry a locked loadout can never unlock, and nothing warns
-    // you.
+    // Without this entry a locked loadout still unlocks, but Galactic War
+    // Overhaul writes the unlock to its own storage instead of to your bank.
+    // The unlock then stays behind after the player removes your mod, and
+    // nothing warns you.
     //
     // prefix - the first part of every loadout ID in this mod.  When the player
     //          earns one of your loadouts, Galactic War Overhaul uses the prefix
