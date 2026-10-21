@@ -175,9 +175,12 @@ If something is wrong, the result tells you where to look:
 - **No `[ModTranslations]` line with your identifier.** `translations.js` is not under
   `global_mod_list`, the address there does not contain your identifier, Mod Translations
   is not enabled, or your `priority` is `50` or below.
-- **`languages` is empty, or `added` is `0`.** The game did not find your file. Check the
-  name of the `translations` folder, the file's name against the `locales` folder, and the
-  identifier in `translations.js`.
+- **`languages` is empty.** If the game's language is English, this is normal: Mod
+  Translations loads no files for English. Otherwise the game did not find your file.
+  Check the name of the `translations` folder, the file's name against the `locales`
+  folder, and the identifier in `translations.js`.
+- **`added` is `0`.** If `invalid` is `0` too, the file was found but is empty.
+  Otherwise, see the `invalid` point below.
 - **A red error that names your file.** The file is not valid JSON. The usual cause is a
   missing comma or quotation mark.
 - **`invalid` is above `0`.** An entry has an empty or missing `message`, or is written

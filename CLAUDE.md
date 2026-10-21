@@ -58,7 +58,7 @@ watching. Look each one up.
 | Discovery voice lines for `audio`                       | the list in the comment in `ui/main/game/galactic_war/cards/tech_card_id.js`                                                                                                                                                                                                                                                              |
 | AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`                                                                                                                                                                         |
 | AI `builders` roles                                     | keys under `unit_map` in `<PA>/pa_ex1/ai/unit_maps/ai_unit_map.json` and `ai_unit_map_x1.json` (TITANS roles such as `SupportCommander` are only in `_x1`), `<PA>/pa_ex1/ai_queller/q_*/unit_maps/*.json`, and `<GWO>` → `pa/ai_penchant/unit_maps/*.json`. `pa_ex1` shadows `<PA>/pa/ai/unit_maps/ai_unit_map.json`: never read that one |
-| Platoon template names (`squad`'s `toBuild`)            | keys under `platoon_templates` in `<PA>/pa_ex1/ai/platoon_templates/*.json` and `<PA>/pa_ex1/ai_queller/q_*/platoon_templates/*.json`                                                                                                                                                                                                     |
+| Platoon template names (`squad`'s `toBuild`)            | keys under `platoon_templates` in `<PA>/pa_ex1/ai/platoon_templates/*.json`, `<PA>/pa_ex1/ai_queller/q_*/platoon_templates/*.json`, and `<GWO>` → `pa/ai_penchant/platoon_templates/**/*.json`                                                                                                                                            |
 | Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                                                                                                               |
 | What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available                                                                                                                                                                |
 | Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                                                                                                                                                                                    |
@@ -312,8 +312,9 @@ see "What a missing or wrong field does" below.
 
 `new` reads `idToMod` as a flag. When it is truthy, `value` is one test object, pushed
 into every existing group of the entry. When it is absent, `value` is a whole group (a
-list of tests), added as a new group. This is the form GWO's own cards use
-(`gwaio_upgrade_icarus.js`). A single test with no `idToMod` adds a malformed group.
+list of tests), added as a new group. GWO's cards use both: `gwaio_upgrade_icarus.js` the
+group form, `nem_start_planetary.js` the flag form (`idToMod: true`). A single test with
+no `idToMod` adds a malformed group.
 
 `squad` works only with `type: "template"`; the other seven (`append`, `prepend`,
 `replace`, `unset`, `remove`, `new`, `silence`) work only with `fabber`, `factory`, and

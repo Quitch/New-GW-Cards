@@ -220,8 +220,10 @@ cannot find that file without help, so you give it the address. **Without this e
 GWO writes the unlock to its own storage instead of to your bank.** The same happens when
 `prefix` does not match the start of your loadout IDs. The loadout still unlocks, so the
 mod looks fine, but the unlock stays behind after the player removes your mod, and
-nothing warns you. To check the entry, look for the loadout's ID under your `LS_KEY`
-after a test war unlocks it (see [Testing loadouts](testing.md#testing-loadouts)).
+nothing warns you. [Testing loadouts](testing.md#testing-loadouts) checks the entry and
+its `path`: GWO reads your `LS_KEY` only through the entry, so a loadout that you write
+there by hand unlocks only when both are right. That test does not check `prefix`, which
+GWO uses only when the player wins the loadout, so compare `prefix` with your IDs by eye.
 
 ```js
 if (!model.gwoLoadoutBanks) {

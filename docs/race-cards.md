@@ -34,6 +34,8 @@ Shank, which has none either, and also the Legion Stoke, an amphibious tank, bec
 stock basic tank is amphibious. Bugs has no anti-air bot, so for a Bugs player a card for
 the Stinger changes the Ripper, the Stealth Ripper, and the Runner. Some stock units reach
 no race unit at all: for a Legion player, a card for the Skitter changes no Legion unit.
+A stock unit that no commander can build, such as the Squall's drone (`gwoUnit.squall`),
+is the opposite: it reaches every race unit of its kind.
 
 Defences, superweapons, and intel structures (radars and jammers) are matched by kind and
 by job in the same way. Titans, commanders, fabricators, factories, and the other

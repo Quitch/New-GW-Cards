@@ -52,10 +52,11 @@ A missing label does not always do nothing:
 - Without `value`, `append`, `prepend`, `replace`, `new`, and `squad` write an empty value
   into the entry, which can break it.
 - Without `idToMod`, `append`, `prepend`, `replace`, and `unset` change nothing.
-- `silence` without `value`, and `load` without `type`, show an error in the Console. See
+- A few mistakes show an error in the Console: `silence` without `value`, `load` without
+  `type`, and a change without `op` or with a misspelled one. See
   [Messages you may see](troubleshooting.md#messages-you-may-see).
 
-Only those two show an error, so check each change against the table.
+Most mistakes show no error, so check each change against the table.
 
 **Where the names come from.** `toBuild` must match one of the AI's build entries exactly.
 Those names are the `to_build` values inside the AI's build files, which you can read in
@@ -208,16 +209,16 @@ These change the AI's build files in ways that need a good understanding of them
 
 - `new` adds build conditions to an entry, in one of two ways. **Without `idToMod`**,
   `value` is a whole group: a list of tests, which the entry gets as a new group. **With
-  `idToMod`**, set to anything, `value` is one test, which GWO adds to every group that the
-  entry already has. Choose the form that matches your `value`: one test without
-  `idToMod` damages the entry.
+  `idToMod`** set to a value such as `true`, `value` is one test, which GWO adds to every
+  group that the entry already has. Choose the form that matches your `value`: one test
+  without `idToMod` damages the entry.
 - `remove` takes a test away from every group of the entry. Its `value` is an exact copy
   of one whole test.
 - `squad` adds one unit to a platoon template. It works only with `type: "template"`.
 
 GWO's own cards show `new` without `idToMod` in `gwaio_upgrade_icarus.js` and
-`nem_start_deepspace.js`, and `remove` in `nem_start_deepspace.js` and
-`nem_start_planetary.js`, in its
+`nem_start_deepspace.js`, `new` with `idToMod: true` in `nem_start_planetary.js`, and
+`remove` in `nem_start_deepspace.js` and `nem_start_planetary.js`, in its
 [cards folder](https://github.com/Quitch/GW-AI-Overhaul/tree/master/ui/main/game/galactic_war/cards).
 No GWO card uses `squad`.
 
