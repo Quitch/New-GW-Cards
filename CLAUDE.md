@@ -446,7 +446,8 @@ use the game's own wording for that language.
 
 ## Code rules
 
-This code runs in PA's embedded **Chrome 40**, and a parse error takes out the entire
+This code must parse in **Chrome 40**: PA defaults to CEF (Chromium 150), but players can
+still select the old Coherent UI backend until it is dropped, and a parse error takes out the entire
 screen, not just the card. Use `var`; no `let`/`const`, arrow functions, template
 literals, or `class`. Do not use `String.prototype.startsWith`/`endsWith` — PA's own
 polyfill ignores the position argument and returns the wrong answer; use `_.startsWith`
@@ -477,8 +478,8 @@ actually guarantees today.
 
 ## Checking the work
 
-There is no test suite — validation is in-game, and `docs/testing.md` is the procedure (launch with `--devmode` and `--coherent_port=9999`, watch the
-Coherent UI Debugger console, deal the card from the `X` panel, then build the units in a
+There is no test suite — validation is in-game, and `docs/testing.md` is the procedure (launch with `--devmode` and `--webview-port=9999`, watch the
+Console of Chrome or Edge DevTools attached through `chrome://inspect`, deal the card from the `X` panel, then build the units in a
 GW battle — a skirmish or sandbox game uses stock specs, so it cannot show a card's
 effect). The panel's give-card box finds IDs in `model.gwoCards`, which `gw_play` rebuilds
 as the registered cards plus every GWO loadout plus the war's deck

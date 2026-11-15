@@ -26,10 +26,12 @@ count. Nothing after the two `>` lines means no problems.
 ### What it catches
 
 - **Typing mistakes**: a missing comma, or a bracket or quotation mark that is not closed.
-- **Newer JavaScript that PA cannot run.** The browser inside PA is very old. Modern
-  JavaScript that you may have seen elsewhere, such as `let`, `=>`, backtick strings, and
-  `class`, does not even load, and takes the whole file down with it. The checker knows
-  exactly what PA supports, and reports the rest.
+- **Newer JavaScript that PA cannot run.** PA can still run its menus in a very old
+  browser, and some players use it. In that browser, modern JavaScript that you may have
+  seen elsewhere, such as `let`, `=>`, backtick strings, and `class`, does not even load,
+  and takes the whole file down with it. Your own game may run that code without a
+  problem and still break for those players. The checker knows exactly what the old
+  browser supports, and reports the rest.
 - **Functions that PA does not have**, such as `Object.assign` and `Array.from`. These are
   worse than a typing mistake, because the file loads and the card fails only when a
   player uses it.
@@ -44,36 +46,49 @@ loading at all, which are the hardest to track down from inside the game.
 
 ### Setting up
 
-You test with the **Coherent UI Debugger**, a free tool that shows you the messages that
-the game's menus print. You set it up once.
+You test with **DevTools**, the debugger that is built into Google Chrome and Microsoft
+Edge. It shows you the messages that the game's menus print. Edge comes with Windows, so
+you probably have one of them already. You set it up once.
 
-1. [Download the debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip)
-   and unzip it anywhere.
-2. Add `--coherent_port=9999 --devmode` to PA's Steam
+1. Add `--webview-port=9999 --devmode` to PA's Steam
    [launch options](https://help.steampowered.com/en/faqs/view/7D01-D2DD-D75E-2955) (in
    Steam, right-click the game → **Properties** → **Launch Options**).
-   `--coherent_port=9999` lets the debugger connect to PA, and `--devmode` turns on the
-   test panel that you use below.
+   `--webview-port=9999` lets DevTools connect to PA, and `--devmode` turns on the test
+   panel that you use below. If your launch options already say `--coherent_port=9999`,
+   that also works: it is the old name for the same option.
+2. In Chrome, go to `chrome://inspect`. In Edge, go to `edge://inspect`.
+3. Next to **Discover network targets**, click **Configure…**, add `localhost:9999`, and
+   click **Done**.
 
 Then, each time that you test:
 
 1. Launch PA.
 2. Open **Community Mods**, find your mod in the INSTALLED list, and enable it.
 3. Return to the main menu.
-4. Start the Coherent UI Debugger from the folder where you unzipped it. Check that the
-   address box says `localhost` and the port is `9999`, and click **GO**.
-5. The debugger lists the game's screens. Click **Start Page**, which is the main menu.
-6. Switch to the **Console** tab. The game's messages appear here.
+4. In Chrome or Edge, go to `chrome://inspect` (or `edge://inspect`) again. Under
+   **Remote Target**, it lists the game's screens. Find **Start Page**, which is the main
+   menu, and click **inspect** below it. A DevTools window opens.
+5. Switch to the **Console** tab. The game's messages appear here.
+6. Click the gear icon at the top right of the Console, and tick **Preserve log**. Without
+   it, the Console empties every time that the game changes screen.
 
-Keep the Console open while you test, and watch for red errors.
+Keep the Console open while you test, and watch for red errors. The DevTools window stays
+connected as you move from screen to screen, so you do not need to click **inspect**
+again until you restart PA.
 
-PA prints these two messages in normal play, up to once for each screen. They are **not**
-a problem:
+PA prints these two messages on the main menu in normal play. They are **not** a problem.
+They come from the news and video panels on the main menu, and the numbers at the end can
+differ:
 
-- ERROR: _Uncaught TypeError: undefined is not a function_
-- WARN: _Synchronous XMLHttpRequest on the main thread is deprecated because of its
-  detrimental effects to the end user's experience. For more help, check
-  <http://xhr.spec.whatwg.org/>._
+- ERROR: _Failed to load resource: the server responded with a status of 503 ()_
+- ERROR: _Failed to load resource: the server responded with a status of 404 ()_
+
+> **If you start PA with `--ui-backend=coherent`, do not use Chrome or Edge.** That option
+> makes PA use its old browser, and DevTools can break that browser's connection. Use the
+> [Coherent UI Debugger](https://cdn.planetaryannihilation.com/downloads/debugger-windows.zip)
+> instead. The old browser also prints _Uncaught TypeError: undefined is not a function_
+> and a warning about _Synchronous XMLHttpRequest_ on every screen. Those are not a
+> problem either.
 
 Learn these:
 
@@ -125,8 +140,8 @@ Other messages, and what each one means, are in
 4. Check that the card appears in your hand, and that no new errors appear in the Console.
 5. Hover over the card, and check that its name, description, picture, and tooltip look
    right.
-6. In the debugger, tick the **Preserve log** box, so that the Console keeps its messages
-   when the battle loads.
+6. Check that **Preserve log** is still ticked (the gear icon at the top right of the
+   Console), so that the Console keeps its messages when the battle loads.
 7. Start a fight.
 8. Check that no unexpected errors appear in the Console.
 9. In the battle, build the units that your card changes, and check that they behave as
@@ -138,17 +153,19 @@ Other messages, and what each one means, are in
 1. Open the Galactic War loadout screen.
 2. Check that your loadout is listed, locked (for a locked loadout), and shows its hint.
 3. Check that no errors appear in the Console.
-4. To unlock the loadout for testing, switch the debugger to the **Resources** tab.
-5. Expand **Local Storage**, and click `coui://`.
-6. Find the key with the same name as your `LS_KEY`. If there isn't one, right-click the
-   empty line at the bottom of the list and create it.
-7. Right-click the key, choose to edit its value, and add your loadout ID. The finished
+4. To unlock the loadout for testing, switch DevTools to the **Application** tab. If you
+   cannot see it, click **»** at the end of the tab names.
+5. In the list on the left, under **Storage**, expand **Local storage**, and click
+   `coui://ui`.
+6. Find the key with the same name as your `LS_KEY`. If there isn't one, double-click the
+   empty line at the bottom of the list, type the name, and press Enter.
+7. Double-click the key's value to edit it, and add your loadout ID. The finished
    value should look like this, with your own ID or IDs in it:
    `{"startCards":[{"id":"mym_start_myloadout"}]}`. If the value already lists other
    loadouts, add yours to the list, with a comma between the entries:
    `{"startCards":[{"id":"mym_start_other"},{"id":"mym_start_myloadout"}]}`.
 8. Press Enter to save.
-9. Press F5 to reload the loadout screen.
+9. Click in the DevTools window, and press F5 to reload the loadout screen.
 10. Check that your loadout is now unlocked and can be selected.
 11. Start a war with it, and check that you get the units that it gives.
 

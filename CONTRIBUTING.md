@@ -30,10 +30,12 @@ template therefore works only when GWO is installed. This repo is the sibling of
 GWO workspace (`GW-AI-Overhaul`) is the authoritative source for card examples, for unit
 IDs, and for the `referee.js` and AI-mod runtime that the cards use.
 
-This repo, like GWO, contains plain JS and JSON that the game's embedded Chrome 40 loads.
+This repo, like GWO, contains plain JS and JSON that the game's embedded browser loads.
+That is CEF (Chromium 150) by default, but players can still select the old Coherent UI
+(Chrome 40), so the code must parse there.
 There is **no build step, no transpile step, and no bundler**. The only tooling is ESLint
 (`package.json` and `eslint.config.mjs`). Unlike GWO, this repo has **no test harness**.
-You do the other validation by hand, in the game, with the Coherent UI Debugger. See
+You do the other validation by hand, in the game, with Chrome or Edge DevTools. See
 "Testing" below.
 
 ## The template is full of placeholders — that is by design
@@ -291,12 +293,17 @@ template and the game disagree.
 ## Testing (manual, in-game)
 
 There is no automated test suite. Follow `docs/testing.md`.
-Start PA with `--devmode` and `--coherent_port=9999`, enable the mod, and watch the
-console of the Coherent UI Debugger.
+Start PA with `--devmode` and `--webview-port=9999` (`--coherent_port` is its deprecated
+alias), enable the mod, attach Chrome or Edge DevTools through `chrome://inspect` to
+`localhost:9999`, and watch the Console.
 
-`docs/testing.md` lists the two errors and warnings that PA prints in normal operation: an
-`Uncaught TypeError: undefined is not a function`, and a deprecation warning about
-synchronous XHR. Each can appear once for each scene. It also lists GWO's
+`docs/testing.md` lists the errors that PA prints in normal operation. On CEF these are
+two `Failed to load resource` errors on the start scene: a 503 from
+`services.planetaryannihilation.net/messages/` and a 404 for a YouTube thumbnail, both
+requested by stock `start.js`. On Coherent they are an
+`Uncaught TypeError: undefined is not a function` and a deprecation warning about
+synchronous XHR, each up to once for each scene. Never point modern DevTools at a
+Coherent client: that can kill the Coherent host process. It also lists GWO's
 `Warning: File not found in mod`, followed by the change that GWO skipped, which is
 expected whenever a card changes a unit that the player does not own. The list exists so
 that a reader does not take these messages for real failures.
