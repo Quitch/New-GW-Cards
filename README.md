@@ -44,7 +44,7 @@ copy the folder, rename it, and fill in the blanks.
   names a menu.
 
 The pages below tell you when you need other tools. The checker needs Node.js, and
-testing needs the free Coherent UI Debugger.
+testing needs Google Chrome or Microsoft Edge, which comes with Windows.
 
 ## Start here
 

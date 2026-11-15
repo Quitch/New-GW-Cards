@@ -6,7 +6,7 @@ Most mistakes in a card mod fail without a message. Find your symptom below, and
 each cause in turn. Most causes link to the details.
 
 Before you start, run the [checker](setup.md#installing-the-checker-recommended). Keep
-the debugger's Console open, as [Checking and testing your mod](testing.md#setting-up)
+the DevTools Console open, as [Checking and testing your mod](testing.md#setting-up)
 describes. That section also lists the messages that PA prints in normal play. Those
 messages are not faults.
 
@@ -17,8 +17,9 @@ shown. Find yours, and follow the link for the details.
 
 | Message                                                       | Normal?    | What it means                                                                                                                                                                                               |
 | ------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Uncaught TypeError: undefined is not a function`             | Yes        | PA prints it on every screen. See [Setting up](testing.md#setting-up).                                                                                                                                      |
-| `Synchronous XMLHttpRequest on the main thread is deprecated` | Yes        | PA prints it on every screen.                                                                                                                                                                               |
+| `Failed to load resource: the server responded with a status` | Main menu  | The main menu's news and video panels print it. Anywhere else, check the address beside it: if it is one of your files, that file is missing. See [Setting up](testing.md#setting-up).                      |
+| `Uncaught TypeError: undefined is not a function`             | Yes        | Only PA's old browser (`--ui-backend=coherent`) prints it, on every screen. See [Setting up](testing.md#setting-up).                                                                                        |
+| `Synchronous XMLHttpRequest on the main thread is deprecated` | Yes        | Only PA's old browser (`--ui-backend=coherent`) prints it, on every screen.                                                                                                                                 |
 | `Warning: File not found in mod`                              | Usually    | A card changed a unit that the player does not own. It is a fault only when the player should own it. See [Setting up](testing.md#setting-up).                                                              |
 | `GWO card failed to load:`                                    | No         | A tech-card ID has no card file of that name, or the file has a typing mistake.                                                                                                                             |
 | `Start card failed to load:`                                  | No         | The same, for a loadout. See [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).                                                                             |
