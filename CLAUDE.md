@@ -468,10 +468,22 @@ fail silently: the text just stays English. The `[ModTranslations]` log line (se
    `modinfo.json`, beside GWO.
 2. **`ui/mods/<identifier>/translations.js`**, in the loader shape from "Code rules"
    (IIFE, `try`/`catch`, `console.error`), whose body is
-   `if (window.ModTranslations) { window.ModTranslations.register("<identifier>"); }`.
+   `if (window.ModTranslations) { window.ModTranslations.register("<identifier>", { languages: ["de"] }); }`.
    The guard keeps the mod working when the framework is absent. That string is a
    **fourth** place the identifier must agree — it is also the folder `register` reads
-   the files from.
+   the files from. `languages` lists the `<lang>.json` files the mod ships, without
+   `.json`. Without it, `register` requests every file in the locale chain, and on CEF
+   each one the mod does not ship logs `ERROR CEF webview resource not found: coui://…`
+   on every page. A name that is missing from the list is skipped silently. A value
+   that is not an array, or one entry that is not a string matching
+   `/^[a-z]+(-[a-z0-9]+)*$/i` (so not `"de.json"`, `"de_DE"`, or `""`), refuses the whole
+   call: a `console.error`
+   (`[ModTranslations] languages must be an array of language names …; <id> not registered`),
+   no files, and no log line. Mod Translations 1.1.0 reads only `root` from the options
+   and ignores `languages`, so with 1.1.0 neither mistake shows: check the list against
+   the files by hand. The release after 1.1.0 honours it, and its README describes it.
+   The list stops only this mod's requests: GWO 7.11.4 registers without one, so a
+   regional locale still logs GWO's own not-found lines.
 3. **`scenes.global_mod_list`, and no scene list.** Add
    `"global_mod_list": ["coui://ui/mods/<identifier>/translations.js"]` beside the three
    existing scene keys. This is the one loader that does not follow the
@@ -480,8 +492,9 @@ fail silently: the text just stays English. The `[ModTranslations]` log line (se
    any scene-list script. A registration from `gw_play`/`gw_start` lands after them, and
    whatever they translated stays English for the life of the page.
 4. **`ui/mods/<identifier>/translations/<lang>.json`**, one per language, shaped
-   `{ "English key": { "message": "…" } }`. A regional locale falls back to its base
-   (`de-AT.json`, then `de.json`). An optional `en-US.json` catalogue is never loaded.
+   `{ "English key": { "message": "…" } }`, and its `<lang>` in the `languages` list.
+   A regional locale falls back to its base (`de-AT.json`, then `de.json`). An optional
+   `en-US.json` catalogue is never loaded.
 
 **Keys.** The key is the text after `!LOC:`, trimmed
 (`<PA>/ui/main/shared/js/localization.js`, the `_.trim` in `loc()`), and nothing else is
@@ -505,8 +518,9 @@ run before `window.ModTranslations` exists. When two mods ship the same key the 
 registration — the higher number — wins everywhere the key appears, and GWO is 200. So
 ship only the user's own keys. `register` never throws, and logs one line per page:
 `[ModTranslations] <id> <lng> {"languages":[…],"added":n,"replaced":n,"invalid":n}`. No
-line means steps 1–3 or the priority; `languages: []` is normal with the game in English
-(no file is loaded for it) and otherwise means the file name or folder; a
+line means steps 1–3, the priority, or a refused `languages` list (its `console.error`
+says so); `languages: []` is normal with the game in English (no file is loaded for it)
+and otherwise means the file name, the folder, or a `languages` list without the file; a
 `console.error` naming the URL means the file: `is not valid JSON` is a syntax error, and
 `must hold a JSON object of entries` means valid JSON of the wrong shape (a list or a
 single value).

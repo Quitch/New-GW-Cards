@@ -91,6 +91,8 @@ each item as you complete it.
 - [ ] Wrote one `translations/<lang>.json` for each language, with every key copied
       exactly from the text after `!LOC:` (see
       [Translating your mod](translating.md)).
+- [ ] Put the name of each translation file, without `.json`, in the `languages` list in
+      `translations.js`.
 
 ---
 
