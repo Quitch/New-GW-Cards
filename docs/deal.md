@@ -29,7 +29,10 @@ them:
   (`inventory.removedUnits()`) do not count as missing, so the card stops being offered
   once it would add nothing. It takes the inventory, not `inventory.units()`.
 - `gwoCard.missingAllUnits(inventory.units(), X)`: true if the player is missing **all**
-  of unit(s) X.
+  of unit(s) X. It counts the units that a loadout removed for good as missing, so it can
+  stay true for the whole war. For a card that grants unit(s) X, decide whether to offer
+  it with `missingObtainableUnit`, and use `missingAllUnits` only to change the chance,
+  as GWO's own unlock cards do.
 - `gwoCard.fieldedUnits(inventory)`: use it in place of `inventory.units()` to include the
   race or add-on units that the player fields. See
   [Cards for another race or an add-on](race-cards.md).

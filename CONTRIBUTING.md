@@ -164,13 +164,18 @@ templates here follow it:
 - `visible`, `describe`, `summarize`, `icon`, `deal`, `buff`, and `dull` are always
   present. A tech card also carries `audio` and `getContext`. A start card carries `hint`
   in place of those two. `keep`, `discard`, and `releaseContext` are optional and almost
-  unused. GWO replaces PA's dealer, so GWO never calls `discard`, and it calls
-  `keep(deal, context)` at deal time rather than when the player keeps the card. Only
-  `releaseContext` behaves as its name says.
+  unused. GWO replaces PA's dealer, so GWO never calls `discard`. It calls
+  `keep(deal, context)` and `releaseContext(context)` only from `dealCard` in
+  `shared/deal.js` and from `gw_start/war_generation.js`, which deal one card on its own:
+  the `X` panel, a co-op AI player's factory card, and a loadout. `chooseCards` in
+  `gw_play/cards_dealer.js`, which deals every hand, calls neither.
 - `deal(system, context, inventory, rng)` controls distribution and returns `{ chance }`.
   A tech card calculates a chance. A start card passes the work to `gwoCard.startCard`.
-  `rng` is the seeded stream of the card, and it is optional. GWO's own docs require
-  `gwoCard.uniqueValue(rng)` in place of `Math.random()`. They also require that `chance`
+  `rng` is the seeded stream of the card, and it is optional, so a card that draws falls
+  back to `_.sample` when it is absent. GWO's own docs require
+  `gwoCard.uniqueValue(rng)` in place of `Math.random()` for a `unique` marker, and
+  `params.unique` makes GWO's `hasCard` treat the card as not held, so it is only for a
+  card that a player may hold more than once. They also require that `chance`
   never depends on `rng`, because the dealer calls `deal()` many times for each hand as a
   test. Only `params` may depend on `rng`.
 - `buff(inventory)` applies the card. It uses `inventory.addUnits(...)` with unit paths,
