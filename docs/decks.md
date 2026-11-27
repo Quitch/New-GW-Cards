@@ -38,14 +38,22 @@ model.gwoDecks.push({
   you can pick single cards without including a whole deck.
 
 A deck needs at least one card between `include` and `cards`. A card appears only once,
-however many times these lists name it. `modinfo.json` already lists `decks.js` on all
-three screens. If the player removes your mod, a war started with your deck deals the GWO
-deck instead.
+however many times these lists name it. `modinfo.json` already lists `decks.js` on the
+two screens that read it. If the player removes your mod, a war started with your deck
+deals the GWO deck instead.
+
+A card of your own that you list only here, and not in `model.gwoCards`, still needs an
+entry in `tech_cards.js`: in
+[`model.gwoCardsToUnits`](tech-cards.md#modelgwocardstounits--tech-card-tooltips-in-tech_cardsjs)
+if it changes units, or in
+[`model.gwoCardsWithoutTooltip`](tech-cards.md#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
+if it does not. GWO reads that entry for the card's tooltip and to decide which races get
+the card.
 
 `decks.js` starts with its example turned off (commented out), because an example deck
 would appear in the picker as soon as the mod is enabled. Remove
 the comment marks and edit the values to use it. If you don't want a deck, you can delete
-`decks.js` and its three lines in `modinfo.json`.
+`decks.js` and its two lines in `modinfo.json`.
 
 ---
 

@@ -23,9 +23,7 @@
       "coui://ui/mods/com.pa.YOURNAME.MODNAME/decks.js"
     ],
     "gw_coop_per_player_loadout": [
-      "coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js",
-      "coui://ui/mods/com.pa.YOURNAME.MODNAME/tech_cards.js",
-      "coui://ui/mods/com.pa.YOURNAME.MODNAME/decks.js"
+      "coui://ui/mods/com.pa.YOURNAME.MODNAME/start_cards.js"
     ]
   },
   "priority": 100,

@@ -8,9 +8,11 @@
 // 1. Rename this file.  The file name without ".js" is the ID of the card, for
 //    example "mym_upgrade_dox.js" has the ID "mym_upgrade_dox".
 //    Start it with a prefix of your own, then "_upgrade_", then the unit.
-//    Never start it with "gwc_" or "gwaio_".  If a card has the same name as
-//    one of the game's or GWO's, the game silently ignores one of the two
-//    files, and which one depends on which mod loads last.  GWO offers a card
+//    Never start it with "gwc_", "gwaio_", "nem_", or "tgw_", and never put
+//    "_start_" anywhere in it (GWO would treat the card as a loadout).  If a
+//    card has the same name as one of the game's or GWO's, the game silently
+//    ignores one of the two files, and which one depends on which mod loads
+//    last.  GWO offers a card
 //    with "_upgrade_" in its ID to MLA players only, unless its
 //    model.gwoCardsToUnits entry in tech_cards.js names Legion, Bugs, Exiles,
 //    or add-on units, or lists the races to offer it to, for example

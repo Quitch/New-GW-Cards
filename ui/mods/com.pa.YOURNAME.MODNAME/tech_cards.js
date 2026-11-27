@@ -24,51 +24,64 @@
       // three lines silence that.  Delete all three when a list uses gwoUnit.
       // eslint-disable-next-line no-unused-vars
       function (gwoUnit) {
-        // THE CARDS THAT THE GAME CAN DEAL
-        if (!model.gwoCards) {
-          model.gwoCards = [];
-        }
-        // Write your IDs inside the brackets of push( ), with a comma between
-        // them and no comma after the last one, for example:
-        //   model.gwoCards.push("mym_damage_bots", "mym_faster_air");
-        model.gwoCards.push();
+        // The game runs the lines inside this function later, after the rest
+        // of the file has finished, so the try at the bottom of the file
+        // cannot catch a mistake in them.  This second try does that.
+        try {
+          // THE CARDS THAT THE GAME CAN DEAL
+          if (!model.gwoCards) {
+            model.gwoCards = [];
+          }
+          // Write your IDs inside the brackets of push( ), with a comma
+          // between them and no comma after the last one, for example:
+          //   model.gwoCards.push("mym_damage_bots", "mym_faster_air");
+          model.gwoCards.push();
 
-        // THE UNITS THAT EACH CARD'S TOOLTIP NAMES
-        // One entry for each card listed above.  Use the same IDs.
-        if (!model.gwoCardsToUnits) {
-          model.gwoCardsToUnits = [];
-        }
-        // Always name the unit itself, never its ammo or its weapon, even when
-        // the card changes only the weapon.  For a card that changes the
-        // commander, use gwoUnit.commander.  You can use a path to a unit, or
-        // a GWO unit ID:
-        //   example path: "/pa/units/land/assault_bot/assault_bot.json"
-        //   example GWO unit ID: gwoUnit.dox
-        // Write your entries inside the brackets of push( ), with a comma
-        // between them and no comma after the last one, for example:
-        //   model.gwoCardsToUnits.push(
-        //     {
-        //       id: "YOUR_CARD_ID_1",
-        //       units: ["AFFECTED_UNIT_PATH_1", gwoUnit.dox, "AND_SO_ON"],
-        //     },
-        //     {
-        //       id: "YOUR_CARD_ID_N",
-        //       units: ["AFFECTED_UNIT_PATH_1", gwoUnit.dox, "AND_SO_ON"],
-        //     }
-        //   );
-        model.gwoCardsToUnits.push();
+          // THE UNITS THAT EACH CARD'S TOOLTIP NAMES
+          // One entry for each tech card that changes units, including a card
+          // that you list only in decks.js.  Use the same IDs.  A card that
+          // changes no units goes in model.gwoCardsWithoutTooltip below
+          // instead.
+          if (!model.gwoCardsToUnits) {
+            model.gwoCardsToUnits = [];
+          }
+          // Always name the unit itself, never its ammo or its weapon, even
+          // when the card changes only the weapon.  For a card that changes
+          // the commander, use gwoUnit.commander.  You can use a path to a
+          // unit, or a GWO unit ID:
+          //   example path: "/pa/units/land/assault_bot/assault_bot.json"
+          //   example GWO unit ID: gwoUnit.dox
+          // Write your entries inside the brackets of push( ), with a comma
+          // between them and no comma after the last one, for example:
+          //   model.gwoCardsToUnits.push(
+          //     {
+          //       id: "YOUR_CARD_ID_1",
+          //       units: ["AFFECTED_UNIT_PATH_1", gwoUnit.dox, "AND_SO_ON"],
+          //     },
+          //     {
+          //       id: "YOUR_CARD_ID_N",
+          //       units: ["AFFECTED_UNIT_PATH_1", gwoUnit.dox, "AND_SO_ON"],
+          //     }
+          //   );
+          model.gwoCardsToUnits.push();
 
-        // OPTIONAL: tech cards that must NOT show an affected-units tooltip.
-        // A card that changes something other than units, for example a card
-        // that only turns on a feature, belongs here INSTEAD of in
-        // model.gwoCardsToUnits above.  If you do not list it here, GWO warns
-        // that the card has no tooltip data.  See docs/tech-cards.md.  Remove the
-        // comment marks (//) from the lines below and edit them if you need
-        // this list.
-        // if (!model.gwoCardsWithoutTooltip) {
-        //   model.gwoCardsWithoutTooltip = [];
-        // }
-        // model.gwoCardsWithoutTooltip.push("YOUR_CARD_ID_1", "YOUR_CARD_ID_N");
+          // OPTIONAL: tech cards that must NOT show an affected-units tooltip.
+          // A card that changes something other than units, for example a
+          // card that only turns on a feature, belongs here INSTEAD of in
+          // model.gwoCardsToUnits above.  If you do not list it here, GWO
+          // warns that the card has no tooltip data.  See docs/tech-cards.md.
+          // Remove the comment marks (//) from the lines below and edit them
+          // if you need this list.
+          // if (!model.gwoCardsWithoutTooltip) {
+          //   model.gwoCardsWithoutTooltip = [];
+          // }
+          // model.gwoCardsWithoutTooltip.push("YOUR_CARD_ID_1", "YOUR_CARD_ID_N");
+        } catch (e) {
+          console.error(e);
+          // If you change "New GW Cards" at the bottom of the file, change it
+          // here too.
+          console.error("New GW Cards: " + (e.stack || e.message || e));
+        }
       }
     );
   } catch (e) {
