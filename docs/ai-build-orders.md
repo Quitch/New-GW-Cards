@@ -29,9 +29,14 @@ Each change is written with these labels:
 - `toBuild`: which entry in the AI's build list to change (not needed for `load` or
   `silence`).
 - `idToMod`: which part of that entry to change, for example `builders` or `priority`.
-- `refId` and `refValue`: optional. Make the change only when the entry already has
-  `refValue` at `refId`. When the entry does not match, GWO looks at its build
-  conditions instead (see [`matchAll`](#matchall--change-every-build-condition)).
+- `refId` and `refValue`: optional. Make the change only when the entry's value at
+  `refId` is exactly `refValue`: the whole value, and for a list, the same names in the
+  same order. Your card sees the entry as the player's other cards left it, so if one of
+  them has already added a name to that list, your `refValue` no longer matches. Only
+  `append`, `prepend`, `replace`, and `unset` use `refId` and `refValue`. The other ops
+  ignore them and change every entry with that `toBuild`. When the entry does not match,
+  GWO looks at its build conditions instead (see
+  [`matchAll`](#matchall--change-every-build-condition)).
 - `matchAll`, `treeOnly`: optional and advanced. See
   [More AI changes](#more-ai-changes).
 
@@ -96,9 +101,10 @@ replace it. Remember the `.json` at the end of `value`: without it, GWO skips th
 file, and nothing reports it.
 
 > **Check that the file really is there before you share the mod.** If a `load` names a
-> file that is missing, the AI never gets the builds in it. The battle starts without
-> them, and the log says `AI file of a load mod not read, skipped:` followed by the file's
-> path.
+> file that is missing, or a file that is not valid JSON, the AI never gets the builds in
+> it. The battle starts without them, and the log says
+> `AI file of a load mod not read, skipped:` followed by the file's path. For a file that
+> is not valid JSON, the brackets at the end of that line say `HTTP 200`.
 
 ## Changing one build entry
 
@@ -206,6 +212,13 @@ inventory.addAIMods([
 It also leaves alone an entry that has any builder outside `value.builders`, or that has
 no `builders`. No `platoon` entry has `builders`, so `silence` on `platoon` changes
 nothing.
+
+On `fabber`, some entries have no `to_build` name. They are the AI's orders to move the
+commander or a fabricator to another planet. `except` cannot name them, so `silence`
+stops them too whenever all their builders are in `value.builders`. For example,
+`Teleport Commander To Planet` has only `Commander` as its builder, and
+`Move Orbital Fabber To Planet` has only `OrbitalFabber`. List `Commander` or
+`OrbitalFabber` in `value.builders` only if you also mean to stop those moves.
 
 `silence` uses only `type`, `op`, `value`, and `treeOnly`. It ignores `toBuild`,
 `idToMod`, `refId`, `refValue`, and `matchAll`. `builders` and `except` must both be lists

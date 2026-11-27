@@ -60,7 +60,7 @@ watching. Look each one up.
 | AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`                                                                                                                                                                         |
 | AI `builders` roles                                     | keys under `unit_map` in `<PA>/pa_ex1/ai/unit_maps/ai_unit_map.json` and `ai_unit_map_x1.json` (TITANS roles such as `SupportCommander` are only in `_x1`), `<PA>/pa_ex1/ai_queller/q_*/unit_maps/*.json`, and `<GWO>` → `pa/ai_penchant/unit_maps/*.json`. `pa_ex1` shadows `<PA>/pa/ai/unit_maps/ai_unit_map.json`: never read that one |
 | Platoon template names (`squad`'s `toBuild`)            | keys under `platoon_templates` in `<PA>/pa_ex1/ai/platoon_templates/*.json`, `<PA>/pa_ex1/ai_queller/q_*/platoon_templates/*.json`, and `<GWO>` → `pa/ai_penchant/platoon_templates/**/*.json`                                                                                                                                            |
-| Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                                                                                                               |
+| Legal `test_type` values for AI build conditions        | the list collected by hand in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                                                                                                       |
 | What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available                                                                                                                                                                |
 | Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                                                                                                                                                                                    |
 | The game's existing wording for a stock term            | `<PA>/ui/main/_i18n/locales/<lang>/*.json`                                                                                                                                                                                                                                                                                                |
@@ -361,26 +361,42 @@ passes. You need that shape to use `new` or `remove`. `template` files are
 
 **How matching works.** `toBuild` must equal an entry's `to_build` exactly — no wildcards,
 no partial matches. `idToMod` is the field on that entry you are changing (`builders`,
-`priority`, …). `refId`/`refValue` restrict the change to entries that already hold that
-value, which is the usual way to tell apart the same `to_build` in the TITANS, Queller,
-and Penchant AI trees — `refId: "priority"` with the priority that tree uses.
+`priority`, …). `refId`/`refValue` restrict the change to entries whose `refId` field
+`_.isEqual`s `refValue` (`referee_ai.js`, `forEachMatchingTarget`): the whole current
+value, list order included, as the earlier descriptors in the hand left it. A card that
+appends to `builders` first stops a later card's `refValue: ["X"]` from matching. Only
+`append`, `prepend`, `replace`, and `unset` read `refId`/`refValue`; `remove`, `new`,
+`squad`, and `silence` ignore them and change every entry with that `to_build`, in every
+AI tree. And `refId: "priority"` cannot pick out the TITANS tree from the others:
+every TITANS combination of build kind, `to_build`, and `priority` also appears in GWO's
+Penchant files.
 
 **What a missing or wrong field does.** Nothing, silently: a `toBuild` no file contains;
 `append`/`prepend`/`replace`/`unset` with no `idToMod`; `replace` against a field the
-entry does not already have (it cannot create one); `remove` whose `value` is not an
-exact copy of a whole test object; `squad` naming a template that does not exist;
-`silence` on `platoon` (no `platoon_builds` entry has `builders`). Damage, silently: a
-missing `toBuild` matches every entry with no `to_build` (fabber task entries); a missing
-`value` on `append`, `prepend`, `replace`, `new`, or `squad` writes `undefined` (or `NaN`,
-or a string ending in `undefined`) into the matched entries; `silence` with no `except`
-zeroes every entry in scope. A message: `silence` with no `value` logs
-`applyAiMods: op threw`; `load` with no or an unknown `type` logs
-`Invalid AI file type in load mod`; an unknown `op` logs `Invalid AI mod operation`.
+entry does not already have (it cannot create one; under `matchAll`, or with a `refId`
+that a test matches, it falls through to the build conditions and changes each matched
+test whose field is truthy); `remove` whose `value` is not an exact copy of a whole test
+object; `squad` naming a template that does not exist; `silence` on `platoon` (no
+`platoon_builds` entry has `builders`). Damage, silently: a missing `toBuild` matches
+every entry with no `to_build` (fabber task entries); a missing `value` on `append`,
+`prepend`, `replace`, `new`, or `squad` writes `undefined` (or `NaN`, or a string that
+starts with `undefined` for `prepend` and ends with it for `append`) into the matched
+entries; `silence` with no `except` zeroes every entry in scope. A `new` with `idToMod`
+and no `value` pushes `undefined` into every test group, and a later `append`, `prepend`,
+`replace`, or `unset` that falls through to those tests (by `matchAll` or `refId`) then
+throws on it: `applyAiMods: op threw` names that later descriptor, not the `new`. A
+message: `silence` with no `value` logs `applyAiMods: op threw`; `load` with no or an
+unknown `type` logs `Invalid AI file type in load mod`; an unknown `op` logs
+`Invalid AI mod operation`.
 
 **`op: "silence"`**. `value` is `{ builders: [...], except: [...] }`, both string
 arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
 `builders` are **all** in `value.builders`, unless its `to_build` is in `value.except`. An
-entry with any builder outside the list, or with no `builders`, is untouched. It ignores
+entry with any builder outside the list, or with no `builders`, is untouched. `except`
+matches `to_build` only, so on `fabber` it cannot keep the entries that have no `to_build`
+(the planet moves and teleports, such as `Teleport Commander To Planet` with builder
+`Commander` and `Move Orbital Fabber To Planet` with `OrbitalFabber`): they are zeroed
+whenever all their builders are listed. It ignores
 `toBuild`, `idToMod`, `refId`, `refValue`, and `matchAll`, and it reads `treeOnly`. Use it
 when a card changes what a builder can build and the AI must stop ordering everything else
 from that builder. A missing `value` throws, so `applyAiMods` logs
@@ -392,9 +408,15 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 `pa/ai_tech/factory_builds/my_card.json` shipped alongside your `ui` folder.
 
 - `value` must include the `.json`.
-- **If that file is missing, its builds are lost.** The referee logs
-  `AI file of a load mod not read, skipped:` with the path, and the battle starts without
-  that file's builds. Confirm the file exists on disk before shipping a `load`.
+- **If that file is missing or is not valid JSON, its builds are lost.** The referee logs
+  `AI file of a load mod not read, skipped:` with the path and, in brackets, the reason:
+  an HTTP error status for a missing file, and `HTTP 200` for invalid JSON (`$.getJSON`
+  rejects the parse). The battle starts without that file's builds. Confirm the file
+  exists on disk and parses before shipping a `load`. Invalid JSON in any file under
+  `/pa/ai_tech/` also logs
+  `Galactic War Overhaul (GWO): AI load files not read before the hire:` once per Fight:
+  GWO's early read of every load file (`gw_play/referee.js`) fails as a whole, and the
+  referee reads each file a `load` names during the hire instead.
 - Name it after your card ID. A name another mod also uses replaces that mod's file.
 - GWO walks a loaded file like any other build file, so every descriptor of that `type`
   lands on it — your card's own, and those of every other card in the hand.
