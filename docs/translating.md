@@ -133,8 +133,11 @@ Text that needs a key:
 - `name` and `tooltip` in a deck.
 
 Text that needs no key: the line "Adds a new slot for another technology." that
-`gwoCard.upgradeCard` adds to a description. The game's own translation files already
-translate it.
+`gwoCard.upgradeCard` adds to a description. The game's own translation files translate
+it in most languages. In Czech, Danish, Finnish, Hungarian, Norwegian, Brazilian
+Portuguese, Romanian, Swedish, Turkish, and Ukrainian they don't, so players see it in
+English. Don't translate it yourself: it is the game's own text, so your translation would
+replace it for every mod that uses it.
 
 **Put only your own text in your files.** When two mods translate the same key, the mod
 with the higher `priority` number wins everywhere that the key appears. GWO's `priority`
@@ -178,11 +181,15 @@ If something is wrong, the result tells you where to look:
 - **`languages` is empty.** If the game's language is English, this is normal: Mod
   Translations loads no files for English. Otherwise the game did not find your file.
   Check the name of the `translations` folder, the file's name against the `locales`
-  folder, and the identifier in `translations.js`.
-- **`added` is `0`.** If `invalid` is `0` too, the file was found but is empty.
-  Otherwise, see the `invalid` point below.
-- **A red error that names your file.** The file is not valid JSON. The usual cause is a
-  missing comma or quotation mark.
+  folder, and the identifier in `translations.js`. A file that is completely empty also
+  counts as not found.
+- **`added` is `0`.** If `invalid` is `0` too, the file was found but holds no entries:
+  only `{}`. Otherwise, see the `invalid` point below.
+- **A red error that names your file and says `is not valid JSON`.** The usual cause is
+  a missing comma or quotation mark.
+- **A red error that names your file and says `must hold a JSON object of entries`.** The
+  file is valid JSON, but it is the wrong shape: a list (`[ … ]`) or a single value
+  instead of `{ … }`. Put the entries inside `{` and `}`.
 - **`invalid` is above `0`.** An entry has an empty or missing `message`, or is written
   without `{ "message": … }`, such as `"Bot Damage": "Bot-Schaden"`. Or its key contains
   `;;` or `::`.

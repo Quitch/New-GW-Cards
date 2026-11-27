@@ -56,6 +56,20 @@ you probably have one of them already. You set it up once.
    `--webview-port=9999` lets DevTools connect to PA, and `--devmode` turns on the test
    panel that you use below. If your launch options already say `--coherent_port=9999`,
    that also works: it is the old name for the same option.
+
+   > **`--devmode` costs you badges.** GWO counts it as cheating. Every war that you host
+   > and open while it is set is saved as cheated, for good, and never earns a badge, even
+   > after you remove the option. That includes your normal wars, not only your test
+   > wars. So either remove `--devmode` before you open one of your own wars, or keep your
+   > test wars apart: also add `--localstorageurl=modtest`, which makes PA use a separate
+   > profile folder. While both options are set, you see only your test wars. Remove both
+   > to get back to your own.
+   >
+   > A new profile starts with no mods turned on and with the game's default settings.
+   > Before you test in it, open **Community Mods**, turn on your mod, and check that
+   > Galactic War Overhaul is on too (and Mod Translations, if your mod uses it). If you
+   > test translations, set the game's language again in that profile.
+
 2. In Chrome, go to `chrome://inspect`. In Edge, go to `edge://inspect`.
 3. Next to **Discover network targets**, click **Configure…**, add `localhost:9999`, and
    click **Done**.
@@ -76,12 +90,13 @@ Keep the Console open while you test, and watch for red errors. The DevTools win
 connected as you move from screen to screen, so you do not need to click **inspect**
 again until you restart PA.
 
-PA prints these two messages on the main menu in normal play. They are **not** a problem.
+PA prints these messages on the main menu in normal play. They are **not** a problem.
 They come from the news and video panels on the main menu, and the numbers at the end can
 differ:
 
 - ERROR: _Failed to load resource: the server responded with a status of 503 ()_
 - ERROR: _Failed to load resource: the server responded with a status of 404 ()_
+- ERROR: _fetchAnnouncements failed_
 
 > **If you start PA with `--ui-backend=coherent`, do not use Chrome or Edge.** That option
 > makes PA use its old browser, and DevTools can break that browser's connection. Use the
@@ -100,6 +115,9 @@ Learn these:
   loading. The usual cause is a misspelled ID, an example ID that you copied without
   changing it, or a typing mistake that the [checker](#checking-your-work) would find.
   The first message is for a tech card: the game skips that card, and the war continues.
+  It can also name a loadout: on the war screen, for a loadout in the player's hand, and
+  in a co-op war, when the loadout lists are loaded. The cause is then a missing or broken
+  loadout file.
   The second is for a loadout: that loadout cannot be used. The game itself can show the
   third message as well as one of the first two. See the warning under
   [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).

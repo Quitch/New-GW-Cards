@@ -268,7 +268,10 @@ template and the game disagree.
   inside another folder. The config then permits again, one rule at a time, the post-ES5
   features that Chrome 40 really contains. Each of those rules names the Chrome version
   that added the feature. **That list of permitted features is the authoritative answer to
-  "may I use X in a card?". A feature that is absent from it is forbidden.** The config
+  "may I use X in a card?" for language features and built-ins. A feature that is absent
+  from it is forbidden.** It says nothing about browser APIs: `globals.browser` declares
+  Web APIs that Chrome 40 lacks, such as `fetch` and `URLSearchParams`, so check those
+  against Chrome 40 by hand. The config
   forbids everything first and then permits, so it also catches a missing _builtin_, such
   as `Object.assign` or `Array.from`. A missing builtin fails at call time rather than at
   parse time, so a syntax-only check does not find it. The config restates these bans with
@@ -317,7 +320,8 @@ alias), enable the mod, attach Chrome or Edge DevTools through `chrome://inspect
 `docs/testing.md` lists the errors that PA prints in normal operation. On CEF these are
 two `Failed to load resource` errors on the start scene: a 503 from
 `services.planetaryannihilation.net/messages/` and a 404 for a YouTube thumbnail, both
-requested by stock `start.js`. On Coherent they are an
+requested by stock `start.js`, and stock `start.js`'s own `fetchAnnouncements failed`
+when the announcements feed does not load. On Coherent they are an
 `Uncaught TypeError: undefined is not a function` and a deprecation warning about
 synchronous XHR, each up to once for each scene. Never point modern DevTools at a
 Coherent client: that can kill the Coherent host process. It also lists GWO's
