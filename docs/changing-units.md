@@ -343,8 +343,8 @@ for you.
 > **`clone` is advanced. Avoid it.** It is easy to get wrong, and one of the everyday ops
 > can nearly always do the same work more safely.
 
-GWO has no `eval` op. A change with `op: "eval"` is skipped, and the Console shows
-`Invalid operation in mod`.
+GWO after v7.11.4 has no `eval` op. A change with `op: "eval"` is skipped. If its file
+is in play, the Console shows `Invalid operation in mod`.
 
 ---
 

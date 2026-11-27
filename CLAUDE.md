@@ -286,8 +286,8 @@ function in its `ops` table.
 - **Follow a value that is a file name with `op: "tag"`** on the same `file`, at the
   path where the file name now sits. See the section below — this is the failure that is
   hardest to spot.
-- **`clone` is advanced — avoid it**, as `docs/changing-units.md` says. GWO has no
-  `eval` op.
+- **`clone` is advanced — avoid it**, as `docs/changing-units.md` says. GWO up to
+  v7.11.4 also has `eval`; Quitch/GW-AI-Overhaul#723 removes it for the next release.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
   never gets it, silently. A loadout's `dulls` forbid their units for the whole war.
