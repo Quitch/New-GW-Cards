@@ -69,11 +69,18 @@ define(function () {
 
       var saved =
         config && _.isArray(config.startCards) ? config.startCards : [];
-      self.startCards(
-        _.filter(saved, function (card) {
-          return _.isPlainObject(card) && _.isString(card.id);
-        })
-      );
+      var usable = _.filter(saved, function (card) {
+        return _.isPlainObject(card) && _.isString(card.id);
+      });
+      if (usable.length < saved.length) {
+        console.warn(
+          "Ignoring " +
+            (saved.length - usable.length) +
+            ' entries that are not {"id": "..."} in loadout unlock record ' +
+            LS_KEY
+        );
+      }
+      self.startCards(usable);
       loading = false;
     },
 
