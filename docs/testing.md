@@ -64,6 +64,11 @@ you probably have one of them already. You set it up once.
    > test wars apart: also add `--localstorageurl=modtest`, which makes PA use a separate
    > profile folder. While both options are set, you see only your test wars. Remove both
    > to get back to your own.
+   >
+   > A new profile starts with no mods turned on and with the game's default settings.
+   > Before you test in it, open **Community Mods**, turn on your mod, and check that
+   > Galactic War Overhaul is on too (and Mod Translations, if your mod uses it). If you
+   > test translations, set the game's language again in that profile.
 
 2. In Chrome, go to `chrome://inspect`. In Edge, go to `edge://inspect`.
 3. Next to **Discover network targets**, click **Configure…**, add `localhost:9999`, and
@@ -110,8 +115,9 @@ Learn these:
   loading. The usual cause is a misspelled ID, an example ID that you copied without
   changing it, or a typing mistake that the [checker](#checking-your-work) would find.
   The first message is for a tech card: the game skips that card, and the war continues.
-  In a co-op war it can also name a loadout, when a co-op player's loadout list or an AI
-  player's loadouts are loaded; the cause is then a missing or broken loadout file.
+  It can also name a loadout: on the war screen, for a loadout in the player's hand, and
+  in a co-op war, when the loadout lists are loaded. The cause is then a missing or broken
+  loadout file.
   The second is for a loadout: that loadout cannot be used. The game itself can show the
   third message as well as one of the first two. See the warning under
   [`model.gwoStartingCards`](loadouts.md#modelgwostartingcards--unlocked-loadouts-in-start_cardsjs).

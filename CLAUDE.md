@@ -106,8 +106,9 @@ If the user has no mod folder yet, create one before writing any card:
    author-facing explanation.
 
 The `scenes` addresses and the `ui/mods/` folder name must agree, or the game loads
-none of the mod's scripts; the only sign is stock `loadScript`'s
-`Failed loading <url> with 404` for each address, in a console the user is not watching. Keep the `identifier` in `modinfo.json` the same as them too:
+none of the mod's scripts; the only signs are console errors naming each address, such
+as stock `loadScript`'s `Failed loading <url> with 404`, in a console the user is not
+watching. Keep the `identifier` in `modinfo.json` the same as them too:
 the game would accept a different one (GWO's own dev checkout is `…-dev` beside an
 unsuffixed folder), but one name in three places is the rule the guide teaches. A mod that
 ships translations has a fourth: the string passed to `ModTranslations.register` (see
@@ -500,7 +501,8 @@ silent failure to its cause.
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`,
 `!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, `YOUR-DECK-ID` and
-`!LOC:ONE LINE DESCRIBING THE DECK.` in `decks.js`, and in `modinfo.json`
+`!LOC:ONE LINE DESCRIBING THE DECK.` in `decks.js`, `com.pa.YOURNAME.MODNAME` anywhere
+(including the `bank.js` address in a loadout card's `define`), and in `modinfo.json`
 `CHANGE THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release, `#.#.#`,
 `yyyy-mm-dd`, `THREAD_ID`, and `SOME_PUBLIC_URL_HERE`); a tech card's `deal` returns a
 chance above `0` that does not depend on its optional fourth argument `rng` (only `params`

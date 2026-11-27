@@ -181,9 +181,10 @@ If something is wrong, the result tells you where to look:
 - **`languages` is empty.** If the game's language is English, this is normal: Mod
   Translations loads no files for English. Otherwise the game did not find your file.
   Check the name of the `translations` folder, the file's name against the `locales`
-  folder, and the identifier in `translations.js`.
-- **`added` is `0`.** If `invalid` is `0` too, the file was found but is empty.
-  Otherwise, see the `invalid` point below.
+  folder, and the identifier in `translations.js`. A file that is completely empty also
+  counts as not found.
+- **`added` is `0`.** If `invalid` is `0` too, the file was found but holds no entries:
+  only `{}`. Otherwise, see the `invalid` point below.
 - **A red error that names your file and says `is not valid JSON`.** The usual cause is
   a missing comma or quotation mark.
 - **A red error that names your file and says `must hold a JSON object of entries`.** The
