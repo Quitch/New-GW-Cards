@@ -51,8 +51,24 @@ define(function () {
         return;
       }
 
-      var config = JSON.parse(bankJson);
-      self.startCards(config.startCards);
+      // A saved record that is damaged, for example one typed by hand with a
+      // mistake in it, counts as no unlocks.  Without this check, a damaged
+      // record would stop every one of your loadouts from loading.
+      var config;
+      try {
+        config = JSON.parse(bankJson);
+      } catch (e) {
+        console.warn(
+          "Ignoring unreadable loadout unlock record " +
+            LS_KEY +
+            ": " +
+            ((e && e.stack) || e)
+        );
+      }
+
+      self.startCards(
+        config && _.isArray(config.startCards) ? config.startCards : []
+      );
       loading = false;
     },
 
