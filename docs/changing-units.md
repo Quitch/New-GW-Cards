@@ -91,13 +91,24 @@ The everyday `op` choices:
 When the `value` of `push`, `prepend`, or `pull` is itself a list, the game adds or
 removes its entries one by one. It does not add the list as one entry.
 
+Two of these ops have limits:
+
+- `pull` can take out a number or a piece of text. It cannot take out an entry that is a
+  set of labelled values, such as a tool (`{ spec_id: … }`). Such an entry never matches,
+  so nothing is taken out, and nothing reports it.
+- `merge` works on the top level only. If one of your labelled values holds a set of
+  labelled values of its own, that whole set replaces the old one. The two sets are not
+  merged.
+
 There are three more: `wipe`, `clone`, and `eval`. See
 [More unit-stat ops](#more-unit-stat-ops--wipe-clone-and-eval).
 
-> **The order in which you write changes does not matter.** Across every card in the
-> player's hand, the game makes every `clone` first, then every `replace`, then every
-> `multiplyOrCreate`, then every `multiply`, then every `add`, and all the other ops after
-> those. Never write two changes that only work in a particular order.
+> **Five ops run in a fixed order, not in the order that you write them.** Across every
+> card in the player's hand, the game makes every `clone` first, then every `replace`,
+> then every `multiplyOrCreate`, then every `multiply`, then every `add`. All the other
+> ops run after those, in the order that you write them. So write a `tag` after the
+> change that it tags. Apart from that, never write two changes that only work in a
+> particular order.
 
 ### Finding the value that you want to change
 
@@ -132,8 +143,10 @@ writes points at the original file, not at the player's copy. Nothing seems brok
 weapon still fires, and the unit still spawns. But none of the player's other cards apply
 to it: no health card, no damage card, nothing. There is no warning.
 
-The fix is a second entry with the same `file`, the same `path`, `op: "tag"`, and no
-`value` at all.
+The fix is a second entry with the same `file`, `op: "tag"`, and no `value` at all. Its
+`path` is where the file name now sits. After a `replace`, that is the same `path`. After
+a `push` or a `prepend`, it is the new entry's own label, such as `tools.1.spec_id`, not
+the list (`tools`). Write the `tag` after the change that writes the file name.
 
 ```js
 inventory.addMods([
@@ -157,8 +170,11 @@ inventory.addMods([
 | `ammo_id`, or `ammo_id.<number>.id` when `ammo_id` is a list               | what a weapon fires                       |
 | `spawn_unit_on_death`                                                      | a unit left behind when this is destroyed |
 | `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec`              | the explosion on death                    |
-| `base_spec`                                                                | the file this one inherits from           |
 | `replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` | rarer, same rule                          |
+
+Don't change `base_spec`, the file that a unit takes its other values from. GWO has
+already folded that file into the unit before your card runs, so a new `base_spec` does
+not work, and a `tag` on it shows a warning.
 
 `tag` works only on a single file name. `replaceable_units` and `buildable_projectiles`
 are lists, so tag each entry that you wrote. Name the entry by its number, for example
@@ -171,6 +187,13 @@ count like this: open the unit's file in the game install, count the tools that 
 already has, and your pushed tool takes the next number. The Dox has one tool (number
 `0`), so the pushed tool is number `1`. A `prepend` goes in at `0` instead, and moves the
 other tools along by one.
+
+**That number is right only if no other card adds a tool to the same unit.** The `push`
+and `prepend` changes of every card in the hand go into one list, so another card's tool
+can take your number, or yours can take its number. Which tag then misses depends on the
+order of the cards in the hand. GWO's own cards add a tool to the Advanced Fabrication
+Bot, Avenger, Bluehawk, Catapult, Horsefly, Inferno, Solar Array, Stingray, Storm,
+Stryker, and Vanguard. Choose another unit if you can.
 
 **The file that you borrow must be in play.** A tag on a file that the player has no copy
 of leaves the tool with no target, and the tool then disappears completely. That is worse
@@ -240,7 +263,7 @@ names the three sets that cards change most often:
 | Set                          | What it covers                                             |
 | ---------------------------- | ---------------------------------------------------------- |
 | `gwoCard.paths.navigation`   | how a unit moves: speed, braking, acceleration and turning |
-| `gwoCard.paths.damage`       | a weapon's direct damage and its splash damage             |
+| `gwoCard.paths.damage`       | the direct damage and splash damage of a weapon's ammo     |
 | `gwoCard.paths.energyWeapon` | an energy weapon's ammo capacity, demand and cost per shot |
 
 ```js
@@ -248,6 +271,30 @@ inventory.addMods(
   gwoCard.mods(gwoUnit.dox, "multiply", gwoCard.paths.navigation, 1.25)
 );
 ```
+
+Use `gwoCard.paths.damage` on the ammo file, such as `gwoUnit.doxAmmo`, not on the
+weapon. The weapon file has no damage values, so the change does nothing there, and
+nothing reports it.
+
+To cut what a weapon's shots cost with `gwoCard.paths.energyWeapon`, wrap the change in
+`gwoCard.ammoCost(…)`, as the Improved Energy Weapons card does:
+
+```js
+inventory.addMods(
+  gwoCard.ammoCost(
+    gwoCard.flatMapMods(
+      gwoGroup.energyWeapons,
+      "multiply",
+      gwoCard.paths.energyWeapon,
+      0.75
+    )
+  )
+);
+```
+
+`gwoCard.ammoCost` makes GWO skip the change on a weapon whose ammo refills over time.
+That ammo costs nothing, so the cut only makes the weapon fire more often. A weapon that
+fires in long bursts can then keep firing and ignore the player's orders.
 
 A list of paths that you write yourself works in the same way, and so does
 `gwoCard.flatMapMods`.
@@ -286,7 +333,8 @@ for you.
 
 - `wipe`: despite its name, this does not clear the value. It finds and replaces text
   inside a text value. `value` is a pair, `[what to find, what to put in its place]`. A
-  single value on its own means "delete every occurrence of this".
+  single value on its own means "delete every occurrence of this". Used on a number,
+  `wipe` turns the number into text. Use `replace` to change a number.
 - `clone`: copies whatever is at `path` into the file named by `value`. If nothing is at
   `path`, it copies nothing, and the Console shows `clone: attribute is missing or null`.
 - `eval`: runs `value` as raw JavaScript. The game gives you the thing at `path` as

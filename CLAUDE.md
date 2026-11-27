@@ -214,14 +214,21 @@ function in its `ops` table.
   nothing; if the stat is not a number it warns and leaves it alone. `multiplyOrCreate`
   sets it to `value` when it is absent. `add` also creates when absent, and concatenates
   when the value is a string.
-- **Ops do not run in the order you write them.** Across every card in the hand, GWO runs
-  all `clone` first, then `replace`, then `multiplyOrCreate`, then `multiply`, then `add`;
-  everything else follows afterwards (`orderOfOperations`). So another card's `replace`
+- **Five ops do not run in the order you write them.** Across every card in the hand, GWO
+  runs all `clone` first, then `replace`, then `multiplyOrCreate`, then `multiply`, then
+  `add`; everything else follows afterwards, in written order: the hand's cards in turn,
+  each card's descriptors in turn (`orderOfOperations`). So another card's `replace`
   still lands before your `multiply`, and a `clone` copies its source before any card's
-  `replace`, `multiply`, or `add` reaches it. Never write two ops that depend on running
-  in sequence.
+  `replace`, `multiply`, or `add` reaches it. A `tag` written before the `push` or
+  `prepend` it tags warns and leaves the new entry untagged, so write it after. Never
+  write two of the five ordered ops so that they depend on running in sequence.
 - **`wipe` is a string substitution, not a delete.** `value` is `[from, to]`; a bare value
-  means "delete every occurrence of it".
+  means "delete every occurrence of it". It stringifies a value that is not a string
+  first, so `wipe` on a number leaves a string.
+- **`pull` never removes an object entry, and `merge` is shallow.** `pull` is `_.pull`,
+  which compares by identity, and the spec is a deep copy, so only a number or string
+  entry can match. `merge` is `_.assign`: a nested object in `value` replaces the
+  existing one whole.
 - **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
   creates missing intermediate levels for you, except for `multiply`, `tag`, and `clone`,
@@ -257,8 +264,9 @@ function in its `ops` table.
   intended behaviour. It only indicates a bug when the file _should_ have been reachable:
   a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
-- **Follow a value that is a file name with `op: "tag"`** on the same `file` and
-  `path`. See the section below — this is the failure that is hardest to spot.
+- **Follow a value that is a file name with `op: "tag"`** on the same `file`, at the
+  path where the file name now sits. See the section below — this is the failure that is
+  hardest to spot.
 - **`clone` and `eval` are advanced — avoid them**, as `docs/changing-units.md` says.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
@@ -276,19 +284,31 @@ player's entire hand misses it. The game logs nothing. This has shipped broken i
 itself more than once.
 
 Every mod whose `value` is a spec reference needs a second mod, `op: "tag"`, on the same
-`file` and `path` and with no `value`. The reference fields are the ones `tagSpec`
-renames: `base_spec`, `tools[].spec_id`, `ammo_id` (or `ammo_id[].id` when it is a list),
-`replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` (only when it
-is a string), `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec`,
-`spawn_unit_on_death`. The `tag` op takes only a string, so a list field
-(`replaceable_units`, `buildable_projectiles`) is tagged one entry at a time by index
-(`buildable_projectiles.0`); `tag` on the list itself warns and changes nothing.
+`file`, with no `value`, written after it. Its `path` is where the reference now sits:
+the same `path` after a `replace`, and the new entry's own field after a `push` or
+`prepend` (`tools.1.spec_id`, never `tools`, which warns and changes nothing). The
+reference fields are the ones `tagSpec` renames: `tools[].spec_id`, `ammo_id` (or
+`ammo_id[].id` when it is a list), `replaceable_units`, `buildable_projectiles`,
+`factory.initial_build_spec` (only when it is a string), `death_weapon.ground_ammo_spec`,
+`death_weapon.air_ammo_spec`, `spawn_unit_on_death`. The `tag` op takes only a string,
+so a list field (`replaceable_units`, `buildable_projectiles`) is tagged one entry at a
+time by index (`buildable_projectiles.0`); `tag` on the list itself warns and changes
+nothing. `tagSpec` also renames `base_spec`, but a card cannot change one: GWO's `load()`
+in `gw_play/specs.js` flattens any spec that holds `base_spec` each time it reads it, so
+a written `base_spec` is merged under values the spec already has, and its `tag` finds
+no `base_spec` left and warns.
 
 Two things follow.
 
 - **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so you tag a
   tool pushed onto a two-tool unit at `tools.2.spec_id`. Read the count from the unit's
-  own spec under `<PA>`, not from the card.
+  own spec under `<PA>`, not from the card. That count holds only while no other card in
+  the hand pushes or prepends to the same unit's `tools`: every card's `push`/`prepend`
+  share one written-order list, so another card's tool shifts your index or yours shifts
+  its index, depending on hand order. GWO's own cards add a tool to the Advanced
+  Fabrication Bot, Avenger, Bluehawk, Catapult, Horsefly, Inferno, Solar Array,
+  Stingray, Storm, Stryker (a `prepend`), and Vanguard; steer the user away from those
+  units.
 - **The target must exist tagged**, or the tag points at nothing and the game loses the
   tool outright — a worse outcome than leaving it untagged. GW already tags a file the
   unit references; it does not tag one borrowed from another unit, which therefore needs
