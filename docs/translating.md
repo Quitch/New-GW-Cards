@@ -42,7 +42,8 @@ and change `"de", "fr"` to your own languages, as the next section describes:
     if (window.ModTranslations) {
       window.ModTranslations.register("<your identifier>", {
         // The names of your files in the translations folder, without
-        // ".json".  A file that is not in this list is not read.
+        // ".json".  From the Mod Translations version after 1.1.0, a file
+        // that is not in this list is not read.
         languages: ["de", "fr"],
       });
     }
@@ -73,9 +74,14 @@ _Failed to load resource: the server responded with a status of 404 (Not Found)_
 mod still works, but the errors look like a fault. The list stops them.
 
 **The list works from the version of Mod Translations after 1.1.0.** Version 1.1.0 and
-older ignore it: they read your files as if there were no list, so the errors stay, and
-the two mistakes below change nothing. Write the list anyway. Your mod works with every
-version, and the errors stop when players get the newer one.
+older ignore it: they read your files as if there were no list, so the errors stay. Write
+the list anyway, so that the errors stop when players get the newer version.
+
+While you have 1.1.0, the [test](#testing-your-translations) cannot check the list. Your
+text shows translated even when the list has one of the mistakes below. With the newer
+version, the same mistake turns some or all of your text back to English. So check the
+list by hand: each name is the name of one of your files without `.json`, and each file
+has its name in the list.
 
 The list stops only your own mod's errors. Another mod that ships translations without a
 list, such as GWO 7.11.4, still shows the same red error for its own files.
@@ -213,10 +219,10 @@ If something is wrong, the result tells you where to look:
   `global_mod_list`, the address there does not contain your identifier, Mod Translations
   is not enabled, or your `priority` is `50` or below.
 - **No `[ModTranslations]` line with your identifier, and a red error that says
-  `languages must be an array of language names`.** A name in the
-  [`languages` list](#the-languages-list) is not a language name: it ends in `.json`, or
-  it has a space or a `_` in it. Mod Translations reads none of your files until you
-  correct it.
+  `languages must be an array of language names`.** The
+  [`languages` list](#the-languages-list) is wrong. A name ends in `.json`, has a space
+  or a `_` in it, or is empty (`""`). Or the names are not inside `[` and `]`, as in
+  `languages: "de"`. Mod Translations reads none of your files until you correct it.
 - **`languages` is empty.** If the game's language is English, this is normal: Mod
   Translations loads no files for English. Otherwise the game did not find your file.
   Check the name of the `translations` folder, the file's name against the `locales`

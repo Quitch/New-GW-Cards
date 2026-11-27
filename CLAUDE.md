@@ -474,15 +474,16 @@ fail silently: the text just stays English. The `[ModTranslations]` log line (se
    the files from. `languages` lists the `<lang>.json` files the mod ships, without
    `.json`. Without it, `register` requests every file in the locale chain, and on CEF
    each one the mod does not ship logs `ERROR CEF webview resource not found: coui://…`
-   on every page. A name that is missing from the list is skipped silently. One entry
-   that is not a language name (`/^[a-z]+(-[a-z0-9]+)*$/i`, so not `"de.json"` or
-   `"de_DE"`) refuses the whole call: a `console.error`
+   on every page. A name that is missing from the list is skipped silently. A value
+   that is not an array, or one entry that is not a string matching
+   `/^[a-z]+(-[a-z0-9]+)*$/i` (so not `"de.json"`, `"de_DE"`, or `""`), refuses the whole
+   call: a `console.error`
    (`[ModTranslations] languages must be an array of language names …; <id> not registered`),
-   no files, and no log line. The option came with Mod-Translations #18 (merged to
-   `develop` on 2026-11-27). Mod Translations 1.1.0 ignores it, and its README does not
-   describe it, so read `develop` for it until the next release. The list stops only
-   this mod's requests: GWO 7.11.4 registers without one, so a regional locale still
-   logs GWO's own not-found lines.
+   no files, and no log line. Mod Translations 1.1.0 reads only `root` from the options
+   and ignores `languages`, so with 1.1.0 neither mistake shows: check the list against
+   the files by hand. The release after 1.1.0 honours it, and its README describes it.
+   The list stops only this mod's requests: GWO 7.11.4 registers without one, so a
+   regional locale still logs GWO's own not-found lines.
 3. **`scenes.global_mod_list`, and no scene list.** Add
    `"global_mod_list": ["coui://ui/mods/<identifier>/translations.js"]` beside the three
    existing scene keys. This is the one loader that does not follow the
