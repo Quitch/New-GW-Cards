@@ -425,8 +425,11 @@ exists in the source — a stale key is silent. An entry whose `message` is empt
 or not a string (including a bare string value, `"Bot Damage": "Bot-Schaden"`), or a key
 containing `;;` or `::`, is skipped and counted `invalid`. Keep numbers and `<br>`
 identical in the message. The "Adds a new slot for another technology." line that
-`upgradeCard` appends (`withSlot` in `<GWO>` `shared/cards.js`) is GWO's key, already
-translated — do not ship it.
+`upgradeCard` appends (`withSlot` in `<GWO>` `shared/cards.js`) is the base game's key
+(`<PA>/ui/main/_i18n/locales/<lang>/galactic_war.json`) — do not ship it, because a
+translation of a shared key changes it for every mod. The base game translates it in
+most locales but not in `cs-CZ`, `da`, `fi`, `hu-HU`, `no`, `pt-BR`, `ro`, `sv`, `tr-TR`,
+or `uk`, where it stays English.
 
 **Priority.** Keep `priority` above 50 (the template's 100 is right): Community Mods
 loads in ascending `priority`, Mod Translations is 50, and at 50 or below the script can
@@ -434,8 +437,11 @@ run before `window.ModTranslations` exists. When two mods ship the same key the 
 registration — the higher number — wins everywhere the key appears, and GWO is 200. So
 ship only the user's own keys. `register` never throws, and logs one line per page:
 `[ModTranslations] <id> <lng> {"languages":[…],"added":n,"replaced":n,"invalid":n}`. No
-line means steps 1–3 or the priority; `languages: []` means the file name or folder; a
-`console.error` naming the URL means invalid JSON.
+line means steps 1–3 or the priority; `languages: []` is normal with the game in English
+(no file is loaded for it) and otherwise means the file name or folder; a
+`console.error` naming the URL means the file: `is not valid JSON` is a syntax error, and
+`must hold a JSON object of entries` means valid JSON of the wrong shape (a list or a
+single value).
 
 **Unit names in translated text.** The unit's own spec decides. Read `display_name` from
 `<PA>/pa_ex1/units/**` first, then `<PA>/pa/units/**`. Without `!LOC:` (`"Dox"`, `"Ant"`,

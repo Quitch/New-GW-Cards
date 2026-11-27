@@ -36,7 +36,7 @@ shown. Find yours, and follow the link for the details.
 | `Invalid AI mod operation`                                    | No         | An AI change has a misspelled `op`. See [Change what your Sub Commanders build](ai-build-orders.md).                                                                                                        |
 | `applyAiMods: op threw`                                       | No         | An AI change is missing a label that it needs, for example a `silence` with no `value`. See [Change what your Sub Commanders build](ai-build-orders.md).                                                    |
 | `[ModTranslations]` with `"languages":[]`                     | In English | Normal when the game's language is English. In any other language, your translations were not found. See [Testing your translations](translating.md#testing-your-translations).                             |
-| A red error that names one of your translation files          | No         | That file is not valid JSON. See [Testing your translations](translating.md#testing-your-translations).                                                                                                     |
+| A red error that names one of your translation files          | No         | `is not valid JSON`: a typing mistake. `must hold a JSON object of entries`: the file is not wrapped in `{ }`. See [Testing your translations](translating.md#testing-your-translations).                   |
 
 Most other mistakes show no message at all. The rest of this page lists them by symptom.
 
