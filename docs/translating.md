@@ -31,8 +31,8 @@ Your text then stays English, and no error tells you why.
 ## Step 2: create the register script
 
 Create a new file, `translations.js`, in `ui/mods/<your identifier>/`, next to
-`tech_cards.js`. Put this in it, and change `<your identifier>` to your mod's
-`identifier`:
+`tech_cards.js`. Put this in it. Change `<your identifier>` to your mod's `identifier`,
+and change `"de", "fr"` to your own languages, as the next section describes:
 
 ```js
 (function () {
@@ -40,7 +40,11 @@ Create a new file, `translations.js`, in `ui/mods/<your identifier>/`, next to
     // Mod Translations supplies window.ModTranslations.  If the player does
     // not have that mod, this script does nothing and your text stays English.
     if (window.ModTranslations) {
-      window.ModTranslations.register("<your identifier>");
+      window.ModTranslations.register("<your identifier>", {
+        // The names of your files in the translations folder, without
+        // ".json".  A file that is not in this list is not read.
+        languages: ["de", "fr"],
+      });
     }
   } catch (e) {
     console.error(e);
@@ -54,6 +58,30 @@ Create a new file, `translations.js`, in `ui/mods/<your identifier>/`, next to
 > identifier in this script must agree with them too. Mod Translations uses it to find
 > your files, so a different identifier finds none of them. The test at the end then shows
 > `"languages":[]`.
+
+### The `languages` list
+
+The list names your translation files. For each file in your `translations` folder (see
+[Step 4](#step-4-write-the-translation-files)), write its name without `.json`, in
+quotation marks, with a comma between two names. For example, `de.json` is `"de"`, and
+`zh-CN.json` is `"zh-CN"`. Mod Translations then reads only those files.
+
+Without the list, Mod Translations looks for the files of the player's language even when
+you do not ship them. For a player who uses `de-AT`, it looks for `de-AT.json` and
+`de.json`. On every screen, each file that is not there shows a red error in the Console:
+_Failed to load resource: the server responded with a status of 404 (Not Found)_. Your
+mod still works, but the errors look like a fault. The list stops them.
+
+Two mistakes are easy to make:
+
+- **A name that is not a language name**, such as `"de.json"`, `"de DE"`, or `"de_DE"`.
+  Mod Translations then reads none of your files. A red error in the Console says
+  `languages must be an array of language names`.
+- **A file that is not in the list.** Mod Translations does not read it, and nothing
+  tells you. When you add a language later, add it to the list too.
+
+Older versions of Mod Translations ignore the list. They read your files as before, and
+the errors stay. Your mod works with every version.
 
 ## Step 3: list the script under `global_mod_list`, and nowhere else
 
@@ -80,7 +108,9 @@ runs before that first translation.
 ## Step 4: write the translation files
 
 Create a folder named `translations` in `ui/mods/<your identifier>/`. Put one file in it
-for each language, named `<lang>.json`.
+for each language, named `<lang>.json`. Then add `<lang>` to the
+[`languages` list](#the-languages-list) in `translations.js`. A file that is not in that
+list is never read.
 
 `<lang>` must be the name of a folder in
 `{PA_INSTALL_DIRECTORY}/media/ui/main/_i18n/locales/`, for example `de`, `fr`, `es-ES`,
@@ -178,11 +208,17 @@ If something is wrong, the result tells you where to look:
 - **No `[ModTranslations]` line with your identifier.** `translations.js` is not under
   `global_mod_list`, the address there does not contain your identifier, Mod Translations
   is not enabled, or your `priority` is `50` or below.
+- **No `[ModTranslations]` line with your identifier, and a red error that says
+  `languages must be an array of language names`.** A name in the
+  [`languages` list](#the-languages-list) is not a language name: it ends in `.json`, or
+  it has a space or a `_` in it. Mod Translations reads none of your files until you
+  correct it.
 - **`languages` is empty.** If the game's language is English, this is normal: Mod
   Translations loads no files for English. Otherwise the game did not find your file.
   Check the name of the `translations` folder, the file's name against the `locales`
-  folder, and the identifier in `translations.js`. A file that is completely empty also
-  counts as not found.
+  folder, the identifier in `translations.js`, and that the `languages` list in
+  `translations.js` has the file's name. A file that is completely empty also counts as
+  not found.
 - **`added` is `0`.** If `invalid` is `0` too, the file was found but holds no entries:
   only `{}`. Otherwise, see the `invalid` point below.
 - **A red error that names your file and says `is not valid JSON`.** The usual cause is

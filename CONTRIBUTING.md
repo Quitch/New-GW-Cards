@@ -155,9 +155,9 @@ translations", and the "If you ship translations, also:" block of `docs/checklis
 Keep those three consistent with each other. The README of Mod Translations, and its
 `docs/design.md` for the log line, are the authority on how the framework behaves, so keep
 them consistent with them too: the `priority` of 50, the `global_mod_list` rule, the key
-format, and the format of the `[ModTranslations]` log line. A `translations.js` is the one
-loader that goes under `global_mod_list` and under no scene, which is the opposite of the
-rule above.
+format, the `languages` option of `register`, and the format of the `[ModTranslations]`
+log line. A `translations.js` is the one loader that goes under `global_mod_list` and
+under no scene, which is the opposite of the rule above.
 
 ## Card contract
 
