@@ -100,8 +100,8 @@ Two of these ops have limits:
   labelled values of its own, that whole set replaces the old one. The two sets are not
   merged.
 
-There are three more: `wipe`, `clone`, and `eval`. See
-[More unit-stat ops](#more-unit-stat-ops--wipe-clone-and-eval).
+There are two more: `wipe` and `clone`. See
+[More unit-stat ops](#more-unit-stat-ops--wipe-and-clone).
 
 > **Five ops run in a fixed order, not in the order that you write them.** Across every
 > card in the player's hand, the game makes every `clone` first, then every `replace`,
@@ -331,7 +331,7 @@ inventory.addMods(
 A unit that has no item of that layer and channel gets no change. GWO never adds an item
 for you.
 
-### More unit-stat ops — `wipe`, `clone`, and `eval`
+### More unit-stat ops — `wipe` and `clone`
 
 - `wipe`: despite its name, this does not clear the value. It finds and replaces text
   inside a text value. `value` is a pair, `[what to find, what to put in its place]`. A
@@ -339,14 +339,12 @@ for you.
   `wipe` turns the number into text. Use `replace` to change a number.
 - `clone`: copies whatever is at `path` into the file named by `value`. If nothing is at
   `path`, it copies nothing, and the Console shows `clone: attribute is missing or null`.
-- `eval`: runs `value` as raw JavaScript. The game gives you the thing at `path` as
-  `attribute`, and you can do what you like with it. If you used a `path`, remember to
-  return `attribute` at the end.
 
-> **`clone` and `eval` are advanced. Avoid them.** They are easy to get wrong, and one of
-> the everyday ops can nearly always do the same work more safely. `eval` in particular
-> runs your own code inside the game, so a mistake there can break the war rather than
-> only change a number.
+> **`clone` is advanced. Avoid it.** It is easy to get wrong, and one of the everyday ops
+> can nearly always do the same work more safely.
+
+GWO after v7.11.4 has no `eval` op. A change with `op: "eval"` is skipped. If its file
+is in play, the Console shows `Invalid operation in mod`.
 
 ---
 
