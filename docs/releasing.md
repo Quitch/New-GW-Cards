@@ -51,9 +51,20 @@ with the host's cards. So the game reads `galacticWarMod` only from the mods tha
 has turned on. When you join someone else's war, your own copy of the entry only decides
 whether your mods match the host's.
 
-**`false` (the default).** Your mod stays your own. You can host a co-op war, or join one,
-and no other player needs your mod. Use `false` for a mod that only you need, such as a
-personal loadout.
+**`false` (the default).** Your mod stays your own. You can host a co-op war, and no other
+player needs your mod. When you join someone else's war, the host's mods decide what
+reaches the battle:
+
+- The host deals every player's tech cards, so your mod's tech cards are not offered to
+  you.
+- With Separate loadout & tech, the loadout picker shows your mod's loadouts. GWO after
+  v7.11.4 locks each one that the host cannot use, with the note "The host does not have
+  this mod." under it. If the host has your mod too, you can pick it, as long as your
+  mod registers the loadout in `gw_play`, as the template's `start_cards.js` does. In
+  GWO v7.11.4 the picker offers it, but the loadout gives you nothing in battle, not even
+  your Commander.
+
+Use `false` for a mod that only you need in the wars that you host or play alone.
 
 **`true`.** Every player in a war that you host must have your mod, with the same
 `version`. The game refuses a player who:

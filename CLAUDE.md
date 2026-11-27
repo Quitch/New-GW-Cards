@@ -102,8 +102,13 @@ If the user has no mod folder yet, create one before writing any card:
    host's flagged mods are published as the war's required client mods. A viewer's own
    flags count only at connect: a viewer missing one of the host's flagged mods, holding a
    flagged mod the host lacks, or running a different `version` of one, is refused. It has
-   no effect in a solo war. `docs/releasing.md`, "Sharing your mod in a co-op war", is the
-   author-facing explanation.
+   no effect in a solo war. With `false`, a viewer's own card mods reach the battle only
+   through the host: the host deals the viewer's tech cards, and under per-player tech
+   GWO after v7.11.4 locks a viewer's loadout from a mod the host lacks, or one the
+   host's mod registers only outside `gw_play` (Quitch/GW-AI-Overhaul#731). In v7.11.4
+   such a loadout was offered and then gave the viewer nothing in battle
+   (Quitch/GW-AI-Overhaul#699). `docs/releasing.md`, "Sharing your mod in a co-op war",
+   is the author-facing explanation.
 
 The `scenes` addresses and the `ui/mods/` folder name must agree, or the game loads
 none of the mod's scripts; the only signs are console errors naming each address, such
