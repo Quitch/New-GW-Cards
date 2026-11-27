@@ -42,10 +42,15 @@ different style, so they are harder to start from.
      `mym_damage_bots.js`.
    - for a loadout, follow [Loadout IDs](loadouts.md#loadout-ids).
 
-   **Never start a name with `gwc_` or `gwaio_`.** The game's own cards use `gwc_`, and
-   GWO's cards use `gwaio_`. When a card file has the same name as one of theirs, the game
-   silently ignores one of the two files. The `priority` of each mod decides which one.
-   GWO's copy of a `gwc_` or `gwaio_` card normally wins, so your card is never dealt
+   **A tech card's ID must not contain `_start_`.** GWO treats every ID that contains
+   `_start_` as a loadout. When the player wins such a card, GWO records it as an
+   unlocked loadout, and the player never gets it as a tech card. Co-op AI players treat
+   it as a loadout too.
+
+   **Never start a name with `gwc_`, `gwaio_`, `nem_`, or `tgw_`.** The game's own cards
+   use `gwc_`, and GWO's cards use the other three. When a card file has the same name as
+   one of theirs, the game silently ignores one of the two files. The `priority` of each
+   mod decides which one. GWO's copy normally wins, so your card is never dealt
    and nothing tells you why. `gwc_damage_bots.js`, for example, already exists in PA and
    in GWO.
 

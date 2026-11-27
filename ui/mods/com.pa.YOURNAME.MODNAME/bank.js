@@ -51,8 +51,36 @@ define(function () {
         return;
       }
 
-      var config = JSON.parse(bankJson);
-      self.startCards(config.startCards);
+      // A saved record that is damaged, for example one typed by hand with a
+      // mistake in it, counts as no unlocks, and an entry in it that is not
+      // { "id": "..." } is left out.  Without these checks, a damaged record
+      // would stop every one of your loadouts from loading.
+      var config;
+      try {
+        config = JSON.parse(bankJson);
+      } catch (e) {
+        console.warn(
+          "Ignoring unreadable loadout unlock record " +
+            LS_KEY +
+            ": " +
+            ((e && e.stack) || e)
+        );
+      }
+
+      var saved =
+        config && _.isArray(config.startCards) ? config.startCards : [];
+      var usable = _.filter(saved, function (card) {
+        return _.isPlainObject(card) && _.isString(card.id);
+      });
+      if (usable.length < saved.length) {
+        console.warn(
+          "Ignoring " +
+            (saved.length - usable.length) +
+            ' entries that are not {"id": "..."} in loadout unlock record ' +
+            LS_KEY
+        );
+      }
+      self.startCards(usable);
       loading = false;
     },
 

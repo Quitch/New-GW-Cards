@@ -118,8 +118,8 @@ them.
 An AI player judges a card by trying it. GWO copies the AI player's inventory, runs your
 card's `buff` on the copy, and then every card's `dull`, and looks at what changed: the
 units it unlocked, the unit stats it changed, what its Sub Commanders build, and the Sub
-Commanders and card slots it added. It never reads your card's name or ID, so your card
-is judged on what it does.
+Commanders and card slots it added. It reads your card's ID only to see whether it
+contains `_start_`, which marks a loadout, so your card is judged on what it does.
 
 **So your `buff` runs even when nobody takes the card.** It must:
 
