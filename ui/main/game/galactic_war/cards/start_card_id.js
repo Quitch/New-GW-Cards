@@ -8,7 +8,9 @@
 // 1. Rename this file.  The file name without ".js" is the ID of the loadout.
 //    A loadout ID MUST contain "_start_", and it must NOT start with
 //    "gwc_start" - that prefix belongs to the loadouts that come with the
-//    game.  Use a prefix of your own, for example "mym_start_engineer.js".
+//    game.  "gwaio_", "nem_", and "tgw_" belong to Galactic War Overhaul's
+//    own cards.  Use a prefix of your own, for example
+//    "mym_start_engineer.js".
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to start_cards.js, in the locked list or in the unlocked list.
 // 4. In the same file, remove the comment marks from the

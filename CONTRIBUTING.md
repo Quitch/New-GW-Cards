@@ -60,8 +60,8 @@ They are **not** faults to correct in this repo:
   `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` strings. The three example card files
   `start_card_id.js`, `tech_card_id.js`, and `unit_upgrade_card_id.js` are also
   placeholders. The author renames them to `PREFIX_EFFECT_UNITTYPE.js`, for example
-  `mym_damage_bots.js`. Never use a `gwc_` or `gwaio_` prefix in an example: those are
-  the stock and GWO card namespaces, and of two same-named card files the game silently
+  `mym_damage_bots.js`. Never use a `gwc_`, `gwaio_`, `nem_`, or `tgw_` prefix in an
+  example: those are the stock and GWO card namespaces, and of two same-named card files the game silently
   loads only the one from the mod with the higher `priority`. GWO (priority 200) beats
   this template (priority 100), so GWO's copy wins, not the author's
   (`gwc_damage_bots.js` is a real stock card, and GWO ships its own copy).

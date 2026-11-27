@@ -16,8 +16,8 @@ Open `ui/main/game/galactic_war/cards/` in your mod folder. Rename
 The file name, without the `.js`, is the card's **ID**. Here the ID is `mym_upgrade_dox`.
 
 - `mym` stands for "my mod". Use a short prefix of your own, and start every card in your
-  mod with it. Never start an ID with `gwc_` or `gwaio_`: those belong to the game's cards
-  and to GWO's cards.
+  mod with it. Never start an ID with `gwc_`, `gwaio_`, `nem_`, or `tgw_`: those belong to
+  the game's cards and to GWO's cards.
 - `_upgrade_` tells GWO that the card is made for one unit of the base game. GWO offers
   such a card only to players of the base game's own army, and not to players of another
   race, such as Legion. [Cards for another race or an add-on](race-cards.md) explains

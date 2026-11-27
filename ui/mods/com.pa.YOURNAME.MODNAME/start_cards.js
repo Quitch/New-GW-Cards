@@ -22,7 +22,8 @@
     // An ID matches the card filename without the file extension, for example
     // "mym_start_bots".  A loadout ID must contain "_start_", and it must NOT
     // start with "gwc_start" - that prefix belongs to the loadouts that come
-    // with the game.  See "Loadout IDs" in docs/loadouts.md.
+    // with the game - or with "gwaio_", "nem_", or "tgw_", which belong to
+    // Galactic War Overhaul.  See "Loadout IDs" in docs/loadouts.md.
     // A loadout belongs in THIS list or in the unlocked list below, never in
     // both.
     // Write your IDs inside the brackets of push( ), with a comma between them
@@ -44,7 +45,8 @@
     // An ID matches the card filename without the file extension, for example
     // "mym_start_bots".  A loadout ID must contain "_start_", and it must NOT
     // start with "gwc_start" - that prefix belongs to the loadouts that come
-    // with the game.  See "Loadout IDs" in docs/loadouts.md.
+    // with the game - or with "gwaio_", "nem_", or "tgw_", which belong to
+    // Galactic War Overhaul.  See "Loadout IDs" in docs/loadouts.md.
     // Use different loadouts from the locked ones above.  Never put the same ID
     // in both lists.
     // Write your IDs in the same way as above, for example:
@@ -71,6 +73,8 @@
     //          to see that the loadout is yours.  It then writes the loadout to
     //          your bank instead of its own.  CHANGE YOUR_PREFIX_start_
     //          to the start of your loadout IDs, for example "mym_start_".
+    //          Never use "nem_start_" or "tgw_start_": they would take Galactic
+    //          War Overhaul's own loadouts into your bank.
     // path   - the address of your bank.js.  CHANGE THE IDENTIFIER TO MATCH
     //          YOURS.
     // if (!model.gwoLoadoutBanks) {

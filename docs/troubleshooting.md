@@ -66,8 +66,8 @@ Most other mistakes show no message at all. The rest of this page lists them by 
 
 ## The test panel gives me a card, but not mine
 
-- The ID starts with `gwc_` or `gwaio_`. The game then normally uses GWO's file of that
-  name, not yours, so the panel finds the ID and deals GWO's card. See
+- The ID starts with `gwc_`, `gwaio_`, `nem_`, or `tgw_`, and GWO has a card of that name.
+  The game then normally uses GWO's file of that name, not yours, so the panel finds the ID and deals GWO's card. See
   [Naming and registering your card](tech-cards.md#naming-and-registering-your-card).
 
 ## The test panel gives me the card, but a war never offers it

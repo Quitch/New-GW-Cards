@@ -9,16 +9,21 @@ example `start_card_id.js`.
 
 A loadout ID follows the rules for any card ID in
 [Naming and registering your card](tech-cards.md#naming-and-registering-your-card): a
-prefix of your own, and never `gwc_` or `gwaio_` at the start. A loadout ID has two more
-rules. A mistake in either one reports nothing.
+prefix of your own, and never `gwc_`, `gwaio_`, `nem_`, or `tgw_` at the start. A loadout
+ID has two more rules. A mistake in either one reports nothing.
 
 - The ID must contain `_start_`. That is how the game recognises a loadout.
 - The ID must **not** start with `gwc_start`. That prefix belongs to the game's own
   loadouts.
 
-Write your prefix, then `_start_`, then a name, as the existing mods do:
-`gwaio_start_rapid`, `nem_start_nuke`. Write `mym_start_engineer`, not
-`gwc_start_engineer`.
+Write your prefix, then `_start_`, then a name. GWO's own loadouts show the shape, such
+as `gwaio_start_rapid` and `nem_start_nuke`, but their prefixes are GWO's: write
+`mym_start_engineer`, not `gwc_start_engineer` or `nem_start_engineer`.
+
+The prefix in your [`model.gwoLoadoutBanks`](#modelgwoloadoutbanks--where-your-bank-lives-in-start_cardsjs)
+entry must be your own for the same reason. GWO sends an unlock to the first bank whose
+prefix starts the loadout's ID, so a bank with the prefix `nem_start_` or `tgw_start_`
+would take GWO's own loadouts into your bank.
 
 A mistake here is hard to spot. An ID without `_start_` still appears on the loadout
 screen, and the player can still pick it, so the mod looks fine. The damage is inside

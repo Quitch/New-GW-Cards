@@ -193,7 +193,7 @@ own cards. It judges a card by applying it to a scratch copy of its inventory - 
 is not), one apply at a time, each against a
 10-second timeout - and scoring what
 changed: units unlocked, unit stats modded, AI mods, and Sub Commanders and card slots
-added. It never reads the card's ID. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
+added. It reads the card's ID only to treat an ID containing `_start_` as a loadout. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
 authority. What that means for a card, all of it silent when wrong:
 
 - **`buff` runs speculatively**, for cards nobody takes. It must be deterministic for a
