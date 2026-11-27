@@ -60,8 +60,8 @@ They are **not** faults to correct in this repo:
   `CHOSEN_LINE_HERE`, and the `!LOC:...HERE` strings. The three example card files
   `start_card_id.js`, `tech_card_id.js`, and `unit_upgrade_card_id.js` are also
   placeholders. The author renames them to `PREFIX_EFFECT_UNITTYPE.js`, for example
-  `mym_damage_bots.js`. Never use a `gwc_` or `gwaio_` prefix in an example: those are
-  the stock and GWO card namespaces, and of two same-named card files the game silently
+  `mym_damage_bots.js`. Never use a `gwc_`, `gwaio_`, `nem_`, or `tgw_` prefix in an
+  example: those are the stock and GWO card namespaces, and of two same-named card files the game silently
   loads only the one from the mod with the higher `priority`. GWO (priority 200) beats
   this template (priority 100), so GWO's copy wins, not the author's
   (`gwc_damage_bots.js` is a real stock card, and GWO ships its own copy).
@@ -115,13 +115,15 @@ There are two separate trees in `ui/`:
     work with, and `model.gwoLoadoutsAiCannotUse`, for loadouts that a co-op AI player
     cannot use. GWO never creates those arrays, so the loader must create each one if it
     is absent.
-  - `tech_cards.js` (`gw_play`, `gw_coop_per_player_loadout`) → `model.gwoCards` (the
+  - `tech_cards.js` (`gw_play`) → `model.gwoCards` (the
     deck) and `model.gwoCardsToUnits` (the unit associations for the tooltip). It can also
     use `model.gwoCardsWithoutTooltip`, for tech cards that must show no affected-units
     tooltip.
-  - `specs.js` (the `gw_play` scene) → `model.gwoSpecs`. Use it to mod unit specs that the
-    base game does not otherwise load, such as an unused unit.
-  - `decks.js` (`gw_play`, `gw_start`, `gw_coop_per_player_loadout`) → `model.gwoDecks`,
+  - `specs.js` (the `gw_play` scene) → `model.gwoSpecs`. Use it for a file that a card
+    gives to a unit that does not already use it: a file borrowed from another unit, or
+    one that no unit uses, such as the Ares stomp. GW copies every file that a player's
+    units reference, so only such a file needs listing.
+  - `decks.js` (`gw_play`, `gw_start`) → `model.gwoDecks`,
     a deck of the mod's own for the Techs picker. It ships commented out. See
     `docs/decks.md`.
   - `bank.js` — an AMD module written with `define()`. `start_card_id.js` calls `require`
@@ -132,10 +134,13 @@ There are two separate trees in `ui/`:
 The `scenes` block in `modinfo.json` is the real list of entry points. The game loads only
 the files listed there, and every URL must match the mod `identifier`. **Each scene gets a
 new `model` page.** A loader must therefore appear under every scene that needs its data.
-That is why `start_cards.js` and `decks.js` appear three times and `tech_cards.js` appears
-twice. If you register loadouts only in `gw_start`, they are absent from the `gw_play`
-treasure pool, so the game can never award them, and they are also absent from the co-op
-loadout picker.
+That is why `start_cards.js` appears three times and `decks.js` twice. A loader appears
+only under the scenes that read its data, as the scene table in GWO's `docs/tech-cards.md`
+lists them: `model.gwoCards`, `model.gwoCardsToUnits`, `model.gwoCardsWithoutTooltip`,
+and `model.gwoSpecs` are read only in `gw_play`, and `model.gwoDecks` only in `gw_start`
+and `gw_play`. If you register loadouts only in `gw_start`, they are absent from the
+`gw_play` treasure pool, so the game can never award them, and they are also absent from
+the co-op loadout picker.
 
 ### Translations
 
@@ -164,13 +169,20 @@ templates here follow it:
 - `visible`, `describe`, `summarize`, `icon`, `deal`, `buff`, and `dull` are always
   present. A tech card also carries `audio` and `getContext`. A start card carries `hint`
   in place of those two. `keep`, `discard`, and `releaseContext` are optional and almost
-  unused. GWO replaces PA's dealer, so GWO never calls `discard`, and it calls
-  `keep(deal, context)` at deal time rather than when the player keeps the card. Only
-  `releaseContext` behaves as its name says.
+  unused. GWO replaces PA's dealer, so GWO never calls `discard`. It calls
+  `keep(deal, context)` and `releaseContext(context)` only from `dealCard` in
+  `shared/deal.js` and from `gw_start/war_generation.js`, which deal one card on its own:
+  the `X` panel, a co-op AI player's factory card, and a loadout. `chooseCards` in
+  `gw_play/cards_dealer.js`, which deals every hand, calls neither.
 - `deal(system, context, inventory, rng)` controls distribution and returns `{ chance }`.
   A tech card calculates a chance. A start card passes the work to `gwoCard.startCard`.
-  `rng` is the seeded stream of the card, and it is optional. GWO's own docs require
-  `gwoCard.uniqueValue(rng)` in place of `Math.random()`. They also require that `chance`
+  `rng` is the seeded stream of the card, and it is optional, so a card that draws falls
+  back to `_.sample` when it is absent. GWO's own docs require
+  `gwoCard.uniqueValue(rng)` in place of `Math.random()` for a `unique` marker, and
+  `params.unique` makes GWO's `hasCard` treat the card as not held, so it is only for a
+  card that a player may hold more than once. `docs/advanced.md` ("Randomness in
+  `deal`") states this, and also reserves `params.id` and `params.allowOverflow`, which
+  GWO reads; keep the two consistent. They also require that `chance`
   never depends on `rng`, because the dealer calls `deal()` many times for each hand as a
   test. Only `params` may depend on `rng`.
 - `buff(inventory)` applies the card. It uses `inventory.addUnits(...)` with unit paths,
@@ -183,7 +195,8 @@ templates here follow it:
   templates document the op tables and the meaning of each field. GWO applies spec mods in
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod with `op: "tag"`, on the
-  same `file` and the same `path`. The file must also be reachable, or listed in
+  same `file`, written after it, at the path where the file name now sits
+  (the new entry's own field after a `push` to `tools`, such as `tools.1.spec_id`). The file must also be reachable, or listed in
   `model.gwoSpecs`. This is a silent failure. `docs/changing-units.md`, `CLAUDE.md`, and
   the comments in `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js`, and
   `specs.js` all warn about it. Keep those warnings consistent with each other, and with GWO's
@@ -287,7 +300,11 @@ template and the game disagree.
   each one immediately invoked function, `(function () { ... })();`, so that they declare
   nothing in the shared scene scope. Inside it they put their body in a `try`/`catch`
   block that sends failures to `console.error`. Keep both patterns. A throw in a loader
-  would break the scene in the game and show no cause.
+  would break the scene in the game and show no cause. `tech_cards.js` and `specs.js` do
+  their work in a `requireGW` callback, which RequireJS runs on a later turn, after the
+  outer `try` has returned. So each callback has its own `try`/`catch` with the same
+  `New GW Cards:` line. The outer one still catches an error in the `requireGW` call
+  itself.
 - LICENSE is public domain (Unlicense).
 - The audience of this mod is people who may know nothing about code. The mod must guide
   the user at every step. Write many more comments, in much more detail, than is normal,

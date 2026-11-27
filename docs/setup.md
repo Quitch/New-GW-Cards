@@ -103,8 +103,9 @@ include it, and you create it yourself. See [Translating your mod](translating.m
 Galactic War has three separate screens: the loadout choice, the war itself, and the
 loadout choice in a co-op game. Each screen starts empty, and the game loads your loaders
 separately for each screen that needs them. That is why `modinfo.json` lists some of them
-more than once. If a loader runs on only one screen, your cards are missing from the other
-two.
+more than once: `start_cards.js` on all three screens, `decks.js` on the first two, and
+`tech_cards.js` and `specs.js` on the war screen only. Keep every line that is there. If
+a loader is missing from a screen that needs it, your cards are missing from that screen.
 
 ## Installing the checker (recommended)
 

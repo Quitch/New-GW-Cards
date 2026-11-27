@@ -8,7 +8,9 @@
 // 1. Rename this file.  The file name without ".js" is the ID of the loadout.
 //    A loadout ID MUST contain "_start_", and it must NOT start with
 //    "gwc_start" - that prefix belongs to the loadouts that come with the
-//    game.  Use a prefix of your own, for example "mym_start_engineer.js".
+//    game.  "gwaio_", "nem_", and "tgw_" belong to Galactic War Overhaul's
+//    own cards.  Use a prefix of your own, for example
+//    "mym_start_engineer.js".
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to start_cards.js, in the locked list or in the unlocked list.
 // 4. In the same file, remove the comment marks from the
@@ -74,6 +76,10 @@ define([
       // Tools count from 0.  You must also list a borrowed file in specs.js, or
       // the tag points at nothing.  "Whenever your value is a file name, tag it"
       // in docs/changing-units.md explains both halves.
+      // A change to a unit's tools also stops every card's changes to that unit
+      // from reaching the race unit that stands in for it, in a war played as
+      // another race.  If your loadout changes tools, give its entry in
+      // start_cards.js races: ["mla"].  See docs/race-cards.md.
       //
       // Delete the two lines below if your loadout changes no unit stats.
       var mods = [];

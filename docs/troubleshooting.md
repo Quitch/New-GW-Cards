@@ -33,7 +33,8 @@ shown. Find yours, and follow the link for the details.
 | `Invalid operation in mod`                                    | No         | A change to a unit stat has a misspelled `op`. See [Change unit stats](changing-units.md#change-unit-stats--inventoryaddmods).                                                                              |
 | `Invalid mod: op`                                             | No         | A change to a unit stat has no `path`, and its op needs one. See [Change unit stats](changing-units.md#change-unit-stats--inventoryaddmods).                                                                |
 | `Invalid selector in mod`                                     | No         | A `[layer=…,channel=…]` part of a `path` is written wrongly. See [Change unit stats](changing-units.md#change-unit-stats--inventoryaddmods).                                                                |
-| `AI file of a load mod not read, skipped:`                    | No         | A `load` names a file that is missing. See [`load`](ai-build-orders.md#loading-a-ready-made-build-file--load).                                                                                              |
+| `AI file of a load mod not read, skipped:`                    | No         | A `load` names a file that is missing, or one that is not valid JSON (the brackets at the end say `HTTP 200`). See [`load`](ai-build-orders.md#loading-a-ready-made-build-file--load).                      |
+| `AI load files not read before the hire`                      | No         | Usually a file in a mod's `pa/ai_tech/` folder is not valid JSON. If a card loads that file, the message above follows and names it.                                                                        |
 | `Invalid AI file type in load mod`                            | No         | A `load` has no `type`, or a wrong one. See [Change what your Sub Commanders build](ai-build-orders.md).                                                                                                    |
 | `Invalid AI mod operation`                                    | No         | An AI change has a misspelled `op`. See [Change what your Sub Commanders build](ai-build-orders.md).                                                                                                        |
 | `applyAiMods: op threw`                                       | No         | An AI change is missing a label that it needs, for example a `silence` with no `value`. See [Change what your Sub Commanders build](ai-build-orders.md).                                                    |
@@ -68,8 +69,8 @@ Most other mistakes show no message at all. The rest of this page lists them by 
 
 ## The test panel gives me a card, but not mine
 
-- The ID starts with `gwc_` or `gwaio_`. The game then normally uses GWO's file of that
-  name, not yours, so the panel finds the ID and deals GWO's card. See
+- The ID starts with `gwc_`, `gwaio_`, `nem_`, or `tgw_`, and GWO has a card of that name.
+  The game then normally uses GWO's file of that name, not yours, so the panel finds the ID and deals GWO's card. See
   [Naming and registering your card](tech-cards.md#naming-and-registering-your-card).
 
 ## The test panel gives me the card, but a war never offers it

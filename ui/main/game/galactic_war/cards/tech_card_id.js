@@ -7,9 +7,12 @@
 //
 // 1. Rename this file.  The file name without ".js" is the ID of the card, for
 //    example "mym_damage_bots.js" has the ID "mym_damage_bots".  Start it with a
-//    prefix of your own.  Never start it with "gwc_" or "gwaio_".  If a card has
-//    the same name as one of the game's or GWO's, the game silently ignores one
-//    of the two files, and which one depends on which mod loads last.
+//    prefix of your own.  Never start it with "gwc_", "gwaio_", "nem_", or
+//    "tgw_".  If a card has the same name as one of the game's or GWO's, the
+//    game silently ignores one of the two files, and which one depends on
+//    which mod loads last.  Never put "_start_" anywhere in a tech card's ID:
+//    GWO treats such a card as a loadout, and a player who wins it never gets
+//    it as a tech card.
 // 2. Change the parts marked in CAPITALS below.
 // 3. Add the ID to tech_cards.js, in model.gwoCards.  Also list it in
 //    model.gwoCardsToUnits if it changes units, or in
@@ -120,6 +123,10 @@ define([
       // Tools count from 0.  You must also list a borrowed file in specs.js, or
       // the tag points at nothing.  "Whenever your value is a file name, tag it"
       // in docs/changing-units.md explains both halves.
+      // A change to a unit's tools also stops every card's changes to that unit
+      // from reaching the race unit that stands in for it, in a war played as
+      // another race.  If your card changes tools, give its entry in
+      // model.gwoCardsToUnits races: ["mla"].  See docs/race-cards.md.
       //
       // Delete the two lines below if your card changes no unit stats.
       var mods = [];
