@@ -282,11 +282,12 @@ function in its `ops` table.
   several units to players owning only some of them, and dropping the rest is the
   intended behaviour. It only indicates a bug when the file _should_ have been reachable:
   a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
-- **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
+- **`path` is required** except for `clone`. There is no whole-file replace.
 - **Follow a value that is a file name with `op: "tag"`** on the same `file`, at the
   path where the file name now sits. See the section below — this is the failure that is
   hardest to spot.
-- **`clone` and `eval` are advanced — avoid them**, as `docs/changing-units.md` says.
+- **`clone` is advanced — avoid it**, as `docs/changing-units.md` says. GWO has no
+  `eval` op.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
   never gets it, silently. A loadout's `dulls` forbid their units for the whole war.
