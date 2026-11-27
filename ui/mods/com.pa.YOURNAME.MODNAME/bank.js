@@ -52,8 +52,9 @@ define(function () {
       }
 
       // A saved record that is damaged, for example one typed by hand with a
-      // mistake in it, counts as no unlocks.  Without this check, a damaged
-      // record would stop every one of your loadouts from loading.
+      // mistake in it, counts as no unlocks, and an entry in it that is not
+      // { "id": "..." } is left out.  Without these checks, a damaged record
+      // would stop every one of your loadouts from loading.
       var config;
       try {
         config = JSON.parse(bankJson);
@@ -66,8 +67,12 @@ define(function () {
         );
       }
 
+      var saved =
+        config && _.isArray(config.startCards) ? config.startCards : [];
       self.startCards(
-        config && _.isArray(config.startCards) ? config.startCards : []
+        _.filter(saved, function (card) {
+          return _.isPlainObject(card) && _.isString(card.id);
+        })
       );
       loading = false;
     },

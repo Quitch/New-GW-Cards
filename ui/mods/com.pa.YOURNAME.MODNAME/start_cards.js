@@ -73,8 +73,8 @@
     //          to see that the loadout is yours.  It then writes the loadout to
     //          your bank instead of its own.  CHANGE YOUR_PREFIX_start_
     //          to the start of your loadout IDs, for example "mym_start_".
-    //          Never use "nem_start_" or "tgw_start_": they would take Galactic
-    //          War Overhaul's own loadouts into your bank.
+    //          Never use "gwaio_start_", "nem_start_", or "tgw_start_": they
+    //          would take Galactic War Overhaul's own loadouts into your bank.
     // path   - the address of your bank.js.  CHANGE THE IDENTIFIER TO MATCH
     //          YOURS.
     // if (!model.gwoLoadoutBanks) {
