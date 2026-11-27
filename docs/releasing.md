@@ -55,14 +55,16 @@ whether your mods match the host's.
 player needs your mod. When you join someone else's war, the host's mods decide what
 reaches the battle:
 
-- The host deals every player's tech cards, so your mod's tech cards are not offered to
-  you.
-- With Separate loadout & tech, the loadout picker shows your mod's loadouts. GWO after
-  v7.11.4 locks each one that the host cannot use, with the note "The host does not have
-  this mod." under it. If the host has your mod too, you can pick it, as long as your
-  mod registers the loadout in `gw_play`, as the template's `start_cards.js` does. In
-  GWO v7.11.4 the picker offers it, but the loadout gives you nothing in battle, not even
-  your Commander.
+- The host deals every player's tech cards from the host's own mods, so your mod's tech
+  cards are offered to you only if the host has your mod too.
+- With Separate loadout & tech, the loadout picker shows your mod's loadouts. From GWO's
+  next release (after v7.11.4, the current one), the picker locks each loadout that the
+  host cannot use, with the note "The host does not have this mod." under it. If the
+  host has your mod too, you can pick it, as long as your mod registers the loadout in
+  `gw_play`. The template does this: `modinfo.json` lists `start_cards.js` under
+  `gw_play`. A loadout registered only in `gw_start` shows the same note. In GWO v7.11.4
+  the picker offers a loadout from a mod the host does not have, but it gives you
+  nothing in battle, not even your Commander.
 
 Use `false` for a mod that only you need in the wars that you host or play alone.
 
