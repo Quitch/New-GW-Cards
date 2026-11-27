@@ -156,12 +156,21 @@ wrong and fails quietly. The template's three example cards are one of each shap
   ID **must contain `_start_`** (GWO's `isStartLoadoutCardId` test) and **must not begin
   `gwc_start`** (GWO reserves that prefix for base-game loadouts, and routes the card to
   the base game's bank). Use a mod-specific prefix matching the one you register in
-  `model.gwoLoadoutBanks`. A `races` list on the entry (`{ id: "…", races: ["mla"] }`)
+  `model.gwoLoadoutBanks`, never `gwaio_`, `nem_`, or `tgw_`: GWO ships loadouts under
+  all three, and `bankFor` (`shared/loadout_banks.js`) sends an unlock to the first bank
+  whose `prefix` starts the ID, so a bank registered as `nem_start_` or `tgw_start_`
+  captures GWO's own unlocks. A tech card's ID must not contain `_start_` at all: GWO
+  banks a won card with such an ID as a loadout unlock (`bankWonLoadout`,
+  `gw_play/cards_win.js`) and never grants it as tech. A `races` list on the entry (`{ id: "…", races: ["mla"] }`)
   names the races that can use the loadout, in place of the `_upgrade_` rule; `races` on
   a `gwoCardsToUnits` entry does not reach a loadout.
-- A unit file the game does not otherwise load (an unused spec such as Ares' stomp) must
-  be listed in `model.gwoSpecs` in `specs.js`, or GWO drops mods to it. So must a file
-  one unit borrows from another — see "Writing a file name into a spec" below.
+- A file that a card gives to a unit that does not already reference it must be listed in
+  `model.gwoSpecs` in `specs.js`: a file one unit borrows from another, or one that no
+  unit references at all, such as the Ares stomp (`gwoUnit.aresStomp`). GW copies every
+  file that a player's units reference, and nothing else, so without the entry the card's
+  `tag` points at nothing and GWO drops mods to the file — see "Writing a file name into a
+  spec" below. A file that no unit references and no card gives to a unit has no effect
+  in battle, listed or not.
 
 **Every registered loadout ID needs a card file of that name.** `gw_start` resolves each
 ID in `gwoStartingCards`/`gwoNewStartCards` through requirejs. A missing file reaches
@@ -184,7 +193,9 @@ own cards. It judges a card by applying it to a scratch copy of its inventory - 
 is not), one apply at a time, each against a
 10-second timeout - and scoring what
 changed: units unlocked, unit stats modded, AI mods, and Sub Commanders and card slots
-added. It never reads the card's ID. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
+added. It reads the card's ID only to treat an ID containing `_start_` as a loadout
+(`isLoadout` in `gw_play/cards_coop_ai_tech.js`). GWO's doc says "never by its id" up to
+v7.11.4; Quitch/GW-AI-Overhaul#704 adds the `_start_` rule for the next release. GWO's `docs/tech-cards.md`, "How AI players judge a card", is the
 authority. What that means for a card, all of it silent when wrong:
 
 - **`buff` runs speculatively**, for cards nobody takes. It must be deterministic for a
@@ -515,7 +526,9 @@ The loader files (`tech_cards.js`, `start_cards.js`, `decks.js`, `specs.js`) are
 one immediately invoked function, `(function () { ... })();`, and wrap their body in
 `try`/`catch` and `console.error` the failure. Keep both: every mod shares one scope per
 scene, so a top-level name can collide, and a throw there breaks the whole scene with no
-visible cause.
+visible cause. `tech_cards.js` and `specs.js` do their work inside a `requireGW`
+callback, which RequireJS runs after the outer `try` has returned, so each callback has a
+second `try`/`catch` of its own. Keep it, and put any code you add inside it.
 
 ## When something here disagrees with the game
 

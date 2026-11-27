@@ -210,15 +210,14 @@ ammo, and anything that the ammo spawns, along with it.
 ### `model.gwoSpecs` — extra unit files to change (in `specs.js`)
 
 Optional. Galactic War gives each player a private copy of only the files that their own
-units need. If you list a path here, every player also gets a copy of that file. There are
-two reasons to do this.
+units need. If you list a path here, every player also gets a copy of that file.
 
-- The game doesn't normally use some unit files, for example the Ares' stomp. To change
-  one of those, list its path here so that GWO loads it.
-- You lend one unit a file that belongs to another unit: a weapon, a build arm, or a unit
-  that spawns on death.
-  [Whenever your value is a file name, `tag` it](#whenever-your-value-is-a-file-name-tag-it)
-  explains that. List the borrowed file here, and its ammo comes with it.
+List a file here when one of your cards gives it to a unit that does not already use it:
+a weapon, a build arm, or a unit that spawns on death. It can be a file that belongs to
+another unit, or a file that no unit uses, such as the Ares' stomp.
+[Whenever your value is a file name, `tag` it](#whenever-your-value-is-a-file-name-tag-it)
+explains why. List the file here, and its ammo comes with it. Listing a file that no unit
+uses does nothing on its own: a card must also give it to a unit.
 
 ```js
 if (!model.gwoSpecs) {

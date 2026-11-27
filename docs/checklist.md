@@ -16,7 +16,8 @@ each item as you complete it.
 - [ ] Renamed the folder under `ui/mods/` so that it matches your identifier.
 - [ ] Renamed the example card file that you use (`tech_card_id.js`,
       `unit_upgrade_card_id.js`, or `start_card_id.js`) to a unique name that does not
-      start with `gwc_` or `gwaio_`, and noted that name, without `.js`, as the card's ID.
+      start with `gwc_`, `gwaio_`, `nem_`, or `tgw_`, and noted that name, without `.js`,
+      as the card's ID. A tech card's name must not contain `_start_`.
 - [ ] Gave the card a name, a description, and a picture.
 - [ ] Made the card do something in its `buff` (in `apply`, for a loadout): add units,
       change unit stats, or change the AI.
