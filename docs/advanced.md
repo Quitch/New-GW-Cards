@@ -51,10 +51,16 @@ buff: function (inventory, params) {
 ```
 
 Whatever you put in `params` stays with the card, and `buff` receives it as its second
-value. Choose your own names for what you put in `params`, but never `unique`: GWO treats
-a card that carries `params.unique` as one that the player does not hold, so it can deal
-the card again and again while the player has it. GWO uses `unique` only for cards that a
-player may hold more than once, such as an extra card slot.
+value. Choose your own names for what you put in `params`, but not these three, which GWO
+reads itself:
+
+- `id`: GWO writes the card's ID there, and a value of yours replaces it, so the game
+  looks for a different card file.
+- `allowOverflow`: lets the card into a hand that has no free card slot.
+- `unique`: GWO treats a card that carries it as one that the player does not hold, so
+  it can deal the card again and again while the player has it. Use it only for a card
+  that a player may hold more than once, as GWO's Sub Commander and extra card slot cards
+  do, and set it with `gwoCard.uniqueValue(rng)`.
 
 GWO gives each card its own `rng`, and that `rng` comes from the war's seed. This is what
 makes a war repeatable: the same war dealt again offers the same cards, and every player
@@ -141,8 +147,11 @@ instead, as this guide already asks.
 
 The chance also counts only for a card that uses up one card slot. A card made with
 `gwoCard.upgradeCard` adds a slot back, so it uses up none. If such a card changes no
-units, an AI player scores it as worth nothing and never takes it. Give it `slot: false`,
-so that it uses up its slot like any other card.
+units, an AI player scores it as worth nothing and never takes it. Write a card like that
+as an ordinary card, not with `upgradeCard`. Or give it
+[`slot: false`](tech-cards.md#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard),
+so that it uses up its slot like any other card. Then it gives players no extra slot
+either, so also give it your own `describe`, or its description still promises one.
 
 **A loadout that an AI player cannot use** belongs in
 [`model.gwoLoadoutsAiCannotUse`](loadouts.md#modelgwoloadoutsaicannotuse--loadouts-that-a-co-op-ai-player-cannot-use-in-start_cardsjs),

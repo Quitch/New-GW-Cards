@@ -175,7 +175,9 @@ templates here follow it:
   back to `_.sample` when it is absent. GWO's own docs require
   `gwoCard.uniqueValue(rng)` in place of `Math.random()` for a `unique` marker, and
   `params.unique` makes GWO's `hasCard` treat the card as not held, so it is only for a
-  card that a player may hold more than once. They also require that `chance`
+  card that a player may hold more than once. `docs/advanced.md` ("Randomness in
+  `deal`") states this, and also reserves `params.id` and `params.allowOverflow`, which
+  GWO reads; keep the two consistent. They also require that `chance`
   never depends on `rng`, because the dealer calls `deal()` many times for each hand as a
   test. Only `params` may depend on `rng`.
 - `buff(inventory)` applies the card. It uses `inventory.addUnits(...)` with unit paths,

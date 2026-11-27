@@ -201,8 +201,9 @@ authority. What that means for a card, all of it silent when wrong:
   slot cost, which is negative, and is never taken. Feature cards go in
   `model.gwoCardsWithoutTooltip`. The chance counts only when the card's net slot change
   is -1 (`shared/coop_ai_cards.js`): a feature card built with `gwoCard.upgradeCard`
-  takes a slot and adds one, nets 0, scores 0, and is never taken, unless it passes
-  `slot: false`.
+  takes a slot and adds one, nets 0, scores 0, and is never taken. `slot: false` (with
+  its own `describe`, and no extra slot for players) lets the chance count; it does not
+  guarantee a take, since the slot cost still applies.
 - **`gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards` count the AI
   players' cards** under per-player tech, as they count connected viewers'.
 
