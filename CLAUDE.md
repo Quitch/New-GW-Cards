@@ -480,7 +480,9 @@ fail silently: the text just stays English. The `[ModTranslations]` log line (se
    (`[ModTranslations] languages must be an array of language names …; <id> not registered`),
    no files, and no log line. The option came with Mod-Translations #18 (merged to
    `develop` on 2026-11-27). Mod Translations 1.1.0 ignores it, and its README does not
-   describe it, so read `develop` for it until the next release.
+   describe it, so read `develop` for it until the next release. The list stops only
+   this mod's requests: GWO 7.11.4 registers without one, so a regional locale still
+   logs GWO's own not-found lines.
 3. **`scenes.global_mod_list`, and no scene list.** Add
    `"global_mod_list": ["coui://ui/mods/<identifier>/translations.js"]` beside the three
    existing scene keys. This is the one loader that does not follow the

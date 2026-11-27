@@ -72,6 +72,14 @@ you do not ship them. For a player who uses `de-AT`, it looks for `de-AT.json` a
 _Failed to load resource: the server responded with a status of 404 (Not Found)_. Your
 mod still works, but the errors look like a fault. The list stops them.
 
+**The list works from the version of Mod Translations after 1.1.0.** Version 1.1.0 and
+older ignore it: they read your files as if there were no list, so the errors stay, and
+the two mistakes below change nothing. Write the list anyway. Your mod works with every
+version, and the errors stop when players get the newer one.
+
+The list stops only your own mod's errors. Another mod that ships translations without a
+list, such as GWO 7.11.4, still shows the same red error for its own files.
+
 Two mistakes are easy to make:
 
 - **A name that is not a language name**, such as `"de.json"`, `"de DE"`, or `"de_DE"`.
@@ -79,9 +87,6 @@ Two mistakes are easy to make:
   `languages must be an array of language names`.
 - **A file that is not in the list.** Mod Translations does not read it, and nothing
   tells you. When you add a language later, add it to the list too.
-
-Older versions of Mod Translations ignore the list. They read your files as before, and
-the errors stay. Your mod works with every version.
 
 ## Step 3: list the script under `global_mod_list`, and nowhere else
 
@@ -109,8 +114,7 @@ runs before that first translation.
 
 Create a folder named `translations` in `ui/mods/<your identifier>/`. Put one file in it
 for each language, named `<lang>.json`. Then add `<lang>` to the
-[`languages` list](#the-languages-list) in `translations.js`. A file that is not in that
-list is never read.
+[`languages` list](#the-languages-list) in `translations.js`.
 
 `<lang>` must be the name of a folder in
 `{PA_INSTALL_DIRECTORY}/media/ui/main/_i18n/locales/`, for example `de`, `fr`, `es-ES`,
