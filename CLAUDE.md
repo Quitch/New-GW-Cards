@@ -189,8 +189,8 @@ and the war plays without that card.
 
 A host can seat AI players in a co-op war, and under per-player tech each one picks its
 own cards. It judges a card by applying it to a scratch copy of its inventory - the real
-`GWInventory.applyCards` with GWO's bank and the stock bank held shut (a mod's own bank
-is not), one apply at a time, each against a
+`GWInventory.applyCards` with GWO's bank and the stock bank held shut (and a mod's own
+bank too, through `gwoCard.loadout`), one apply at a time, each against a
 10-second timeout - and scoring what
 changed: units unlocked, unit stats modded, AI mods, and Sub Commanders and card slots
 added. It reads the card's ID only to treat an ID containing `_start_` as a loadout
@@ -210,7 +210,11 @@ authority. What that means for a card, all of it silent when wrong:
   effect the AI can see is valued by its own `deal` chance - unless it is in
   `gwoCardsToUnits`, which tells the AI to expect a unit effect, so it scores only its
   slot cost, which is negative, and is never taken. Feature cards go in
-  `model.gwoCardsWithoutTooltip`.
+  `model.gwoCardsWithoutTooltip`. The chance counts only when the card's net slot change
+  is -1 (`shared/coop_ai_cards.js`): a feature card built with `gwoCard.upgradeCard`
+  takes a slot and adds one, nets 0, scores 0, and is never taken. `slot: false` (with
+  its own `describe`, and no extra slot for players) lets the chance count; it does not
+  guarantee a take, since the slot cost still applies.
 - **`gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards` count the AI
   players' cards** under per-player tech, as they count connected viewers'.
 

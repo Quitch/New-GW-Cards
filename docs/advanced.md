@@ -39,9 +39,28 @@ instead of `Math.random()`:
 
 ```js
 deal: function (system, context, inventory, rng) {
-  return { chance: 40, params: { unique: gwoCard.uniqueValue(rng) } };
+  var choices = [gwoUnit.dox, gwoUnit.grenadier];
+  return {
+    chance: 40,
+    params: { unit: rng ? rng.pick(choices) : _.sample(choices) },
+  };
+},
+buff: function (inventory, params) {
+  inventory.addUnits(params.unit);
 },
 ```
+
+Whatever you put in `params` stays with the card, and `buff` receives it as its second
+value. Choose your own names for what you put in `params`, but not these three, which GWO
+reads itself:
+
+- `id`: GWO writes the card's ID there, and a value of yours replaces it, so the game
+  looks for a different card file.
+- `allowOverflow`: lets the card into a hand that has no free card slot.
+- `unique`: GWO treats a card that carries it as one that the player does not hold, so
+  it can deal the card again and again while the player has it. Use it only for a card
+  that a player may hold more than once, as GWO's Sub Commander and extra card slot cards
+  do, and set it with `gwoCard.uniqueValue(rng)`.
 
 GWO gives each card its own `rng`, and that `rng` comes from the war's seed. This is what
 makes a war repeatable: the same war dealt again offers the same cards, and every player
@@ -50,12 +69,8 @@ used it would deal differently every time, and players in the same game would di
 about what the game offered.
 
 `rng` is **optional**. Some ways of dealing a card don't supply one, and `rng` is then
-`undefined`. `gwoCard.uniqueValue(rng)` handles that for you. If you take a random value
-yourself, fall back to another method when `rng` is missing:
-
-```js
-var pick = rng ? rng.pick(list) : _.sample(list);
-```
+`undefined`. That is why the example falls back to `_.sample` when `rng` is missing. Do
+the same whenever you take a random value.
 
 > **Your `chance` must never be random.** Only `params` may be random. GWO asks every card
 > in the deck for its chance several times, and keeps only one of the answers. A chance
@@ -64,8 +79,10 @@ var pick = rng ? rng.pick(list) : _.sample(list);
 
 ## Co-op games — `gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards`
 
-The `inventory` that your card receives belongs to the local player. In a co-op war every
-player has their own hand, so a card that must react to the whole team has to look wider.
+The `inventory` that your card receives belongs to the player whose hand is being dealt.
+In a co-op war that is not always the player at this computer: the host deals each other
+player's hand, and each AI player's hand, on that player's own inventory. Every player
+has their own hand, so a card that must react to the whole team has to look wider.
 Two helpers do that:
 
 - `gwoCard.anyPlayerHasCard(inventory, "some_card_id")`: true when the player _or_ any
@@ -128,6 +145,14 @@ as worth nothing, and never takes it. List that kind of card in
 [`model.gwoCardsWithoutTooltip`](tech-cards.md#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
 instead, as this guide already asks.
 
+The chance also counts only for a card that uses up one card slot. A card made with
+`gwoCard.upgradeCard` adds a slot back, so it uses up none. If such a card changes no
+units, an AI player scores it as worth nothing and never takes it. Write a card like that
+as an ordinary card, not with `upgradeCard`. Or give it
+[`slot: false`](tech-cards.md#a-shortcut-for-a-card-that-improves-one-unit--gwocardupgradecard),
+so that it uses up its slot like any other card. Then it gives players no extra slot
+either, so also give it your own `describe`, or its description still promises one.
+
 **A loadout that an AI player cannot use** belongs in
 [`model.gwoLoadoutsAiCannotUse`](loadouts.md#modelgwoloadoutsaicannotuse--loadouts-that-a-co-op-ai-player-cannot-use-in-start_cardsjs),
 so that an AI player never starts with it.
@@ -145,16 +170,21 @@ completely, and as a result:
 
 - **Nothing ever calls `discard`.** A card that depends on it does nothing, and reports
   nothing.
-- **GWO calls `keep` every time it deals the card**, whether the player keeps it or not.
-  It gives `keep` the result of your `deal`, which is the `{ chance: … }` that you
-  returned, not PA's `params`.
+- **`keep` does not run when GWO deals a hand.** It runs only when a card is dealt on its
+  own: from the `X` test panel, as the factory card that a co-op AI player gets when it
+  has no basic land factory, and for the loadout when a war or a co-op player's start is
+  created. Then it runs whether the player keeps the card or not, and it receives the
+  result of your `deal`, which is the `{ chance: … }` that you returned, not PA's
+  `params`.
 
 So if you copy a PA card that uses either part, delete that part, and move its logic into
-`deal`, where you can read the `inventory` and the `system` directly.
+`deal`, where you can read the `inventory` and the `system` directly. A test from the `X`
+panel runs `keep`, so it does not show you that a real hand never does.
 
-`releaseContext` is the one useful part of this group. If your card writes its own
+`releaseContext` follows the same rule as `keep`. If your card writes its own
 `getContext` and must clean something up afterwards, GWO calls `releaseContext(context)`
-after it has dealt the card:
+after it has dealt the card on its own, as above, and never when it deals a hand. A tech
+card cannot rely on it:
 
 ```js
 releaseContext: function (context) {
