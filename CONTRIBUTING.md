@@ -115,13 +115,15 @@ There are two separate trees in `ui/`:
     work with, and `model.gwoLoadoutsAiCannotUse`, for loadouts that a co-op AI player
     cannot use. GWO never creates those arrays, so the loader must create each one if it
     is absent.
-  - `tech_cards.js` (`gw_play`, `gw_coop_per_player_loadout`) → `model.gwoCards` (the
+  - `tech_cards.js` (`gw_play`) → `model.gwoCards` (the
     deck) and `model.gwoCardsToUnits` (the unit associations for the tooltip). It can also
     use `model.gwoCardsWithoutTooltip`, for tech cards that must show no affected-units
     tooltip.
-  - `specs.js` (the `gw_play` scene) → `model.gwoSpecs`. Use it to mod unit specs that the
-    base game does not otherwise load, such as an unused unit.
-  - `decks.js` (`gw_play`, `gw_start`, `gw_coop_per_player_loadout`) → `model.gwoDecks`,
+  - `specs.js` (the `gw_play` scene) → `model.gwoSpecs`. Use it for a file that a card
+    gives to a unit that does not already use it: a file borrowed from another unit, or
+    one that no unit uses, such as the Ares stomp. GW copies every file that a player's
+    units reference, so only such a file needs listing.
+  - `decks.js` (`gw_play`, `gw_start`) → `model.gwoDecks`,
     a deck of the mod's own for the Techs picker. It ships commented out. See
     `docs/decks.md`.
   - `bank.js` — an AMD module written with `define()`. `start_card_id.js` calls `require`
@@ -132,10 +134,13 @@ There are two separate trees in `ui/`:
 The `scenes` block in `modinfo.json` is the real list of entry points. The game loads only
 the files listed there, and every URL must match the mod `identifier`. **Each scene gets a
 new `model` page.** A loader must therefore appear under every scene that needs its data.
-That is why `start_cards.js` and `decks.js` appear three times and `tech_cards.js` appears
-twice. If you register loadouts only in `gw_start`, they are absent from the `gw_play`
-treasure pool, so the game can never award them, and they are also absent from the co-op
-loadout picker.
+That is why `start_cards.js` appears three times and `decks.js` twice. A loader appears
+only under the scenes that read its data, as the scene table in GWO's `docs/tech-cards.md`
+lists them: `model.gwoCards`, `model.gwoCardsToUnits`, `model.gwoCardsWithoutTooltip`,
+and `model.gwoSpecs` are read only in `gw_play`, and `model.gwoDecks` only in `gw_start`
+and `gw_play`. If you register loadouts only in `gw_start`, they are absent from the
+`gw_play` treasure pool, so the game can never award them, and they are also absent from
+the co-op loadout picker.
 
 ### Translations
 
@@ -284,7 +289,11 @@ template and the game disagree.
   each one immediately invoked function, `(function () { ... })();`, so that they declare
   nothing in the shared scene scope. Inside it they put their body in a `try`/`catch`
   block that sends failures to `console.error`. Keep both patterns. A throw in a loader
-  would break the scene in the game and show no cause.
+  would break the scene in the game and show no cause. `tech_cards.js` and `specs.js` do
+  their work in a `requireGW` callback, which RequireJS runs on a later turn, after the
+  outer `try` has returned. So each callback has its own `try`/`catch` with the same
+  `New GW Cards:` line. The outer one still catches an error in the `requireGW` call
+  itself.
 - LICENSE is public domain (Unlicense).
 - The audience of this mod is people who may know nothing about code. The mod must guide
   the user at every step. Write many more comments, in much more detail, than is normal,
