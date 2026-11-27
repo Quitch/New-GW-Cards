@@ -35,8 +35,8 @@ Annihilation` on Windows. The author's mod is a copy of this folder under
   the zip is missing, have the user install GWO rather than guessing at its contents.
 
 Prefer these local copies to anything on GitHub: they are what the user is actually
-running. The two exceptions are GWO's `docs/` and `scripts/`, which the zip does not
-contain — read those from a `GW-AI-Overhaul` checkout if the user has one, otherwise from
+running. The three exceptions are GWO's `docs/`, `scripts/`, and `test/`, which the zip
+does not contain — read those from a `GW-AI-Overhaul` checkout if the user has one, otherwise from
 the repo's **`master`** branch (what releases are built from). Never read `develop`; it
 can be ahead of what is live. A checkout may be on `develop`, so check its branch first,
 and read with `git show master:<path>` when it is not on `master`.
@@ -106,7 +106,8 @@ If the user has no mod folder yet, create one before writing any card:
    author-facing explanation.
 
 The `scenes` addresses and the `ui/mods/` folder name must agree, or the game loads
-nothing and reports nothing. Keep the `identifier` in `modinfo.json` the same as them too:
+none of the mod's scripts; the only sign is stock `loadScript`'s
+`Failed loading <url> with 404` for each address, in a console the user is not watching. Keep the `identifier` in `modinfo.json` the same as them too:
 the game would accept a different one (GWO's own dev checkout is `…-dev` beside an
 unsuffixed folder), but one name in three places is the rule the guide teaches. A mod that
 ships translations has a fourth: the string passed to `ModTranslations.register` (see
@@ -459,9 +460,12 @@ literals, or `class`. Do not use `String.prototype.startsWith`/`endsWith` — PA
 polyfill ignores the position argument and returns the wrong answer; use `_.startsWith`
 or `_.endsWith`. `_` (lodash), `ko`, jQuery, `api`, and `model` are globals.
 
-`eslint.config.mjs` is the authoritative answer to "may I use X?": it forbids everything
-after ES5 and then switches back on, one at a time, the features Chrome 40 genuinely
-shipped. Anything not on that list is not allowed. It came with the template and sits in
+`eslint.config.mjs` is the authoritative answer to "may I use X?" for language features
+and built-ins: it forbids everything after ES5 and then switches back on, one at a time,
+the features Chrome 40 genuinely shipped. Anything not on that list is not allowed. It
+does not police browser APIs: `globals.browser` declares Web APIs that Chrome 40 lacks,
+such as `fetch` and `URLSearchParams`, so ESLint accepts them and the card fails on
+Coherent. Check any browser API against Chrome 40 separately. It came with the template and sits in
 the mod folder alongside `package.json`, so checking a card is `npm install` once in that
 folder, then `npm run lint:js`.
 
@@ -477,7 +481,7 @@ visible cause.
 
 GWO is the authority, not this file and not the guide. Its `docs/tech-cards.md` holds
 the card contract, the `model.gwo*` list, and the loadout bank rules; its
-`test/modder_api.test.js` pins the surface you write a card against — the helper names
+`test/modder_api.test.js` (checkout or `master` only) pins the surface you write a card against — the helper names
 in `shared/cards.js`, the unit and group keys, `deal`'s arguments. If a card behaves
 unexpectedly, read that test before assuming the template is wrong: it says what GWO
 actually guarantees today.
@@ -489,19 +493,20 @@ Console of Chrome or Edge DevTools attached through `chrome://inspect`, deal the
 GW battle — a skirmish or sandbox game uses stock specs, so it cannot show a card's
 effect). The panel's give-card box finds IDs in `model.gwoCards`, which `gw_play` rebuilds
 as the registered cards plus every GWO loadout plus the war's deck
-(`shared/deal.js:setupGwoCards`). The same page also lists the two messages PA prints
+(`shared/deal.js:setupGwoCards`). The same page also lists the messages PA prints
 normally, so you do not mistake them for a fault. `docs/troubleshooting.md` maps each
 silent failure to its cause.
 
 Before handing back, check: no placeholder left anywhere (`YOUR_…`, `UNIT_PATH`,
 `AFFECTED_UNIT_PATH_1`, `AND_SO_ON`, `PNG_FILE_NAME`, `CHOSEN_LINE_HERE`, `!LOC:…HERE`,
-`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, and in `modinfo.json`
+`!LOC:TEXT TO SHOW WHEN CARD IS LOCKED`, `your_mod_id`, `YOUR-DECK-ID` and
+`!LOC:ONE LINE DESCRIBING THE DECK.` in `decks.js`, and in `modinfo.json`
 `CHANGE THIS`, `DESCRIBE THEM/THE THEME`, `YOUR NAME HERE`, and, before a release, `#.#.#`,
 `yyyy-mm-dd`, `THREAD_ID`, and `SOME_PUBLIC_URL_HERE`); a tech card's `deal` returns a
 chance above `0` that does not depend on its optional fourth argument `rng` (only `params`
 may be random, and a card drawing at all should use `rng` when it is given, with a
-fallback when it is not, as `docs/advanced.md` shows: the `X` panel,
-`starting_inventory.js`, and the co-op AI's `chanceOf` call `deal` without it, so an
+fallback when it is not, as `docs/advanced.md` shows: the `X` panel and the co-op AI's
+`chanceOf` call `deal` without it, so an
 unguarded `rng.…` call throws there); the card ID is registered in the right list; and the
 identifier is the same in all three places — four when the mod ships translations, where
 every key in every `<lang>.json` must also still match a `!LOC:` literal in the source.

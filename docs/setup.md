@@ -62,7 +62,9 @@ The guide refers to two folders on your computer.
 
 > **Keep three things the same:** the `identifier` in `modinfo.json`, the `scenes`
 > addresses in that same file, and the folder name under `ui/mods/`. If the `scenes`
-> addresses and the folder name disagree, the game loads nothing and reports nothing.
+> addresses and the folder name disagree, the game loads none of your scripts. The only
+> sign is a `Failed loading` error for each address in the
+> [Console](testing.md#setting-up).
 > Use the same identifier in all three, so that you never have to remember which two
 > must match.
 
