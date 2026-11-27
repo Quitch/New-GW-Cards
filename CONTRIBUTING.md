@@ -184,7 +184,7 @@ templates here follow it:
   `gw_play/referee_game_files.js` and AI mods in `gw_play/referee_ai.js` (`applyAiMods`).
 - A spec mod whose `value` is a **file name** needs a second mod with `op: "tag"`, on the
   same `file`, written after it, at the path where the file name now sits
-  (`tools.1.spec_id` after a `push` to `tools`). The file must also be reachable, or listed in
+  (the new entry's own field after a `push` to `tools`, such as `tools.1.spec_id`). The file must also be reachable, or listed in
   `model.gwoSpecs`. This is a silent failure. `docs/changing-units.md`, `CLAUDE.md`, and
   the comments in `tech_card_id.js`, `start_card_id.js`, `unit_upgrade_card_id.js`, and
   `specs.js` all warn about it. Keep those warnings consistent with each other, and with GWO's

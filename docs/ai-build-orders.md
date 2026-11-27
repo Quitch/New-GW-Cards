@@ -33,8 +33,8 @@ Each change is written with these labels:
   `refId` is exactly `refValue`: the whole value, and for a list, the same names in the
   same order. Your card sees the entry as the player's other cards left it, so if one of
   them has already added a name to that list, your `refValue` no longer matches. Only
-  `append`, `prepend`, `replace`, and `unset` use `refId` and `refValue`. The other ops
-  ignore them and change every entry with that `toBuild`. When the entry does not match,
+  `append`, `prepend`, `replace`, and `unset` use `refId` and `refValue`. `remove` and
+  `new` ignore them and change every entry with that `toBuild`. When the entry does not match,
   GWO looks at its build conditions instead (see
   [`matchAll`](#matchall--change-every-build-condition)).
 - `matchAll`, `treeOnly`: optional and advanced. See
@@ -214,11 +214,14 @@ no `builders`. No `platoon` entry has `builders`, so `silence` on `platoon` chan
 nothing.
 
 On `fabber`, some entries have no `to_build` name. They are the AI's orders to move the
-commander or a fabricator to another planet. `except` cannot name them, so `silence`
-stops them too whenever all their builders are in `value.builders`. For example,
-`Teleport Commander To Planet` has only `Commander` as its builder, and
-`Move Orbital Fabber To Planet` has only `OrbitalFabber`. List `Commander` or
-`OrbitalFabber` in `value.builders` only if you also mean to stop those moves.
+commander or a fabricator to another planet, and to help other builders build.
+`except` cannot name them, so `silence` stops them too whenever all their builders are
+in `value.builders`. For example, `Teleport Commander To Planet` has only `Commander` as
+its builder, and so does the Queller AI's `Commander Assist`.
+`Move Orbital Fabber To Planet` has only `OrbitalFabber`. `Move Fabber To Planet` and
+`Fabber Assist` stop once every fabricator name that they list is in `value.builders`.
+List `Commander`, `OrbitalFabber`, or every fabricator only if you also mean to stop those
+orders.
 
 `silence` uses only `type`, `op`, `value`, and `treeOnly`. It ignores `toBuild`,
 `idToMod`, `refId`, `refValue`, and `matchAll`. `builders` and `except` must both be lists

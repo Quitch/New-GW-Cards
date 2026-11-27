@@ -93,9 +93,9 @@ removes its entries one by one. It does not add the list as one entry.
 
 Two of these ops have limits:
 
-- `pull` can take out a number or a piece of text. It cannot take out an entry that is a
-  set of labelled values, such as a tool (`{ spec_id: … }`). Such an entry never matches,
-  so nothing is taken out, and nothing reports it.
+- `pull` can take out a number, a piece of text, `true`, `false`, or `null`. It cannot
+  take out an entry that is a set of labelled values, such as a tool (`{ spec_id: … }`),
+  or a list. Such an entry never matches, so nothing is taken out, and nothing reports it.
 - `merge` works on the top level only. If one of your labelled values holds a set of
   labelled values of its own, that whole set replaces the old one. The two sets are not
   merged.
@@ -146,7 +146,8 @@ to it: no health card, no damage card, nothing. There is no warning.
 The fix is a second entry with the same `file`, `op: "tag"`, and no `value` at all. Its
 `path` is where the file name now sits. After a `replace`, that is the same `path`. After
 a `push` or a `prepend`, it is the new entry's own label, such as `tools.1.spec_id`, not
-the list (`tools`). Write the `tag` after the change that writes the file name.
+the list (`tools`). Write the `tag` after the change that writes the file name. A `tag`
+written first runs before the new entry exists, so the new entry stays untagged.
 
 ```js
 inventory.addMods([
@@ -191,9 +192,11 @@ other tools along by one.
 **That number is right only if no other card adds a tool to the same unit.** The `push`
 and `prepend` changes of every card in the hand go into one list, so another card's tool
 can take your number, or yours can take its number. Which tag then misses depends on the
-order of the cards in the hand. GWO's own cards add a tool to the Advanced Fabrication
-Bot, Avenger, Bluehawk, Catapult, Horsefly, Inferno, Solar Array, Stingray, Storm,
-Stryker, and Vanguard. Choose another unit if you can.
+order of the cards in the hand. A card that replaces the unit's whole `tools` list
+changes the count too, because every `replace` runs first. GWO's own cards add a tool to
+the Advanced Fabrication Bot, Avenger, Bluehawk, Catapult, Firefly, Horsefly, Inferno,
+Solar Array, Stingray, Storm, Stryker, and Vanguard, and to the Colonel in a war started
+on GWO's old CEO loadout. Choose another unit if you can.
 
 **The file that you borrow must be in play.** A tag on a file that the player has no copy
 of leaves the tool with no target, and the tool then disappears completely. That is worse

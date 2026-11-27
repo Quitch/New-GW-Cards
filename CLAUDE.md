@@ -220,14 +220,16 @@ function in its `ops` table.
   each card's descriptors in turn (`orderOfOperations`). So another card's `replace`
   still lands before your `multiply`, and a `clone` copies its source before any card's
   `replace`, `multiply`, or `add` reaches it. A `tag` written before the `push` or
-  `prepend` it tags warns and leaves the new entry untagged, so write it after. Never
-  write two of the five ordered ops so that they depend on running in sequence.
+  `prepend` it tags runs before the new entry exists: it warns when nothing is at that
+  index yet, or silently re-tags the entry already there, and either way the new entry
+  stays untagged. So write it after. Never write two of the five ordered ops so that they
+  depend on running in sequence.
 - **`wipe` is a string substitution, not a delete.** `value` is `[from, to]`; a bare value
   means "delete every occurrence of it". It stringifies a value that is not a string
   first, so `wipe` on a number leaves a string.
-- **`pull` never removes an object entry, and `merge` is shallow.** `pull` is `_.pull`,
-  which compares by identity, and the spec is a deep copy, so only a number or string
-  entry can match. `merge` is `_.assign`: a nested object in `value` replaces the
+- **`pull` never removes an object or array entry, and `merge` is shallow.** `pull` is
+  `_.pull`, which compares by SameValueZero, and the spec is a deep copy, so only a
+  primitive entry (number, string, boolean, `null`) can match. `merge` is `_.assign`: a nested object in `value` replaces the
   existing one whole.
 - **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
@@ -303,12 +305,14 @@ Two things follow.
 - **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so you tag a
   tool pushed onto a two-tool unit at `tools.2.spec_id`. Read the count from the unit's
   own spec under `<PA>`, not from the card. That count holds only while no other card in
-  the hand pushes or prepends to the same unit's `tools`: every card's `push`/`prepend`
-  share one written-order list, so another card's tool shifts your index or yours shifts
-  its index, depending on hand order. GWO's own cards add a tool to the Advanced
-  Fabrication Bot, Avenger, Bluehawk, Catapult, Horsefly, Inferno, Solar Array,
-  Stingray, Storm, Stryker (a `prepend`), and Vanguard; steer the user away from those
-  units.
+  the hand changes how many tools the same unit has. Every card's `push`/`prepend` share
+  one written-order list, so another card's tool shifts your index or yours shifts its
+  index, depending on hand order; and another card's `replace` of `tools` lands before
+  any `push`, so it changes the count you start from. GWO's own cards add a tool to the
+  Advanced Fabrication Bot, Avenger, Bluehawk, Catapult, Firefly (a `replace` of
+  `tools`), Horsefly, Inferno, Solar Array, Stingray, Storm, Stryker (a `prepend`), and
+  Vanguard, and to the Colonel in a war started on the retired CEO loadout; steer the
+  user away from those units.
 - **The target must exist tagged**, or the tag points at nothing and the game loses the
   tool outright — a worse outcome than leaving it untagged. GW already tags a file the
   unit references; it does not tag one borrowed from another unit, which therefore needs
@@ -365,9 +369,10 @@ no partial matches. `idToMod` is the field on that entry you are changing (`buil
 `_.isEqual`s `refValue` (`referee_ai.js`, `forEachMatchingTarget`): the whole current
 value, list order included, as the earlier descriptors in the hand left it. A card that
 appends to `builders` first stops a later card's `refValue: ["X"]` from matching. Only
-`append`, `prepend`, `replace`, and `unset` read `refId`/`refValue`; `remove`, `new`,
-`squad`, and `silence` ignore them and change every entry with that `to_build`, in every
-AI tree. And `refId: "priority"` cannot pick out the TITANS tree from the others:
+`append`, `prepend`, `replace`, and `unset` read `refId`/`refValue`. `remove` and `new`
+ignore them and change every entry with that `to_build`, in every AI tree; `squad`
+(which matches a template key) and `silence` and `load` (which read no `toBuild`)
+ignore them too. And `refId: "priority"` cannot pick out the TITANS tree from the others:
 every TITANS combination of build kind, `to_build`, and `priority` also appears in GWO's
 Penchant files.
 
@@ -394,9 +399,12 @@ arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
 `builders` are **all** in `value.builders`, unless its `to_build` is in `value.except`. An
 entry with any builder outside the list, or with no `builders`, is untouched. `except`
 matches `to_build` only, so on `fabber` it cannot keep the entries that have no `to_build`
-(the planet moves and teleports, such as `Teleport Commander To Planet` with builder
-`Commander` and `Move Orbital Fabber To Planet` with `OrbitalFabber`): they are zeroed
-whenever all their builders are listed. It ignores
+(the planet moves, teleports, and assists): they are zeroed whenever all their builders
+are listed. `Teleport Commander To Planet`, `Move Commander To Planet`, and Queller's
+`Commander Assist` have only `Commander`; `Move Orbital Fabber To Planet` has only
+`OrbitalFabber`; `Teleport Fabber To Planet`, `Move Fabber To Planet`, and
+`Fabber Assist` are zeroed once every fabber role they list (and `SupportCommander`,
+where listed) is in `value.builders`. It ignores
 `toBuild`, `idToMod`, `refId`, `refValue`, and `matchAll`, and it reads `treeOnly`. Use it
 when a card changes what a builder can build and the AI must stop ordering everything else
 from that builder. A missing `value` throws, so `applyAiMods` logs
