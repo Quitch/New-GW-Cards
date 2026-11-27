@@ -120,6 +120,10 @@ define([
       // Tools count from 0.  You must also list a borrowed file in specs.js, or
       // the tag points at nothing.  "Whenever your value is a file name, tag it"
       // in docs/changing-units.md explains both halves.
+      // A change to a unit's tools also stops every card's changes to that unit
+      // from reaching the race unit that stands in for it, in a war played as
+      // another race.  If your card changes tools, give its entry in
+      // model.gwoCardsToUnits races: ["mla"].  See docs/race-cards.md.
       //
       // Delete the two lines below if your card changes no unit stats.
       var mods = [];
