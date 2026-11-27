@@ -73,8 +73,10 @@ the same whenever you take a random value.
 
 ## Co-op games — `gwoCard.anyPlayerHasCard` and `gwoCard.getAllConnectedPlayerCards`
 
-The `inventory` that your card receives belongs to the local player. In a co-op war every
-player has their own hand, so a card that must react to the whole team has to look wider.
+The `inventory` that your card receives belongs to the player whose hand is being dealt.
+In a co-op war that is not always the player at this computer: the host deals each other
+player's hand, and each AI player's hand, on that player's own inventory. Every player
+has their own hand, so a card that must react to the whole team has to look wider.
 Two helpers do that:
 
 - `gwoCard.anyPlayerHasCard(inventory, "some_card_id")`: true when the player _or_ any
@@ -136,6 +138,11 @@ change the units that it names, so it scores such a card that changes nothing it
 as worth nothing, and never takes it. List that kind of card in
 [`model.gwoCardsWithoutTooltip`](tech-cards.md#modelgwocardswithouttooltip--tech-cards-with-no-unit-tooltip-in-tech_cardsjs)
 instead, as this guide already asks.
+
+The chance also counts only for a card that uses up one card slot. A card made with
+`gwoCard.upgradeCard` adds a slot back, so it uses up none. If such a card changes no
+units, an AI player scores it as worth nothing and never takes it. Give it `slot: false`,
+so that it uses up its slot like any other card.
 
 **A loadout that an AI player cannot use** belongs in
 [`model.gwoLoadoutsAiCannotUse`](loadouts.md#modelgwoloadoutsaicannotuse--loadouts-that-a-co-op-ai-player-cannot-use-in-start_cardsjs),
