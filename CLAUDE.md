@@ -60,7 +60,7 @@ watching. Look each one up.
 | AI `toBuild` names                                      | `to_build` values in `<PA>/pa/ai/{fabber,factory,platoon}_builds/*.json`, `<PA>/pa_ex1/ai/**`, `<PA>/pa_ex1/ai_queller/q_*/**`, and `<GWO>` → `pa/ai_penchant/**`                                                                                                                                                                         |
 | AI `builders` roles                                     | keys under `unit_map` in `<PA>/pa_ex1/ai/unit_maps/ai_unit_map.json` and `ai_unit_map_x1.json` (TITANS roles such as `SupportCommander` are only in `_x1`), `<PA>/pa_ex1/ai_queller/q_*/unit_maps/*.json`, and `<GWO>` → `pa/ai_penchant/unit_maps/*.json`. `pa_ex1` shadows `<PA>/pa/ai/unit_maps/ai_unit_map.json`: never read that one |
 | Platoon template names (`squad`'s `toBuild`)            | keys under `platoon_templates` in `<PA>/pa_ex1/ai/platoon_templates/*.json`, `<PA>/pa_ex1/ai_queller/q_*/platoon_templates/*.json`, and `<GWO>` → `pa/ai_penchant/platoon_templates/**/*.json`                                                                                                                                            |
-| Legal `test_type` values for AI build conditions        | the harvested list in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                                                                                                               |
+| Legal `test_type` values for AI build conditions        | the list collected by hand in GWO's `scripts/validate/schemas.js` (checkout or `master` only), otherwise the `test_type` values used in the stock build files above                                                                                                                                                                       |
 | What an op or helper _actually_ does                    | `<GWO>` → `ui/mods/com.pa.quitch.gwaioverhaul/gw_play/specs.js` (unit-spec mods) and `gw_play/referee_ai.js` (AI mods). These are in the zip, so they are always available                                                                                                                                                                |
 | Locale names for a `translations/<lang>.json`           | the directory listing of `<PA>/ui/main/_i18n/locales/`                                                                                                                                                                                                                                                                                    |
 | The game's existing wording for a stock term            | `<PA>/ui/main/_i18n/locales/<lang>/*.json`                                                                                                                                                                                                                                                                                                |
@@ -225,14 +225,23 @@ function in its `ops` table.
   nothing; if the stat is not a number it warns and leaves it alone. `multiplyOrCreate`
   sets it to `value` when it is absent. `add` also creates when absent, and concatenates
   when the value is a string.
-- **Ops do not run in the order you write them.** Across every card in the hand, GWO runs
-  all `clone` first, then `replace`, then `multiplyOrCreate`, then `multiply`, then `add`;
-  everything else follows afterwards (`orderOfOperations`). So another card's `replace`
+- **Five ops do not run in the order you write them.** Across every card in the hand, GWO
+  runs all `clone` first, then `replace`, then `multiplyOrCreate`, then `multiply`, then
+  `add`; everything else follows afterwards, in written order: the hand's cards in turn,
+  each card's descriptors in turn (`orderOfOperations`). So another card's `replace`
   still lands before your `multiply`, and a `clone` copies its source before any card's
-  `replace`, `multiply`, or `add` reaches it. Never write two ops that depend on running
-  in sequence.
+  `replace`, `multiply`, or `add` reaches it. A `tag` written before the `push` or
+  `prepend` it tags runs before the new entry exists: it warns when nothing is at that
+  index yet, or silently re-tags the entry already there, and either way the new entry
+  stays untagged. So write it after. Never write two of the five ordered ops so that they
+  depend on running in sequence.
 - **`wipe` is a string substitution, not a delete.** `value` is `[from, to]`; a bare value
-  means "delete every occurrence of it".
+  means "delete every occurrence of it". It stringifies a value that is not a string
+  first, so `wipe` on a number leaves a string.
+- **`pull` never removes an object or array entry, and `merge` is shallow.** `pull` is
+  `_.pull`, which compares by SameValueZero, and the spec is a deep copy, so only a
+  primitive entry (number, string, boolean, `null`) can match. `merge` is `_.assign`: a nested object in `value` replaces the
+  existing one whole.
 - **Path walking** (`applyMod`): a dot separates the segments, so a segment cannot itself
   contain one. A number indexes into an array, and `+` appends a new object to one. GWO
   creates missing intermediate levels for you, except for `multiply`, `tag`, and `clone`,
@@ -268,8 +277,9 @@ function in its `ops` table.
   intended behaviour. It only indicates a bug when the file _should_ have been reachable:
   a typo'd path, or a borrowed file missing from `model.gwoSpecs`.
 - **`path` is required** except for `clone` and `eval`. There is no whole-file replace.
-- **Follow a value that is a file name with `op: "tag"`** on the same `file` and
-  `path`. See the section below — this is the failure that is hardest to spot.
+- **Follow a value that is a file name with `op: "tag"`** on the same `file`, at the
+  path where the file name now sits. See the section below — this is the failure that is
+  hardest to spot.
 - **`clone` and `eval` are advanced — avoid them**, as `docs/changing-units.md` says.
 - **`dull` removes units only, after every card's `buff`, and every copy.** So it lists
   only the units the card forbids. Listing a unit the card itself grants means the player
@@ -287,19 +297,33 @@ player's entire hand misses it. The game logs nothing. This has shipped broken i
 itself more than once.
 
 Every mod whose `value` is a spec reference needs a second mod, `op: "tag"`, on the same
-`file` and `path` and with no `value`. The reference fields are the ones `tagSpec`
-renames: `base_spec`, `tools[].spec_id`, `ammo_id` (or `ammo_id[].id` when it is a list),
-`replaceable_units`, `buildable_projectiles`, `factory.initial_build_spec` (only when it
-is a string), `death_weapon.ground_ammo_spec`, `death_weapon.air_ammo_spec`,
-`spawn_unit_on_death`. The `tag` op takes only a string, so a list field
-(`replaceable_units`, `buildable_projectiles`) is tagged one entry at a time by index
-(`buildable_projectiles.0`); `tag` on the list itself warns and changes nothing.
+`file`, with no `value`, written after it. Its `path` is where the reference now sits:
+the same `path` after a `replace`, and the new entry's own field after a `push` or
+`prepend` (`tools.1.spec_id`, never `tools`, which warns and changes nothing). The
+reference fields are the ones `tagSpec` renames: `tools[].spec_id`, `ammo_id` (or
+`ammo_id[].id` when it is a list), `replaceable_units`, `buildable_projectiles`,
+`factory.initial_build_spec` (only when it is a string), `death_weapon.ground_ammo_spec`,
+`death_weapon.air_ammo_spec`, `spawn_unit_on_death`. The `tag` op takes only a string,
+so a list field (`replaceable_units`, `buildable_projectiles`) is tagged one entry at a
+time by index (`buildable_projectiles.0`); `tag` on the list itself warns and changes
+nothing. `tagSpec` also renames `base_spec`, but a card cannot change one: GWO's `load()`
+in `gw_play/specs.js` flattens any spec that holds `base_spec` each time it reads it, so
+a written `base_spec` is merged under values the spec already has, and its `tag` finds
+no `base_spec` left and warns.
 
 Two things follow.
 
 - **Index after the fact.** `replace` runs before `push`/`prepend`/`tag`, so you tag a
   tool pushed onto a two-tool unit at `tools.2.spec_id`. Read the count from the unit's
-  own spec under `<PA>`, not from the card.
+  own spec under `<PA>`, not from the card. That count holds only while no other card in
+  the hand changes how many tools the same unit has. Every card's `push`/`prepend` share
+  one written-order list, so another card's tool shifts your index or yours shifts its
+  index, depending on hand order; and another card's `replace` of `tools` lands before
+  any `push`, so it changes the count you start from. GWO's own cards add a tool to the
+  Advanced Fabrication Bot, Avenger, Bluehawk, Catapult, Firefly (a `replace` of
+  `tools`), Horsefly, Inferno, Solar Array, Stingray, Storm, Stryker (a `prepend`), and
+  Vanguard, and to the Colonel in a war started on the retired CEO loadout; steer the
+  user away from those units.
 - **The target must exist tagged**, or the tag points at nothing and the game loses the
   tool outright — a worse outcome than leaving it untagged. GW already tags a file the
   unit references; it does not tag one borrowed from another unit, which therefore needs
@@ -352,26 +376,46 @@ passes. You need that shape to use `new` or `remove`. `template` files are
 
 **How matching works.** `toBuild` must equal an entry's `to_build` exactly — no wildcards,
 no partial matches. `idToMod` is the field on that entry you are changing (`builders`,
-`priority`, …). `refId`/`refValue` restrict the change to entries that already hold that
-value, which is the usual way to tell apart the same `to_build` in the TITANS, Queller,
-and Penchant AI trees — `refId: "priority"` with the priority that tree uses.
+`priority`, …). `refId`/`refValue` restrict the change to entries whose `refId` field
+`_.isEqual`s `refValue` (`referee_ai.js`, `forEachMatchingTarget`): the whole current
+value, list order included, as the earlier descriptors in the hand left it. A card that
+appends to `builders` first stops a later card's `refValue: ["X"]` from matching. Only
+`append`, `prepend`, `replace`, and `unset` read `refId`/`refValue`. `remove` and `new`
+ignore them and change every entry with that `to_build`, in every AI tree; `squad`
+(which matches a template key) and `silence` and `load` (which read no `toBuild`)
+ignore them too. And `refId: "priority"` cannot pick out the TITANS tree from the others:
+every TITANS combination of build kind, `to_build`, and `priority` also appears in GWO's
+Penchant files.
 
 **What a missing or wrong field does.** Nothing, silently: a `toBuild` no file contains;
 `append`/`prepend`/`replace`/`unset` with no `idToMod`; `replace` against a field the
-entry does not already have (it cannot create one); `remove` whose `value` is not an
-exact copy of a whole test object; `squad` naming a template that does not exist;
-`silence` on `platoon` (no `platoon_builds` entry has `builders`). Damage, silently: a
-missing `toBuild` matches every entry with no `to_build` (fabber task entries); a missing
-`value` on `append`, `prepend`, `replace`, `new`, or `squad` writes `undefined` (or `NaN`,
-or a string ending in `undefined`) into the matched entries; `silence` with no `except`
-zeroes every entry in scope. A message: `silence` with no `value` logs
-`applyAiMods: op threw`; `load` with no or an unknown `type` logs
-`Invalid AI file type in load mod`; an unknown `op` logs `Invalid AI mod operation`.
+entry does not already have (it cannot create one; under `matchAll`, or with a `refId`
+that a test matches, it falls through to the build conditions and changes each matched
+test whose field is truthy); `remove` whose `value` is not an exact copy of a whole test
+object; `squad` naming a template that does not exist; `silence` on `platoon` (no
+`platoon_builds` entry has `builders`). Damage, silently: a missing `toBuild` matches
+every entry with no `to_build` (fabber task entries); a missing `value` on `append`,
+`prepend`, `replace`, `new`, or `squad` writes `undefined` (or `NaN`, or a string that
+starts with `undefined` for `prepend` and ends with it for `append`) into the matched
+entries; `silence` with no `except` zeroes every entry in scope. A `new` with `idToMod`
+and no `value` pushes `undefined` into every test group, and a later `append`, `prepend`,
+`replace`, or `unset` that falls through to those tests (by `matchAll` or `refId`) then
+throws on it: `applyAiMods: op threw` names that later descriptor, not the `new`. A
+message: `silence` with no `value` logs `applyAiMods: op threw`; `load` with no or an
+unknown `type` logs `Invalid AI file type in load mod`; an unknown `op` logs
+`Invalid AI mod operation`.
 
 **`op: "silence"`**. `value` is `{ builders: [...], except: [...] }`, both string
 arrays; `except` may be empty. It sets `priority` to 0 on every entry whose
 `builders` are **all** in `value.builders`, unless its `to_build` is in `value.except`. An
-entry with any builder outside the list, or with no `builders`, is untouched. It ignores
+entry with any builder outside the list, or with no `builders`, is untouched. `except`
+matches `to_build` only, so on `fabber` it cannot keep the entries that have no `to_build`
+(the planet moves, teleports, and assists): they are zeroed whenever all their builders
+are listed. `Teleport Commander To Planet`, `Move Commander To Planet`, and Queller's
+`Commander Assist` have only `Commander`; `Move Orbital Fabber To Planet` has only
+`OrbitalFabber`; `Teleport Fabber To Planet`, `Move Fabber To Planet`, and
+`Fabber Assist` are zeroed once every fabber role they list (and `SupportCommander`,
+where listed) is in `value.builders`. It ignores
 `toBuild`, `idToMod`, `refId`, `refValue`, and `matchAll`, and it reads `treeOnly`. Use it
 when a card changes what a builder can build and the AI must stop ordering everything else
 from that builder. A missing `value` throws, so `applyAiMods` logs
@@ -383,9 +427,15 @@ folder follows from `type` (`fabber_builds/`, `factory_builds/`, `platoon_builds
 `pa/ai_tech/factory_builds/my_card.json` shipped alongside your `ui` folder.
 
 - `value` must include the `.json`.
-- **If that file is missing, its builds are lost.** The referee logs
-  `AI file of a load mod not read, skipped:` with the path, and the battle starts without
-  that file's builds. Confirm the file exists on disk before shipping a `load`.
+- **If that file is missing or is not valid JSON, its builds are lost.** The referee logs
+  `AI file of a load mod not read, skipped:` with the path and, in brackets, the reason:
+  an HTTP error status for a missing file, and `HTTP 200` for invalid JSON (`$.getJSON`
+  rejects the parse). The battle starts without that file's builds. Confirm the file
+  exists on disk and parses before shipping a `load`. Invalid JSON in any file under
+  `/pa/ai_tech/` also logs
+  `Galactic War Overhaul (GWO): AI load files not read before the hire:` once per Fight:
+  GWO's early read of every load file (`gw_play/referee.js`) fails as a whole, and the
+  referee reads each file a `load` names during the hire instead.
 - Name it after your card ID. A name another mod also uses replaces that mod's file.
 - GWO walks a loaded file like any other build file, so every descriptor of that `type`
   lands on it — your card's own, and those of every other card in the hand.
